@@ -1,10 +1,15 @@
 import React from 'react';
-import AudioPlayer from '~/components/AudioPlayer/AudioPlayer';
-const Home = () => {
+import styles from './Home.module.scss';
+import Banner from './Banner';
+import Recently from './Recently';
+import Recommend from './Recommend';
+const Home = (props) => {
+    document.title = props.title;
     return (
-        <div>
-            <h1>Home</h1>
-            <AudioPlayer src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" />
+        <div className={styles.home}>
+            <Banner />
+            <Recently />
+            <Recommend />
         </div>
     );
 }

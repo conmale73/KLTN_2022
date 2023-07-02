@@ -2,22 +2,37 @@ import React, { useState } from "react";
 
 import Header from "../../Header";
 import Footer from "../../Footer";
-import Sidebar from "../../Sidebar/Sidebar";
-import { Outlet } from "react-router-dom";
-function DefaultLayout({ children }) {
-    const [isOpen, setOpen] = useState(false);
+import LeftSidebar from "../../LeftSidebar";
+import RightSidebar from "../../RightSidebar";
 
+
+import { Outlet } from "react-router-dom";
+import styles from "./layout.module.scss";
+
+function DefaultLayout({ children }) {
     return (
-        <>
-            <Header />
-            <Sidebar isOpen={isOpen} />
-            <main role="main" className="wrapper">
-                <div className="content">
-                    <Outlet />
+        <div className={styles.layout}>
+            <div className={styles.top}>
+                <div className={styles.left}> 
+                <LeftSidebar />
                 </div>
-            </main>
-            <Footer />
-        </>
+                <div className={styles.headerAndContent}>
+                    <Header />
+                    <div className={styles.content}>
+                        <main role="main" className="wrapper">
+                            <Outlet />
+                        </main>
+                    </div>
+                </div>
+
+                <div className={styles.left}> 
+                <RightSidebar />
+                </div>
+            </div>
+            <div className={styles.bottom}>
+                <Footer />
+            </div>
+        </div>
     );
 }
 

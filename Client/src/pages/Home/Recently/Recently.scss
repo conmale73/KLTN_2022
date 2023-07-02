@@ -1,0 +1,19 @@
+.recently {
+    width: 100%;
+    .title {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        span {
+            font-size: 1.5rem;
+            font-weight: 400;
+        }
+        span:hover {
+            color: #1db954;
+            cursor: pointer;
+        }
+    }
+}

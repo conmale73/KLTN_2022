@@ -1,0 +1,29 @@
+.layout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .top {
+        display: flex;
+        .left {
+        }
+        .headerAndContent {
+            position: relative;
+            width: calc(100% - 300px);
+            left: 250px;
+            display: flex;
+            flex-direction: column;
+            .content {
+                position: relative;
+                width: calc(100% - 300px);
+                height: calc(100%);
+                margin: 20px 0 90px 0;
+
+            }
+        }
+        .right {
+        }
+    }
+    .bottom {
+    }
+}
