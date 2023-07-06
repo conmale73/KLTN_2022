@@ -20,6 +20,12 @@ router.get('/:id', songsController.getSongById);
 // POST /api/songs
 router.post('/', validateRequest(songSchema), songsController.addSong);
 
+// POST /api/songs/:id/like
+router.post('/:id/like', songsController.likeSong);
+
+// POST /api/songs/:id/unlike (not working)
+router.post('/:id/unlike', songsController.unlikeSong);
+
 // DELETE /api/songs/:id
 router.delete('/:id', songsController.deleteSong);
 

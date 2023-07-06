@@ -5,8 +5,22 @@ const Song = require('../models/songModel');
 // @access  Public
 exports.getSongs = async (req, res, next) => {
   try {
-    const songs = await Song.find();
-    res.json(songs);
+    const page = parseInt(req.query.page) || 1; // Current page
+    const limit = parseInt(req.query.limit) || 10; // Number of songs per page
+
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+
+    const totalSongs = await Song.countDocuments();
+    const totalPages = Math.ceil(totalSongs / limit);
+
+    const songs = await Song.find().skip(startIndex).limit(limit);
+
+    res.json({
+      songs,
+      page,
+      totalPages,
+    });
   } catch (error) {
     next(error);
   }
@@ -47,6 +61,46 @@ exports.addSong = async (req, res, next) => {
 
     const savedSong = await newSong.save();
     res.status(201).json(savedSong);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// New function to increment the number of likes for a song
+exports.likeSong = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const song = await Song.findByIdAndUpdate(
+      id,
+      { $inc: { likes: 1 } }, // Increment the likes by 1
+      { new: true }
+    );
+
+    if (!song) {
+      throw new ErrorResponse('Song not found', 404);
+    }
+
+    res.json(song);
+  } catch (error) {
+    next(error);
+  }
+};
+exports.unlikeSong = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const song = await Song.findByIdAndUpdate(
+      id,
+      { $inc: { likes: -1 } },
+      { new: true }
+    );
+
+    if (!song) {
+      throw new ErrorResponse('Song not found', 404);
+    }
+
+    res.json(song);
   } catch (error) {
     next(error);
   }
