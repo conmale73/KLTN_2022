@@ -26,12 +26,7 @@ const AudioPlayer = (props) => {
             );
             setCurrentSongIndex(nextSongIndex);
             setIsPlaying(true);
-        } else if (isRepeat === "off") {
-            const nextSongIndex = currentSongIndex + 1;
-            setCurrentSongIndex(nextSongIndex);
-            setIsPlaying(true);
-        }
-        {
+        } else {
             const nextSongIndex =
                 (currentSongIndex + 1) % props.soundList.length;
             setCurrentSongIndex(nextSongIndex);
@@ -97,7 +92,13 @@ const AudioPlayer = (props) => {
             setIsPlaying(true);
             playNextSong();
         } else if (isRepeat === "off") {
-            setIsPlaying(false);
+            const isLastSong = currentSongIndex + 1 === props.soundList.length;
+            if (isLastSong) {
+                // Stop the player or perform any other desired action
+                setIsPlaying(false);
+            } else {
+                playNextSong();
+            }
         }
     };
     return (
