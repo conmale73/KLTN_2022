@@ -22,11 +22,17 @@ const soundList = [
     },
     {
         id: 2,
-
         name: "Aloha",
         artist: "Cool",
         cover: "/photos/Aloha_Cool.jpg",
         src: "http://localhost:3001/music/aloha.mp3",
+    },
+    {
+        id: 3,
+        name: "[Slowed 0.8] Đào Hoa Nặc OST Thượng Cổ Tình Ca",
+        artist: "Đặng Tử Kỳ",
+        cover: "/photos/Aloha_Cool.jpg",
+        src: "http://localhost:3001/music/Slowed 08 Đào Hoa Nặc Thượng cổ tình ca ost.mp3",
     },
 ];
 function Footer() {

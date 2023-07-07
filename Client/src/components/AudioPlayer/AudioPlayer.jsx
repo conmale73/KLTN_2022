@@ -12,6 +12,7 @@ const AudioPlayer = (props) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isRepeat, setIsRepeat] = useState("off");
     const [isRandom, setIsRandom] = useState(false);
+    const [loop, setLoop] = useState(false);
 
     const playerRef = useRef(null);
     const [currentSongIndex, setCurrentSongIndex] = useState(
@@ -25,7 +26,12 @@ const AudioPlayer = (props) => {
             );
             setCurrentSongIndex(nextSongIndex);
             setIsPlaying(true);
-        } else {
+        } else if (isRepeat === "off") {
+            const nextSongIndex = currentSongIndex + 1;
+            setCurrentSongIndex(nextSongIndex);
+            setIsPlaying(true);
+        }
+        {
             const nextSongIndex =
                 (currentSongIndex + 1) % props.soundList.length;
             setCurrentSongIndex(nextSongIndex);
@@ -84,18 +90,29 @@ const AudioPlayer = (props) => {
         }
     };
     const handleOnEnded = () => {
-        playNextSong();
+        if (isRepeat === "once") {
+            setIsPlaying(true);
+            playerRef.current.seekTo(0);
+        } else if (isRepeat === "all") {
+            setIsPlaying(true);
+            playNextSong();
+        } else if (isRepeat === "off") {
+            setIsPlaying(false);
+        }
     };
     return (
         <div className={styles.audioPlayer}>
             <ReactPlayer
                 ref={playerRef}
                 url={props.soundList[currentSongIndex].src}
-                playing={isPlaying}
                 volume={props.volume}
                 onEnded={handleOnEnded}
                 onProgress={handleProgress}
                 onDuration={handleDuration}
+                width="0px"
+                height="0px"
+                loop={loop}
+                playing={isPlaying}
             />
             <div className={styles.controllerButtons}>
                 <div onClick={(e) => handleClickRandom(e)}>
@@ -146,6 +163,9 @@ const AudioPlayer = (props) => {
                     value={currentTime}
                     className={styles.timeline}
                     step="0.1"
+                    onClick={(e) => {
+                        playerRef.current.seekTo(currentTime, "seconds");
+                    }}
                     onMouseDown={(e) => {
                         setIsPlaying(false);
                     }}

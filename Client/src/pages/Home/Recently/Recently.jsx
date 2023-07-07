@@ -91,7 +91,9 @@ function Recently() {
         <div className="recently">
             <div className="title">
                 <h1>Recently</h1>
-                <span className="watchMoreButton">More...</span>
+                <Link to="/history" className="watchMoreButton">
+                    <span className="watchMoreButton">More...</span>
+                </Link>
             </div>
             <div className="listSong">
                 <ListSong songs={songs} isInlineSong={true} />

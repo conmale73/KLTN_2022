@@ -1,4 +1,4 @@
-.playlist{
+.playlist {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -57,25 +57,14 @@
             text-decoration: underline;
             animation: slide-left 20s linear infinite;
         }
-
-        .artist {
-            font-size: 1rem;
+        .creator {
+            font-size: 13px;
             font-weight: 400;
-            color: #fff;
-            margin: 0 5px 0 0;
-
-            --max-lines: 1;
-            -webkit-line-clamp: var(--max-lines);
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-
-            
+            color: #c5c5c5;
         }
-        .artist a div{
-            display: flex;
-        }
-        .artist:hover {
-            color: #1db954;
+        .creator:hover {
+            cursor: pointer;
+            text-decoration: underline;
         }
     }
 }
