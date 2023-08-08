@@ -5,7 +5,8 @@
     padding: 10px;
     border-radius: 5px;
     &:hover {
-        background-color: #282828;
+        background-color: #231e6e;
+        opacity: 0.8;
     }
     .imageContainer {
         width: 55px;
@@ -89,7 +90,7 @@
             margin: 0 10px 0 0;
             & :hover {
                 cursor: pointer;
-                color: #1db954;
+                color: #04aefe;
             }
         }
         .optionsButton {
@@ -98,7 +99,7 @@
             margin: 0 10px 0 0;
             & :hover {
                 cursor: pointer;
-                color: #1db954;
+                color: #04aefe;
             }
         }
         .deleteButton {
@@ -107,7 +108,7 @@
             margin: 0 10px 0 0;
             & :hover {
                 cursor: pointer;
-                color: #1db954;
+                color: #04aefe;
             }
         }
     }

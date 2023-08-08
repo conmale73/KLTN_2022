@@ -1,29 +1,65 @@
 .layout {
     display: flex;
     flex-direction: column;
+    min-height: 100vh; /* Make sure the layout fills the entire viewport */
+}
+
+.top {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto; /* Enable scrolling within the middle content area */
+}
+
+.left {
+    width: 250px; /* Adjust the width of the left sidebar */
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+}
+
+.headerAndContent {
+    position: absolute;
+    left: 250px;
+    padding: 0 320px 0 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: calc(
+        100% - 250px
+    ); /* Adjust the width to leave space for the left sidebar */
+}
+
+.header {
     width: 100%;
+}
 
-    .top {
-        display: flex;
-        .left {
-        }
-        .headerAndContent {
-            position: relative;
-            width: calc(100% - 300px);
-            left: 250px;
-            display: flex;
-            flex-direction: column;
-            .content {
-                position: relative;
-                width: calc(100% - 300px);
-                height: calc(100%);
-                margin: 20px 0 90px 0;
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
 
-            }
-        }
-        .right {
-        }
-    }
-    .bottom {
-    }
+.left,
+.header,
+.footer {
+    z-index: 1; /* Ensure these elements are above the middle content */
+}
+
+.bottom {
+    width: 100%;
+    padding: 10px; /* Adjust the padding as needed */
+}
+
+.left,
+.right {
+    /* Add any additional styles for the left and right sidebars as needed */
 }

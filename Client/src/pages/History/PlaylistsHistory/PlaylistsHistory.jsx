@@ -1,5 +1,5 @@
 import styles from "./PlaylistsHistory.module.scss";
-import ListSong from "../../../components/ListSong";
+import ListComponent from "../../../components/ListComponent";
 const Playlists = [
     {
         id: 1,
@@ -104,7 +104,7 @@ const PlaylistsHistory = (props) => {
     const playlists = Playlists;
     return (
         <div className={styles.playlistsHistory}>
-            <ListSong playlists={playlists} isInlinePlaylist={true} />
+            <ListComponent playlists={playlists} isInlinePlaylist={true} />
         </div>
     );
 };

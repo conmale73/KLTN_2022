@@ -1,8 +1,8 @@
-import React from 'react';
-import styles from './Home.module.scss';
-import Banner from './Banner';
-import Recently from './Recently';
-import Recommend from './Recommend';
+import React from "react";
+import styles from "./Home.module.scss";
+import Banner from "./Banner";
+import Recently from "./Recently";
+import Recommend from "./Recommend";
 const Home = (props) => {
     document.title = props.title;
     return (
@@ -10,7 +10,8 @@ const Home = (props) => {
             <Banner />
             <Recently />
             <Recommend />
+            <Recommend />
         </div>
     );
-}
+};
 export default Home;

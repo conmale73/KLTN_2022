@@ -13,9 +13,10 @@
         justify-content: center;
         align-items: center;
         gap: 16px;
+        transition: all 0.3s ease;
 
         & :hover {
-            color: #1db954;
+            color: #04aefe;
             cursor: pointer;
         }
     }
@@ -28,12 +29,13 @@
         align-items: center;
         gap: 18.896px;
         input[type="range"] {
-            background-color: #27ae60;
+            background-color: #04aefe;
         }
         .timeline {
             width: 90%;
-            background-color: #27ae60;
+            background-color: #04aefe;
             height: 2px;
+            transition: all 0.3s ease;
         }
         .timeline:hover {
             cursor: pointer;
@@ -43,6 +45,7 @@
             width: 100%;
             height: 2px;
             background-color: #7e7e7e;
+            transition: all 0.3s ease;
         }
         .progress {
             height: 100%;

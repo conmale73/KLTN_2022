@@ -1,5 +1,5 @@
 .footer {
-    background-color: #0f0f0f;
+    // background-color: #0f0f0f;
     color: #fff;
     text-align: center;
     font-size: 12px;
@@ -9,9 +9,7 @@
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 80px;
     display: flex;
-
     .left {
         width: 25%;
 
@@ -43,10 +41,16 @@
                     font-size: 16px;
                     font-weight: 500;
                     margin-bottom: 10px;
+
+                    --max-lines: 1;
+                    display: -webkit-box;
+                    -webkit-line-clamp: var(--max-lines);
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
                 }
                 .name:hover {
                     text-decoration: underline;
-                    color: #1db954;
+                    color: #04aefe;
                     cursor: pointer;
                 }
 
@@ -54,10 +58,16 @@
                     font-size: 13px;
                     font-weight: 200;
                     margin-bottom: 10px;
+
+                    --max-lines: 1;
+                    display: -webkit-box;
+                    -webkit-line-clamp: var(--max-lines);
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
                 }
                 .artist:hover {
                     text-decoration: underline;
-                    color: #1db954;
+                    color: #04aefe;
                     cursor: pointer;
                 }
             }
@@ -81,7 +91,7 @@
             gap: 16px;
 
             & :hover {
-                color: #1db954;
+                color: #04aefe;
                 cursor: pointer;
             }
         }
@@ -94,11 +104,11 @@
             align-items: center;
             gap: 18.896px;
             input[type="range"] {
-                background-color: #27ae60;
+                background-color: #04aefe;
             }
             .timeline {
                 width: 90%;
-                background-color: #27ae60;
+                background-color: #04aefe;
                 height: 2px;
             }
             .timeline:hover {
@@ -124,20 +134,20 @@
         padding: 34px 0px 34px 0px;
         align-items: center;
         flex-shrink: 0;
-        .volumeContainer{
+        .volumeContainer {
             display: flex;
             justify-content: center;
             align-items: center;
 
-            .volumeIcon{
+            .volumeIcon {
                 margin: 0 10px 0 10px;
             }
-            .volumeIcon :hover{
+            .volumeIcon :hover {
                 cursor: pointer;
-                color:#1db954;
+                color: #04aefe;
             }
 
-            .volumeBar{
+            .volumeBar {
                 width: 100px;
                 height: 2px;
                 background-color: #7e7e7e;

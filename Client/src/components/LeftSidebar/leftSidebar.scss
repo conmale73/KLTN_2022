@@ -1,14 +1,21 @@
 .leftSidebar {
     position: fixed;
     width: 250px;
-    background-color: #0f0f0f;
-    overflow-y: auto;
-    padding: 0 10px 10px 10px;
+
+    padding: 0 0 10px 10px;
     height: calc(100vh - 80px);
+    z-index: 1000;
+    transition: 0.5s ease-in-out;
+
+    &.hide {
+        transform: translateX(-250px);
+        transition: transform 0.5s ease-in-out;
+    }
+
     .logo {
         height: 100px;
         margin: 0 auto;
-        width: 130px;
+        width: 100px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -58,78 +65,47 @@
             text-align: center;
             padding: 5px 10px 5px 10px;
             width: 180px;
-            background: #dd3e54; /* fallback for old browsers */
-            background: -webkit-linear-gradient(
-                to left,
-                #6be585,
-                #dd3e54
+            background: #231e6e; /* fallback for old browsers */
+            background-image: -webkit-linear-gradient(
+                to right,
+                #231e6e 0%,
+                #6d607e 51%,
+                #496191 100%
             ); /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(
-                to left,
-                #6be585,
-                #dd3e54
+            background-image: linear-gradient(
+                to right,
+                #231e6e 0%,
+                #6d607e 51%,
+                #496191 100%
             ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
             color: #f0f0f0;
             border-radius: 10px;
+            transition: 0.5s;
+            background-size: 200% auto;
+        }
+        .membership:hover {
+            cursor: pointer;
+            background-position: right center; /* change the direction of the change here */
+            color: #fff;
+            text-decoration: none;
         }
     }
+}
+.toggleButton {
+    position: absolute;
+    top: 50%;
+    right: -30px; /* Adjust the position as needed */
+    background-color: #6d607e;
+    color: #f0f0f0;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
 
-    .menu {
-        height: fit-content;
-        width: 90%;
-        margin: 10px 0px 10px 0px;
-        border-bottom: 1px solid #747474;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .menu_wrapper {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            .button {
-                width: 160px;
-                display: flex;
-                overflow: hidden;
-                padding: 5px 10px 5px 10px;
-                border-radius: 10px;
-                margin: 5px 0 5px 0;
-
-                .icon {
-                    padding: 0 5px 0 5px;
-                }
-                .text {
-                    padding: 0 5px 0 5px;
-                }
-            }
-            .button:hover {
-                background-color: #272727;
-                cursor: pointer;
-            }
-        }
-    }
-
-    .toReadingButton {
-        display: flex;
-        padding: 5px 10px 5px 10px;
-        justify-content: center;
-        align-items: center;
-        width: 200px;
-        background-color: #3b445b;
-        color: #f0f0f0;
-        border-radius: 10px;
-        margin: 10px 0 10px 0;
-        position: inherit;
-        bottom: 80px;
-        .icon {
-            padding: 0 10px 0 10px;
-        }
-    }
-    .toReadingButton:hover {
-        background-color: #5a6277;
-        cursor: pointer;
-    }
+.toggleButton:hover {
+    background-color: #496191;
+    color: #fff;
 }

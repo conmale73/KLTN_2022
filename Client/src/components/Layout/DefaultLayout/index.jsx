@@ -4,7 +4,7 @@ import Header from "../../Header";
 import Footer from "../../Footer";
 import LeftSidebar from "../../LeftSidebar";
 import RightSidebar from "../../RightSidebar";
-
+import ToReadingButton from "../../ToReadingButton";
 
 import { Outlet } from "react-router-dom";
 import styles from "./layout.module.scss";
@@ -13,11 +13,13 @@ function DefaultLayout({ children }) {
     return (
         <div className={styles.layout}>
             <div className={styles.top}>
-                <div className={styles.left}> 
                 <LeftSidebar />
-                </div>
+
                 <div className={styles.headerAndContent}>
-                    <Header />
+                    <div className={styles.header}>
+                        <Header />
+                    </div>
+
                     <div className={styles.content}>
                         <main role="main" className="wrapper">
                             <Outlet />
@@ -25,8 +27,8 @@ function DefaultLayout({ children }) {
                     </div>
                 </div>
 
-                <div className={styles.left}> 
-                <RightSidebar />
+                <div className={styles.left}>
+                    <RightSidebar />
                 </div>
             </div>
             <div className={styles.bottom}>

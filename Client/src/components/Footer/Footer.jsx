@@ -4,46 +4,21 @@ import { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
 import AudioPlayer from "../AudioPlayer";
 import { GiSpeaker, GiSpeakerOff } from "react-icons/gi";
+import { useDispatch, useSelector } from "react-redux";
+import { useSongContext } from "../../context/SongContext";
 
-const soundList = [
-    {
-        id: 0,
-        name: "Daylight",
-        artist: "David Kushner",
-        cover: "/photos/David_Kushner-_Daylight.png",
-        src: "http://localhost:3001/music/David Kushner Daylight.mp3",
-    },
-    {
-        id: 1,
-        name: "Take Me To Church",
-        artist: "Hozier",
-        cover: "/photos/TakeMeToChurch_Hozier.jpg",
-        src: "http://localhost:3001/music/Take Me To Church Hozier.mp3",
-    },
-    {
-        id: 2,
-        name: "Aloha",
-        artist: "Cool",
-        cover: "/photos/Aloha_Cool.jpg",
-        src: "http://localhost:3001/music/aloha.mp3",
-    },
-    {
-        id: 3,
-        name: "[Slowed 0.8] Đào Hoa Nặc OST Thượng Cổ Tình Ca",
-        artist: "Đặng Tử Kỳ",
-        cover: "/photos/Aloha_Cool.jpg",
-        src: "http://localhost:3001/music/Slowed 08 Đào Hoa Nặc Thượng cổ tình ca ost.mp3",
-    },
-];
 function Footer() {
-    const [currentSongIndex, setCurrentSongIndex] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [isRepeat, setIsRepeat] = useState("off");
-    const [isRandom, setIsRandom] = useState(false);
+    const { currentSongIndex, setCurrentSongIndex } = useSongContext();
+
+    const soundList =
+        useSelector((state) => state.listSongs.list) ||
+        localStorage.getItem("listSongs") ||
+        [];
 
     const [volumeSlider, setVolumeSlider] = useState(
         localStorage.getItem("volume")
     );
+
     const [mute, setMute] = useState(false);
     const handleClickVolume = (e) => {
         if (!mute) {
@@ -53,12 +28,6 @@ function Footer() {
             setMute(false);
             setVolumeSlider(localStorage.getItem("volume"));
         }
-    };
-    const playNextSong = () => {
-        const nextSongIndex = (currentSongIndex + 1) % soundList.length;
-        setCurrentSongIndex(nextSongIndex);
-        console.log("currentSongIndex: " + currentSongIndex);
-        console.log("now playing: " + soundList[currentSongIndex].name);
     };
 
     return (
@@ -70,15 +39,23 @@ function Footer() {
                     >
                         <img
                             className="object-cover"
-                            src={soundList[currentSongIndex].cover}
+                            src={
+                                soundList[currentSongIndex]?.songImage || "null"
+                            }
                         />
                     </div>
                     <div className={styles.infoContainer}>
-                        <div className={styles.name}>
-                            {soundList[currentSongIndex].name}
+                        <div
+                            className={styles.name}
+                            title={soundList[currentSongIndex]?.songName}
+                        >
+                            {soundList[currentSongIndex]?.songName}
                         </div>
-                        <div className={styles.artist}>
-                            {soundList[currentSongIndex].artist}
+                        <div
+                            className={styles.artist}
+                            title={soundList[currentSongIndex]?.artistID}
+                        >
+                            {soundList[currentSongIndex]?.artistID}
                         </div>
                     </div>
                 </div>

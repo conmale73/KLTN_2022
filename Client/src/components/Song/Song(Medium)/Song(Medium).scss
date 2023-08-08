@@ -5,23 +5,45 @@
     padding: 10px;
     border-radius: 10px;
     cursor: pointer;
-    width: 150px;
-    height: 160px;
-    max-height: 180px;
+    max-width: 180px;
+    height: 200px;
+    max-height: 200px;
     transition: all 0.3s ease;
     &:hover {
         transform: scale(1.05);
-        box-shadow: 0 5px 15px rgba(255, 255, 255, 0.26);
+        box-shadow: 0 5px 15px rgba(134, 134, 134, 0.26);
+    }
+    &:hover .playButton {
+        opacity: 1;
+    }
+    &:hover img {
+        opacity: 0.7;
+    }
+    .songImageContainer {
+        position: relative;
+        width: 120px;
+        height: 120px;
     }
     .songImage {
-        width: 100px;
-        height: 100px;
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        position: relative;
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+    }
+    .playButton {
+        position: absolute;
+        top: 50%;
+        right: 50%;
+        opacity: 0;
+        color: #fff;
+        cursor: pointer;
+        transform: translate(-50%, -50%);
+        transition: all 0.3s ease;
+        & :hover {
+            color: #04aefe;
         }
     }
+
     .info {
         margin-left: 10px;
         width: 100%;
@@ -29,9 +51,10 @@
 
         .songName {
             width: 100%;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: 600;
             color: #fff;
+            padding: 0 0 0 10px;
 
             --max-lines: 1;
             display: -webkit-box;
@@ -54,15 +77,16 @@
             flex-wrap: nowrap;
             overflow: visible;
             white-space: nowrap;
-            color: #1db954;
+            color: #04aefe;
             text-decoration: underline;
             animation: slide-left 20s linear infinite;
         }
 
         .artist {
-            font-size: 1rem;
+            font-size: 1.2rem;
             font-weight: 400;
             color: #fff;
+            padding: 0 0 0 10px;
 
             --max-lines: 1;
             display: -webkit-box;
@@ -75,7 +99,7 @@
             flex-wrap: nowrap;
             overflow: visible;
             white-space: nowrap;
-            color: #1db954;
+            color: #04aefe;
             text-decoration: underline;
             animation: slide-left 20s linear infinite;
         }

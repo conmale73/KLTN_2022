@@ -7,17 +7,29 @@ import { TbRepeat, TbRepeatOnce, TbRepeatOff } from "react-icons/tb";
 import { GiSpeaker, GiSpeakerOff } from "react-icons/gi";
 import ReactPlayer from "react-player";
 import Duration from "./Duration";
+import { useSongContext } from "../../context/SongContext";
+import { useDispatch, useSelector } from "react-redux";
+import { changeCurrentSong } from "../../redux/listSong/listSongSlice";
 
 const AudioPlayer = (props) => {
-    const [isPlaying, setIsPlaying] = useState(false);
+    const { isPlaying, setIsPlaying } = useSongContext();
     const [isRepeat, setIsRepeat] = useState("off");
     const [isRandom, setIsRandom] = useState(false);
     const [loop, setLoop] = useState(false);
+    const [duration, setDuration] = useState(0);
+    const [currentTime, setCurrentTime] = useState(0);
 
     const playerRef = useRef(null);
-    const [currentSongIndex, setCurrentSongIndex] = useState(
-        props.currentSongIndex
+    const { currentSongIndex, setCurrentSongIndex } = useSongContext();
+    const [currentSong, setCurrentSong] = useState(
+        props.soundList[currentSongIndex]
     );
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(changeCurrentSong(currentSong));
+    }, [currentSong]);
 
     const playNextSong = () => {
         if (isRandom) {
@@ -33,18 +45,32 @@ const AudioPlayer = (props) => {
             setIsPlaying(true);
         }
     };
-
-    const [duration, setDuration] = useState(0);
-    const [currentTime, setCurrentTime] = useState(0);
+    const playPrevSong = () => {
+        if (isRandom) {
+            const prevSongIndex = Math.floor(
+                Math.random() * props.soundList.length
+            );
+            setCurrentSongIndex(prevSongIndex);
+            setIsPlaying(true);
+        } else {
+            const previousSongIndex =
+                (currentSongIndex - 1 + props.soundList.length) %
+                props.soundList.length;
+            setCurrentSongIndex(previousSongIndex);
+            playerRef.current.url =
+                "http://localhost:3001/music/" +
+                props.soundList[currentSongIndex]?._id +
+                ".mp3";
+            setIsPlaying(true);
+        }
+    };
 
     const handleProgress = (progress) => {
         setCurrentTime(progress.playedSeconds);
     };
-
     const handleDuration = (duration) => {
         setDuration(duration);
     };
-
     const handleClickRandom = (e) => {
         if (isRandom === false) {
             setIsRandom(true);
@@ -53,13 +79,19 @@ const AudioPlayer = (props) => {
         }
     };
     const handleClickPlay = (e) => {
+        setCurrentSong(props.soundList[currentSongIndex]);
+
         if (!isPlaying) {
             setIsPlaying(true);
         } else {
             setIsPlaying(false);
         }
+        console.log("currentSongIndex: ", currentSongIndex);
+        console.log(
+            "index of currentSong: ",
+            props.soundList.indexOf(currentSong)
+        );
     };
-
     const handleClickRepeat = (e) => {
         if (isRepeat === "off") {
             setIsRepeat("once");
@@ -77,35 +109,34 @@ const AudioPlayer = (props) => {
             playerRef.current.seekTo(0);
             setCurrentTime(0);
         } else if (currentTime < 5) {
-            const previousSongIndex =
-                (currentSongIndex - 1 + props.soundList.length) %
-                props.soundList.length;
-            setCurrentSongIndex(previousSongIndex);
-            playerRef.current.url = props.soundList[previousSongIndex].src;
+            playPrevSong();
         }
     };
     const handleOnEnded = () => {
+        const isLastSong = currentSongIndex + 1 === props.soundList.length;
         if (isRepeat === "once") {
             setIsPlaying(true);
             playerRef.current.seekTo(0);
         } else if (isRepeat === "all") {
             setIsPlaying(true);
             playNextSong();
-        } else if (isRepeat === "off") {
-            const isLastSong = currentSongIndex + 1 === props.soundList.length;
-            if (isLastSong) {
-                // Stop the player or perform any other desired action
-                setIsPlaying(false);
-            } else {
-                playNextSong();
-            }
+        } else if (isRepeat === "off" && isLastSong && !isRandom) {
+            // Stop the player or perform any other desired action
+            setIsPlaying(false);
+        } else {
+            playNextSong();
         }
     };
+
+    useEffect(() => {
+        localStorage.setItem("currentSongIndex", currentSongIndex);
+        setCurrentSong(props.soundList[currentSongIndex]);
+    }, [currentSongIndex]);
     return (
         <div className={styles.audioPlayer}>
             <ReactPlayer
                 ref={playerRef}
-                url={props.soundList[currentSongIndex].src}
+                url={"http://localhost:3001/music/" + currentSong?._id + ".mp3"}
                 volume={props.volume}
                 onEnded={handleOnEnded}
                 onProgress={handleProgress}
@@ -118,7 +149,7 @@ const AudioPlayer = (props) => {
             <div className={styles.controllerButtons}>
                 <div onClick={(e) => handleClickRandom(e)}>
                     {isRandom ? (
-                        <FaRandom size="24px" color="#1db954" />
+                        <FaRandom size="24px" color="#04aefe" />
                     ) : (
                         <FaRandom size="24px" />
                     )}
@@ -146,9 +177,9 @@ const AudioPlayer = (props) => {
                     {isRepeat === "off" ? (
                         <TbRepeatOff size="24px" />
                     ) : isRepeat === "once" ? (
-                        <TbRepeatOnce size="24px" color="#1db954" />
+                        <TbRepeatOnce size="24px" color="#04aefe" />
                     ) : (
-                        <TbRepeat size="24px" color="#1db954" />
+                        <TbRepeat size="24px" color="#04aefe" />
                     )}
                 </div>
             </div>

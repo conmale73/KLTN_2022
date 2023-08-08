@@ -2,32 +2,29 @@ import React from "react";
 import styles from "./nowPlaying.module.scss";
 import { Link } from "react-router-dom";
 import SmallSong from "../../Song/Song(Small)/Song(Small)";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { songService } from "../../../services/song.service";
+import { useSongContext } from "../../../context/SongContext";
 
-const Songs = [
-    {
-        id: 1,
-        songName: "Take Me To Your Heart",
-        artist: "Michael Learns To Rock",
-        image: "/photos/TakeMeToChurch_Hozier.jpg",
-    },
-    {
-        id: 2,
-        songName: "Bohemian Rhapsody",
-        artist: "Queen",
-        image: "/photos/TakeMeToChurch_Hozier.jpg",
-    },
-];
 const NowPlaying = () => {
+    const songs = useSelector((state) => state.listSongs.list);
+    const { currentSongIndex, setCurrentSongIndex } = useSongContext();
+
     return (
-        <div className="nowPlaying">
-            {Songs.map((song) => (
+        <div className="nowPlaying mt-6">
+            {songs.map((song, index) => (
                 <SmallSong
+                    key={song._id}
+                    index={index}
+                    _id={song._id}
                     songName={song.songName}
-                    artist={song.artist}
-                    image={song.image}
+                    artistID={song.artistID}
+                    songImage={song.songImage}
+                    playing={songs[currentSongIndex]?._id}
                 />
             ))}
         </div>
-    )
-}
+    );
+};
 export default NowPlaying;

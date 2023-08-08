@@ -1,0 +1,13 @@
+.song {
+    display: flex;
+    .left {
+        width: 35%;
+        height: 500px;
+        border: 1px solid red;
+    }
+    .right {
+        width: 60%;
+        height: 500px;
+        border: 1px solid blue;
+    }
+}

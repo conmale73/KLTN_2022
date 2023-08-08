@@ -1,8 +1,11 @@
 import "./Recently.scss";
-import MediumSong from "../../../components/Song/Song(Medium)";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import ListSong from "../../../components/ListSong";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import ListSongs from "../../../components/ListComponent/ListSongs";
+import { getAllSongsAPI } from "../../../redux/song/songsAPI";
+import { songService } from "../../../services/song.service";
+
 const Songs = [
     {
         id: 1,
@@ -85,18 +88,30 @@ const Songs = [
         region: "us-uk",
     },
 ];
+
 function Recently() {
-    const songs = Songs;
+    const [songs, setSongs] = useState([]);
+    const dispatch = useDispatch();
+
+    getAllSongsAPI(dispatch);
+
+    useEffect(() => {
+        async function getSongs() {
+            const res = await songService.getSongs();
+            setSongs(res.data.songs);
+        }
+        getSongs();
+    }, []);
     return (
         <div className="recently">
             <div className="title">
                 <h1>Recently</h1>
-                <Link to="/history" className="watchMoreButton">
+                <Link to="/music/history" className="watchMoreButton">
                     <span className="watchMoreButton">More...</span>
                 </Link>
             </div>
             <div className="listSong">
-                <ListSong songs={songs} isInlineSong={true} />
+                <ListSongs songs={songs} isInlineSong={true} />
             </div>
         </div>
     );

@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import styles from "./History.module.scss";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import SongsHistory from "./SongsHistory";
 import PlaylistsHistory from "./PlaylistsHistory";
 import Divider from "../../components/Divider";

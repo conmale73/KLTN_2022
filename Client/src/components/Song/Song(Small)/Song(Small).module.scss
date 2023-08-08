@@ -1,37 +1,87 @@
+/* Song(Small).module.scss */
 .smallSong {
-    height: 50px;
-    width: 220px;
     display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px;
+    transition: background-color 0.3s;
     border-radius: 5px;
+    &:hover {
+        background-color: #262077;
+        opacity: 0.9;
+    }
+
+    .songImageContainer {
+        position: relative; /* This is important to position the play button relative to the container */
+    }
+
     .songImage {
-        width: 50px;
-        height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        object-fit: fill;
-        img {
-            object-fit: contain;
-        }
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+    &:hover .songImage {
+        opacity: 0.7;
+    }
+
+    .playButtonContainer {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* Center the play button */
+        opacity: 0; /* Hide the play button by default */
+        transition: opacity 0.3s;
+    }
+
+    &:hover .playButtonContainer {
+        opacity: 1; /* Show the play button on hover */
+    }
+
+    .playButton {
+        color: #ffffff;
+    }
+    .playButton:hover {
+        cursor: pointer;
+        color: #04aefe;
+    }
+
+    .playingSong {
+        background-color: #9ca5ac;
     }
     .info {
-        margin: 0 0 0 5px;
-        .songName {
-            font-weight: 300;
-            --max-lines: 1;
-
-            display: -webkit-box;
-            -webkit-line-clamp: var(--max-lines);
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .artist {
-            color: #b6b6b6;
-            font-size: 15px;
-        }
+        flex: 1;
     }
-}
-.smallSong:hover {
-    background-color: #3d3d3d;
-    cursor: pointer;
+
+    .songName {
+        font-size: 16px;
+        font-weight: bold;
+
+        --max-lines: 2;
+        display: -webkit-box;
+        -webkit-line-clamp: var(--max-lines);
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .songName:hover {
+        cursor: pointer;
+        color: #04aefe;
+        text-decoration: underline;
+    }
+
+    .artist {
+        font-size: 14px;
+        color: #888888;
+
+        --max-lines: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: var(--max-lines);
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .artist:hover {
+        cursor: pointer;
+        color: #04aefe;
+        text-decoration: underline;
+    }
 }
