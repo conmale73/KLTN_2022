@@ -104,7 +104,7 @@ const PlaylistsHistory = (props) => {
     const playlists = Playlists;
     return (
         <div className={styles.playlistsHistory}>
-            <ListComponent playlists={playlists} isInlinePlaylist={true} />
+            {/* <ListComponent playlists={playlists} isInlinePlaylist={true} /> */}
         </div>
     );
 };

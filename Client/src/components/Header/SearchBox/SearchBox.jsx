@@ -1,39 +1,43 @@
 import "./SearchBox.scss";
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { songService } from "../../../services";
+import { AiOutlineSearch } from "react-icons/ai";
+import { searchService } from "../../../services";
+import { useNavigate } from "react-router-dom";
 
 const SearchBox = () => {
-    const [search, setSearch] = useState("");
+    const [searchInput, setSearchInput] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
 
+    const navigator = useNavigate(); // Access the history object
+
+    const handleSearchInput = (e) => {
+        setSearchInput(e.target.value);
+        setIsSearching(true);
+        try {
+            async function fetchData() {
+                const response = await searchService.query(e.target.value);
+                setSearchResults(response.data);
+            }
+            fetchData();
+        } catch (error) {}
+    };
+
     const handleSubmitSearch = async (e) => {
         e.preventDefault();
-        console.log("searching:", search);
-        try {
-            const response = await songService.querySong(search);
-            console.log("response: ", response.data);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
+        setIsSearching(false);
+        navigator(`/music/search-results?q=${encodeURIComponent(searchInput)}`);
+        localStorage.setItem("searchInput", searchInput);
     };
-
-    const handleSearch = (e) => {
-        setSearch(e.target.value);
+    const handleClickResult = (e) => {
+        setSearchInput(e.target.innerText);
+        setIsSearching(false);
+        navigator(
+            `/music/search-results?q=${encodeURIComponent(e.target.innerText)}`
+        );
+        localStorage.setItem("searchInput", e.target.innerText);
     };
-
-    // useEffect(() => {
-    //     if (search.length > 0) {
-    //         setIsSearching(true);
-    //         setTimeout(() => {
-    //             setIsSearching(false);
-    //             setSearchResults(["song1", "song2", "song3"]);
-    //         }, 1000);
-    //     } else {
-    //         setSearchResults([]);
-    //     }
-    // }, [search]);
 
     return (
         <div className="searchBox">
@@ -46,19 +50,27 @@ const SearchBox = () => {
                         type="text"
                         className="inputBox"
                         placeholder="Search..."
-                        value={search}
-                        onChange={(e) => handleSearch(e)}
+                        value={searchInput}
+                        onChange={(e) => handleSearchInput(e)}
                     />
                     <div className="searchButton" onClick={handleSubmitSearch}>
                         <FaSearch className="icon" size="24px" />
                     </div>
                 </form>
             </div>
-            {isSearching && <div className="searching">Searching...</div>}
-            {searchResults.length > 0 && (
+
+            {isSearching && searchInput != "" && (
                 <div className="results">
                     {searchResults.map((result) => (
-                        <div className="result">{result}</div>
+                        <div
+                            className="result"
+                            onClick={(e) => handleClickResult(e)}
+                        >
+                            <div className="icon">
+                                <AiOutlineSearch size="24px" />
+                            </div>
+                            <div className="text">{result}</div>
+                        </div>
                     ))}
                 </div>
             )}

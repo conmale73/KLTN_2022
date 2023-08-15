@@ -2,12 +2,21 @@ import "./Song(Medium).scss";
 import { Link } from "react-router-dom";
 import { FaPlay } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { addSong, removeSong } from "../../../redux/listSong/listSongSlice";
-
+import {
+    addSong,
+    removeSong,
+    changeCurrentSong,
+} from "../../../redux/listSong/listSongSlice";
+import { useSongContext } from "../../../context/SongContext";
 function MediumSong(props) {
     const dispatch = useDispatch();
     const songsList = useSelector((state) => state.listSongs.list);
-
+    const {
+        currentSong,
+        setCurrentSong,
+        currentSongIndex,
+        setCurrentSongIndex,
+    } = useSongContext();
     const {
         _id,
         songName,
@@ -33,13 +42,15 @@ function MediumSong(props) {
     };
 
     const addToList = (song) => {
-        if (dispatch(addSong(song))) {
+        if (dispatch(addSong(song)) && songsList.length === 0) {
             console.log("add: ", song);
+            dispatch(changeCurrentSong(song));
+            setCurrentSongIndex(0);
+            setCurrentSong(song);
         }
     };
     const handleClickPlay = (e) => {
         e.preventDefault();
-        console.log("play: ", props._id);
         addToList(songToAdd);
     };
     return (
@@ -63,7 +74,7 @@ function MediumSong(props) {
                             {props.songName}
                         </div>
                         <Link to={`/music/artist/${props.artistSlug}`}>
-                            <div className="artist">{props.artistID}</div>
+                            <div className="artist">{props.artists}</div>
                         </Link>
                     </div>
                 </div>

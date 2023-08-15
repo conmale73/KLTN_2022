@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import styles from "./footer.module.scss";
 import { useState, useEffect } from "react";
-import ReactPlayer from "react-player";
 import AudioPlayer from "../AudioPlayer";
 import { GiSpeaker, GiSpeakerOff } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,7 +13,7 @@ function Footer() {
         useSelector((state) => state.listSongs.list) ||
         localStorage.getItem("listSongs") ||
         [];
-
+    let currentSongRedux = useSelector((state) => state.listSongs.currentSong);
     const [volumeSlider, setVolumeSlider] = useState(
         localStorage.getItem("volume")
     );
@@ -39,23 +38,21 @@ function Footer() {
                     >
                         <img
                             className="object-cover"
-                            src={
-                                soundList[currentSongIndex]?.songImage || "null"
-                            }
+                            src={currentSongRedux?.songImage || "null"}
                         />
                     </div>
                     <div className={styles.infoContainer}>
                         <div
                             className={styles.name}
-                            title={soundList[currentSongIndex]?.songName}
+                            title={currentSongRedux?.songName}
                         >
-                            {soundList[currentSongIndex]?.songName}
+                            {currentSongRedux?.songName}
                         </div>
                         <div
                             className={styles.artist}
-                            title={soundList[currentSongIndex]?.artistID}
+                            title={currentSongRedux?.artists}
                         >
-                            {soundList[currentSongIndex]?.artistID}
+                            {currentSongRedux?.artists}
                         </div>
                     </div>
                 </div>

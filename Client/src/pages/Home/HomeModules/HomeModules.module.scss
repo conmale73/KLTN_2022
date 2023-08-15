@@ -1,0 +1,112 @@
+.homeModules {
+    height: 500px;
+    &__title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 20px 0 0 0;
+    }
+
+    .contents {
+        display: flex;
+        width: 100%;
+        height: 440px;
+        // border: 1px solid red;
+        .quickPicks {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            .quickPicksItemsWrapper {
+                width: 100%;
+                height: 90%;
+                display: flex;
+
+                .quickPicksItems {
+                    --quickPicksItemWidth: 300px;
+                    --quickPicksItemHeight: 60px;
+                    --quickPicksItemPerCollumn: 5;
+                    --quickPicksItemMarginBottom: 16px;
+                    --quickPicksItemMarginRight: 24px;
+
+                    display: flex;
+                    flex-flow: column wrap;
+                    height: calc(
+                        var(--quickPicksItemPerCollumn) *
+                            var(--quickPicksItemHeight) +
+                            var(--quickPicksItemMarginBottom) *
+                            (var(--quickPicksItemPerCollumn))
+                    );
+                    .quickPicksItem {
+                        width: var(--quickPicksItemWidth);
+                        height: var(--quickPicksItemHeight);
+                        margin-bottom: var(--quickPicksItemMarginBottom);
+                        margin-right: var(--quickPicksItemMarginRight);
+                        display: flex;
+                        align-items: center;
+                        .imageContainer {
+                            width: calc(var(--quickPicksItemHeight) - 10px);
+                            height: calc(var(--quickPicksItemHeight) - 10px);
+                            object-fit: contain;
+                            display: flex;
+                        }
+                        .infoContainer {
+                            width: calc(
+                                var(--quickPicksItemWidth) -
+                                    var(--quickPicksItemHeight)
+                            );
+                            height: var(--quickPicksItemHeight);
+                            margin-left: 10px;
+                            display: flex;
+                            flex-direction: column;
+                            .title {
+                                font-size: 1.3rem;
+                                font-weight: 700;
+                                margin-bottom: 5px;
+
+                                --max-lines: 1;
+                                display: -webkit-box;
+                                -webkit-line-clamp: var(--max-lines);
+                                -webkit-box-orient: vertical;
+                                overflow: hidden;
+
+                                &:hover {
+                                    text-decoration: underline;
+                                    cursor: pointer;
+                                    color: #04aefe;
+                                }
+                            }
+                            .artistList {
+                                display: flex;
+                                width: 100%;
+                                overflow: hidden;
+
+                                .artist {
+                                    font-size: 1.2rem;
+                                    font-weight: 500;
+                                    margin-right: 5px;
+
+                                    --max-lines: 1;
+                                    display: -webkit-box;
+                                    -webkit-line-clamp: var(--max-lines);
+                                    -webkit-box-orient: vertical;
+                                    overflow: hidden;
+                                    &:hover {
+                                        text-decoration: underline;
+                                        cursor: pointer;
+                                        color: #04aefe;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .trendingCommPlaylist {
+            width: 100%;
+            height: 100%;
+            border: 2px solid rgb(0, 255, 13);
+        }
+    }
+}

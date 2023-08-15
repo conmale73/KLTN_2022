@@ -4,8 +4,7 @@ import { BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 import { FaRandom } from "react-icons/fa";
 import { BiSkipPrevious, BiSkipNext } from "react-icons/bi";
 import { TbRepeat, TbRepeatOnce, TbRepeatOff } from "react-icons/tb";
-import { GiSpeaker, GiSpeakerOff } from "react-icons/gi";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player/youtube";
 import Duration from "./Duration";
 import { useSongContext } from "../../context/SongContext";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +17,7 @@ const AudioPlayer = (props) => {
     const [loop, setLoop] = useState(false);
     const [duration, setDuration] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
+    const [loaded, setLoaded] = useState(0);
 
     const playerRef = useRef(null);
     const { currentSongIndex, setCurrentSongIndex } = useSongContext();
@@ -26,6 +26,7 @@ const AudioPlayer = (props) => {
     );
 
     const dispatch = useDispatch();
+    let currentSongRedux = useSelector((state) => state.listSongs.currentSong);
 
     useEffect(() => {
         dispatch(changeCurrentSong(currentSong));
@@ -79,18 +80,14 @@ const AudioPlayer = (props) => {
         }
     };
     const handleClickPlay = (e) => {
-        setCurrentSong(props.soundList[currentSongIndex]);
+        console.log("currentSong: ", currentSong);
+        console.log("currentSongRedux: ", currentSongRedux);
 
         if (!isPlaying) {
             setIsPlaying(true);
         } else {
             setIsPlaying(false);
         }
-        console.log("currentSongIndex: ", currentSongIndex);
-        console.log(
-            "index of currentSong: ",
-            props.soundList.indexOf(currentSong)
-        );
     };
     const handleClickRepeat = (e) => {
         if (isRepeat === "off") {
@@ -127,6 +124,9 @@ const AudioPlayer = (props) => {
             playNextSong();
         }
     };
+    const handleOnReady = () => {
+        console.log("Song is ready to be played");
+    };
 
     useEffect(() => {
         localStorage.setItem("currentSongIndex", currentSongIndex);
@@ -136,15 +136,22 @@ const AudioPlayer = (props) => {
         <div className={styles.audioPlayer}>
             <ReactPlayer
                 ref={playerRef}
-                url={"http://localhost:3001/music/" + currentSong?._id + ".mp3"}
-                volume={props.volume}
-                onEnded={handleOnEnded}
-                onProgress={handleProgress}
-                onDuration={handleDuration}
+                url={currentSongRedux?.url}
+                config={{
+                    youtube: {
+                        playerVars: { showinfo: 1 },
+                        embedOptions: { showinfo: 1 },
+                    },
+                }}
                 width="0px"
                 height="0px"
                 loop={loop}
                 playing={isPlaying}
+                volume={props.volume}
+                onEnded={handleOnEnded}
+                onProgress={handleProgress}
+                onDuration={handleDuration}
+                onReady={handleOnReady}
             />
             <div className={styles.controllerButtons}>
                 <div onClick={(e) => handleClickRandom(e)}>

@@ -36,7 +36,7 @@ const Menu = () => {
                             <div className="icon">
                                 <Heart />
                             </div>
-                            <div className="text">Like Songs</div>
+                            <div className="text">Liked Songs</div>
                         </div>
                     </Link>
                 </div>

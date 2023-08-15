@@ -1,21 +1,22 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import styles from "./Song(Small).module.scss";
 import clsx from "clsx";
-import { BsPlayFill } from "react-icons/bs";
+import { BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
 import { useSongContext } from "../../../context/SongContext";
 import * as ContextMenu from "@radix-ui/react-context-menu";
-import {
-    DotFilledIcon,
-    CheckIcon,
-    ChevronRightIcon,
-} from "@radix-ui/react-icons";
 import "./SongContextMenu.css";
 
-import { addSong, removeSong } from "../../../redux/listSong/listSongSlice";
+import {
+    addSong,
+    removeSong,
+    changeCurrentSong,
+} from "../../../redux/listSong/listSongSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const SmallSong = (props) => {
-    const list = useSelector((state) => state.listSongs.list);
+    const [list, setList] = useState(
+        JSON.parse(localStorage.getItem("listSong"))
+    );
     const {
         isPlaying,
         setIsPlaying,
@@ -27,9 +28,11 @@ const SmallSong = (props) => {
 
     const dispatch = useDispatch();
     let currentSongRedux = useSelector((state) => state.listSongs.currentSong);
+
     useEffect(() => {
         setCurrentSong(currentSongRedux);
     }, [currentSongRedux]);
+
     const handleClickPlay = () => {
         const song = list.find((song) => song._id === props._id);
         setCurrentSong(song);
@@ -38,13 +41,27 @@ const SmallSong = (props) => {
             setIsPlaying(true); // Start playing the song
         }
     };
-
+    const handleClickPause = () => {
+        setIsPlaying(false);
+    };
     const playingSongStyle = "#2c239c";
 
     const handleRemoveFromPlaylist = (e) => {
         try {
             dispatch(removeSong(props._id));
-            console.log("Remove " + props.songName + " from playlist");
+            if (props._id === currentSong._id && currentSongIndex > 0) {
+                dispatch(changeCurrentSong(list[currentSongIndex - 1]));
+                setCurrentSongIndex(currentSongIndex - 1);
+                setCurrentSong(currentSongRedux);
+            } else if (
+                props._id === currentSong._id &&
+                currentSongIndex === 0
+            ) {
+                setCurrentSongIndex(0);
+                dispatch(changeCurrentSong(list[currentSongIndex]));
+                setCurrentSong(currentSongRedux);
+                setIsPlaying(false);
+            }
         } catch (err) {
             console.log(err);
         }
@@ -59,7 +76,7 @@ const SmallSong = (props) => {
                 <ContextMenu.Trigger>
                     <div
                         className={clsx(`${styles.smallSong}`)}
-                        title={props.songName + " - " + props.artistID}
+                        title={props.songName + " - " + props.artists}
                         style={{
                             backgroundColor:
                                 props._id === currentSong?._id
@@ -73,12 +90,21 @@ const SmallSong = (props) => {
                                 src={props.songImage}
                             />
                             <div className={styles.playButtonContainer}>
-                                <BsPlayFill
-                                    size="30px"
-                                    className={styles.playButton}
-                                    title={"Play " + props.songName}
-                                    onClick={handleClickPlay}
-                                />
+                                {isPlaying && props._id === currentSong?._id ? (
+                                    <BsFillPauseFill
+                                        size="30px"
+                                        className={styles.playButton}
+                                        title={"Pause " + props.songName}
+                                        onClick={handleClickPause}
+                                    />
+                                ) : (
+                                    <BsFillPlayFill
+                                        size="30px"
+                                        className={styles.playButton}
+                                        title={"Play " + props.songName}
+                                        onClick={handleClickPlay}
+                                    />
+                                )}
                             </div>
                         </div>
 
@@ -86,8 +112,11 @@ const SmallSong = (props) => {
                             <div className={styles.songName}>
                                 {props.songName}
                             </div>
-                            <div className={styles.artist}>
-                                {props.artistID}
+                            <div
+                                className={styles.artist}
+                                title={props.artists}
+                            >
+                                {props.artists}
                             </div>
                         </div>
                     </div>
@@ -114,7 +143,7 @@ const SmallSong = (props) => {
                             <ContextMenu.SubTrigger className="ContextMenuSubTrigger">
                                 More Tools
                                 <div className="RightSlot">
-                                    <ChevronRightIcon />
+                                    {/* <ChevronRightIcon /> */}
                                 </div>
                             </ContextMenu.SubTrigger>
                             <ContextMenu.Portal>
@@ -148,7 +177,7 @@ const SmallSong = (props) => {
                             onCheckedChange={setBookmarksChecked}
                         >
                             <ContextMenu.ItemIndicator className="ContextMenuItemIndicator">
-                                <CheckIcon />
+                                {/* <CheckIcon /> */}
                             </ContextMenu.ItemIndicator>
                             Show Bookmarks <div className="RightSlot">⌘+B</div>
                         </ContextMenu.CheckboxItem>
@@ -158,7 +187,7 @@ const SmallSong = (props) => {
                             onCheckedChange={setUrlsChecked}
                         >
                             <ContextMenu.ItemIndicator className="ContextMenuItemIndicator">
-                                <CheckIcon />
+                                {/* <CheckIcon /> */}
                             </ContextMenu.ItemIndicator>
                             Show Full URLs
                         </ContextMenu.CheckboxItem>
@@ -177,7 +206,7 @@ const SmallSong = (props) => {
                                 value="pedro"
                             >
                                 <ContextMenu.ItemIndicator className="ContextMenuItemIndicator">
-                                    <DotFilledIcon />
+                                    {/* <DotFilledIcon /> */}
                                 </ContextMenu.ItemIndicator>
                                 Pedro Duarte
                             </ContextMenu.RadioItem>
@@ -186,7 +215,7 @@ const SmallSong = (props) => {
                                 value="colm"
                             >
                                 <ContextMenu.ItemIndicator className="ContextMenuItemIndicator">
-                                    <DotFilledIcon />
+                                    {/* <DotFilledIcon /> */}
                                 </ContextMenu.ItemIndicator>
                                 Colm Tuite
                             </ContextMenu.RadioItem>

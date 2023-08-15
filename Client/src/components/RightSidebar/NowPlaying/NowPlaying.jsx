@@ -15,11 +15,10 @@ const NowPlaying = () => {
         <div className="nowPlaying mt-6">
             {songs.map((song, index) => (
                 <SmallSong
-                    key={song._id}
-                    index={index}
+                    key={index}
                     _id={song._id}
                     songName={song.songName}
-                    artistID={song.artistID}
+                    artists={song.artists}
                     songImage={song.songImage}
                     playing={songs[currentSongIndex]?._id}
                 />

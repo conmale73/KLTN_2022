@@ -5,6 +5,8 @@ const History = lazy(() => import("../pages/History"));
 const Library = lazy(() => import("../pages/Library"));
 const LibraryPlaylist = lazy(() => import("../pages/LibraryPlaylist"));
 const Leaderboard = lazy(() => import("../pages/Leaderboard"));
+const SearchResult = lazy(() => import("../pages/SearchResult"));
+const AuthenticationPage = lazy(() => import("../pages/AuthenticationPage"));
 
 export const publishRoutes = [
     {
@@ -12,6 +14,14 @@ export const publishRoutes = [
         element: (
             <Suspense fallback={<Loading />}>
                 <Home title="MY SPACE" />
+            </Suspense>
+        ),
+    },
+    {
+        path: "/authentication",
+        element: (
+            <Suspense fallback={<Loading />}>
+                <AuthenticationPage title="Login" />
             </Suspense>
         ),
     },
@@ -52,6 +62,14 @@ export const publishRoutes = [
         element: (
             <Suspense fallback={<Loading />}>
                 <Leaderboard title="Top 100 songs" />
+            </Suspense>
+        ),
+    },
+    {
+        path: "/music/search-results?q=:query",
+        element: (
+            <Suspense fallback={<Loading />}>
+                <SearchResult />
             </Suspense>
         ),
     },

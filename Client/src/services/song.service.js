@@ -7,9 +7,12 @@ export const songService = {
     getSong(id) {
         return axiosClient.get(`/api/songs/${id}`);
     },
+    // querySong(query, maxResults) {
+    //     return axiosClient.get(
+    //         `/api/youtube-search/?maxResults=${maxResults}&query=${query}&part=snippet`
+    //     );
+    // },
     querySong(query) {
-        return axiosClient.get(
-            `/api/youtube-search/?maxResults=1&query=${query}`
-        );
+        return axiosClient.get(`/search/?q=${query}&f=songs&r=VN&l=vi_VN`);
     },
 };

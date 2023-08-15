@@ -70,7 +70,7 @@ const Playlist = () => {
                     <p className={styles.seeMore}>More...</p>
                 </Link>
             </div>
-            <ListComponent playlists={playlists} isInlinePlaylist={true} />
+            {/* <ListComponent playlists={playlists} isInlinePlaylist={true} /> */}
         </div>
     );
 };
