@@ -3,6 +3,8 @@ import styles from "./Home.module.scss";
 import { useState, useEffect } from "react";
 import { recommendationService } from "../../services/recommendation.service";
 import HomeModules from "./HomeModules";
+import Loading from "../../components/Loading";
+
 const Home = (props) => {
     document.title = props.title;
     const [searchResults, setSearchResults] = useState([]);
@@ -33,7 +35,7 @@ const Home = (props) => {
     return (
         <div className={styles.home}>
             {loading ? (
-                <p>Loading...</p>
+                <Loading />
             ) : error ? (
                 <p>{error}</p>
             ) : (

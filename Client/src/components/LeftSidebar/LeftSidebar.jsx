@@ -17,7 +17,7 @@ function LeftSidebar() {
         <div className={`leftSidebar ${sidebarVisible ? "" : "hide"}`}>
             <Link to="/music/">
                 <div className="logo">
-                    <img src="/photos/lalaland-removebg.png"></img>
+                    <img src="/photos/MySPACE-Logo.png"></img>
                 </div>
             </Link>
 

@@ -1,4 +1,0 @@
-App Client ID: a06212b3-7f3c-420e-b3f0-8b9d418d2e11
-
-
-MongoDB API key: PcT2n9M16huyHWvzoE0BemXpUAoIJzlLTtrgCex6UgAg03UFLWTfD6gVw9Hj0uwk
