@@ -6,7 +6,7 @@
 
 ><https://www.python.org/downloads/>
 
-### Step 2: Open ytmusicapi folder in Terminal and type in these commands to load required packages
+### Step 2: Open YouTubeMusicAPI folder in Terminal and type in these commands to load required packages
 
 `pip install -r requirements.txt`
 
