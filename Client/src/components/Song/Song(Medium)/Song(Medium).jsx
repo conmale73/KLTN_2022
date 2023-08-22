@@ -1,4 +1,4 @@
-import "./Song(Medium).scss";
+import styles from "./Song(Medium).module.scss";
 import { Link } from "react-router-dom";
 import { FaPlay } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -55,30 +55,64 @@ function MediumSong(props) {
     };
     return (
         <>
-            <Link
-                to={`/music/${props.category}/${props.region}/${props._id}/${props.songSlug}`}
-            >
-                <div className="mediumSong">
-                    <div className="songImageContainer">
-                        <img src={props.songImage} className="songImage" />
-                        <div
-                            className="playButton"
-                            key={props.id}
-                            onClick={(e) => handleClickPlay(e)}
-                        >
-                            <FaPlay size="20px" title="Add to Now Playing" />
-                        </div>
-                    </div>
-                    <div className="info">
-                        <div className="songName" title={props.songName}>
-                            {props.songName}
-                        </div>
-                        <Link to={`/music/artist/${props.artistSlug}`}>
-                            <div className="artist">{props.artists}</div>
-                        </Link>
+            <div className={styles.mediumSong}>
+                <div className={styles.songImageContainer}>
+                    <img
+                        src={
+                            props.thumbnails[0]?.url ||
+                            props.thumbnails[1]?.url ||
+                            props.thumbnails[2]?.url ||
+                            props.thumbnails[3]?.url ||
+                            props.thumbnails[4]?.url
+                        }
+                        className={styles.songImage}
+                    />
+                    <div
+                        className={styles.playButtonContainer}
+                        key={props.videoId}
+                        onClick={(e) => handleClickPlay(e)}
+                    >
+                        <FaPlay
+                            size="20px"
+                            title="Add to Now Playing"
+                            className={styles.playButton}
+                        />
                     </div>
                 </div>
-            </Link>
+                <div className={styles.info}>
+                    <Link to={`/music/song/${props.videoId}`}>
+                        <div
+                            className={styles.songName}
+                            title={props.title}
+                            key={props.videoId}
+                        >
+                            {props.title}
+                        </div>
+                    </Link>
+                    <div className={styles.artistList}>
+                        {props.artists.map((artist, index) => (
+                            <Link to={`/music/artists/?id=${artist.id}`}>
+                                {artist.id !== null ? (
+                                    <p
+                                        key={index}
+                                        className={styles.artist}
+                                        title={artist.name}
+                                    >
+                                        {artist.name}
+                                        {index < props.artists.length - 1 ? (
+                                            <span> </span>
+                                        ) : (
+                                            ""
+                                        )}
+                                    </p>
+                                ) : (
+                                    <></>
+                                )}
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </div>
         </>
     );
 }

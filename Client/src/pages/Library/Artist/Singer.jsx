@@ -28,7 +28,7 @@ const Singer = (props) => {
                     <span className={styles.seeMore}>More...</span>
                 </Link>
             </div>
-            <ListComponent singers={singer} isInlineSinger={true} />
+            <ListComponent singers={singer} isSlideSinger={true} />
         </div>
     );
 };

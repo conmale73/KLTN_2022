@@ -29,7 +29,7 @@ const PlaylistsSearchResult = (props) => {
     }, [searchResults]);
     return (
         <div className={styles.playlistsSearchResult}>
-            <ListPlaylists playlists={searchResults} isInlinePlaylist={true} />
+            <ListPlaylists playlists={searchResults} isSlidePlaylist={true} />
         </div>
     );
 };

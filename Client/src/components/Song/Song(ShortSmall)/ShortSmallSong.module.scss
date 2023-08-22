@@ -1,0 +1,95 @@
+.shortSmallSong {
+    --quickPicksItemWidth: 300px;
+    --quickPicksItemHeight: 60px;
+    --quickPicksItemPerCollumn: 5;
+    --quickPicksItemMarginBottom: 16px;
+    --quickPicksItemMarginRight: 24px;
+
+    width: var(--quickPicksItemWidth);
+    height: var(--quickPicksItemHeight);
+    margin-bottom: var(--quickPicksItemMarginBottom);
+    margin-right: var(--quickPicksItemMarginRight);
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    &:hover {
+        background-color: rgb(38, 32, 119, 0.7);
+    }
+    &:hover .playButton {
+        opacity: 1;
+    }
+    &:hover .imageContainer img {
+        opacity: 0.5;
+    }
+    .playButton {
+        position: absolute;
+        top: 50%;
+        left: 55%;
+        opacity: 0;
+        color: #fff;
+        cursor: pointer;
+        transform: translate(-50%, -50%);
+        transition: all 0.3s ease;
+        & :hover {
+            color: #04aefe;
+        }
+    }
+    .imageContainer {
+        width: calc(var(--quickPicksItemHeight) - 10px);
+        height: calc(var(--quickPicksItemHeight) - 10px);
+        object-fit: contain;
+        display: flex;
+        position: relative;
+        margin: 0 0 0 10px;
+        img {
+            border-radius: 5px;
+        }
+    }
+    .infoContainer {
+        width: calc(var(--quickPicksItemWidth) - var(--quickPicksItemHeight));
+        height: var(--quickPicksItemHeight);
+        margin-left: 10px;
+        display: flex;
+        flex-direction: column;
+
+        .title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+
+            --max-lines: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: var(--max-lines);
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+
+            &:hover {
+                text-decoration: underline;
+                cursor: pointer;
+                color: #04aefe;
+            }
+        }
+        .artistList {
+            display: flex;
+            width: 100%;
+            overflow: hidden;
+
+            .artist {
+                font-size: 1.2rem;
+                font-weight: 500;
+                margin-right: 5px;
+
+                --max-lines: 1;
+                display: -webkit-box;
+                -webkit-line-clamp: var(--max-lines);
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                &:hover {
+                    text-decoration: underline;
+                    cursor: pointer;
+                    color: #04aefe;
+                }
+            }
+        }
+    }
+}

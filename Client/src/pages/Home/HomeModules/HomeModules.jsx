@@ -1,112 +1,186 @@
 import styles from "./HomeModules.module.scss";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import ShortSmallSong from "../../../components/Song/Song(ShortSmall)";
+import ListPlaylists from "../../../components/ListComponent/ListPlaylists";
+import ListSongs from "../../../components/ListComponent/ListSongs";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
 
 const HomeModules = (props) => {
     const [contents, setContents] = useState(props.data);
 
     return (
         <>
-            {contents.map((content) => (
+            {contents.map((content, index) => (
                 <div className={styles.homeModules}>
                     <div className={styles.homeModules__title}>
                         {content.title}
                     </div>
                     <div className={styles.contents}>
-                        {content == contents[0] && ( // Quick Picks
+                        {index == 0 ? ( // Quick Picks
                             <div className={styles.quickPicks}>
                                 <div className={styles.quickPicksItemsWrapper}>
                                     <div className={styles.quickPicksItems}>
                                         {content.contents.map((item) => (
-                                            <div
-                                                className={
-                                                    styles.quickPicksItem
-                                                }
-                                            >
-                                                <div
-                                                    className={
-                                                        styles.imageContainer
-                                                    }
-                                                >
-                                                    <img
-                                                        src={
-                                                            item.thumbnails[0]
-                                                                .url ||
-                                                            item.thumbnails[1]
-                                                                .url
-                                                        }
-                                                        alt=""
-                                                    />
-                                                </div>
-                                                <div
-                                                    className={
-                                                        styles.infoContainer
-                                                    }
-                                                >
-                                                    <Link
-                                                        to={`/music/songs/?id=${item.videoId}`}
-                                                    >
-                                                        <div
-                                                            className={
-                                                                styles.title
-                                                            }
-                                                            title={item.title}
-                                                        >
-                                                            {item.title}
-                                                        </div>
-                                                    </Link>
-
-                                                    <div
-                                                        className={
-                                                            styles.artistList
-                                                        }
-                                                    >
-                                                        {item.artists.map(
-                                                            (artist, index) => (
-                                                                <Link
-                                                                    to={`/music/artists/?id=${artist.id}`}
-                                                                >
-                                                                    <p
-                                                                        key={
-                                                                            index
-                                                                        }
-                                                                        className={
-                                                                            styles.artist
-                                                                        }
-                                                                        title={
-                                                                            artist.name
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            artist.name
-                                                                        }
-                                                                        {index <
-                                                                        item
-                                                                            .artists
-                                                                            .length -
-                                                                            1 ? (
-                                                                            <span>
-                                                                                {" "}
-                                                                                &{" "}
-                                                                            </span>
-                                                                        ) : (
-                                                                            ""
-                                                                        )}
-                                                                    </p>
-                                                                </Link>
-                                                            )
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <ShortSmallSong item={item} />
                                         ))}
                                     </div>
                                 </div>
                             </div>
+                        ) : (
+                            <div className={styles.content}>
+                                {content.contents[0].playlistId ? (
+                                    <ListPlaylists
+                                        isSlidePlaylist={true}
+                                        playlists={content.contents}
+                                        uniqueId={`playlist-swiper-${index}`} // Pass a unique ID for each Swiper
+                                    />
+                                ) : (
+                                    <ListSongs
+                                        isSlideSong={true}
+                                        songs={content.contents}
+                                        uniqueId={`song-swiper-${index}`} // Pass a unique ID for each Swiper
+                                    />
+                                )}
+                            </div>
                         )}
-                        {content == contents[1] && ( // Trending Community Playlists
-                            <div className={styles.trendingCommPlaylist}></div>
+
+                        {/* {content == contents[2] && (
+                            <div className={styles.content}>
+                                {content.contents[0].playlistId ? (
+                                    <ListPlaylists
+                                        isSlidePlaylist={true}
+                                        playlists={content.contents}
+                                    />
+                                ) : (
+                                    <ListSongs
+                                        isSlideSong={true}
+                                        songs={content.contents}
+                                    />
+                                )}
+                            </div>
                         )}
+                        {content == contents[3] && (
+                            <div className={styles.content}>
+                                {content.contents[0].playlistId ? (
+                                    <ListPlaylists
+                                        isSlidePlaylist={true}
+                                        playlists={content.contents}
+                                    />
+                                ) : (
+                                    <ListSongs
+                                        isSlideSong={true}
+                                        songs={content.contents}
+                                    />
+                                )}
+                            </div>
+                        )}
+                        {content == contents[4] && (
+                            <div className={styles.content}>
+                                {content.contents[0].playlistId ? (
+                                    <ListPlaylists
+                                        isSlidePlaylist={true}
+                                        playlists={content.contents}
+                                    />
+                                ) : (
+                                    <ListSongs
+                                        isSlideSong={true}
+                                        songs={content.contents}
+                                    />
+                                )}
+                            </div>
+                        )}
+                        {content == contents[5] && (
+                            <div className={styles.content}>
+                                {content.contents[0].playlistId ? (
+                                    <ListPlaylists
+                                        isSlidePlaylist={true}
+                                        playlists={content.contents}
+                                    />
+                                ) : (
+                                    <ListSongs
+                                        isSlideSong={true}
+                                        songs={content.contents}
+                                    />
+                                )}
+                            </div>
+                        )}
+                        {content == contents[6] && (
+                            <div className={styles.content}>
+                                {content.contents[0].playlistId ? (
+                                    <ListPlaylists
+                                        isSlidePlaylist={true}
+                                        playlists={content.contents}
+                                    />
+                                ) : (
+                                    <ListSongs
+                                        isSlideSong={true}
+                                        songs={content.contents}
+                                    />
+                                )}
+                            </div>
+                        )}
+                        {content == contents[7] && (
+                            <div className={styles.content}>
+                                {content.contents[0].playlistId ? (
+                                    <ListPlaylists
+                                        isSlidePlaylist={true}
+                                        playlists={content.contents}
+                                    />
+                                ) : (
+                                    <ListSongs
+                                        isSlideSong={true}
+                                        songs={content.contents}
+                                    />
+                                )}
+                            </div>
+                        )}
+                        {content == contents[8] && (
+                            <div className={styles.content}>
+                                {content.contents[0].playlistId ? (
+                                    <ListPlaylists
+                                        isSlidePlaylist={true}
+                                        playlists={content.contents}
+                                    />
+                                ) : (
+                                    <ListSongs
+                                        isSlideSong={true}
+                                        songs={content.contents}
+                                    />
+                                )}
+                            </div>
+                        )}
+                        {content == contents[9] && (
+                            <div className={styles.content}>
+                                {content.contents[0].playlistId ? (
+                                    <ListPlaylists
+                                        isSlidePlaylist={true}
+                                        playlists={content.contents}
+                                    />
+                                ) : (
+                                    <ListSongs
+                                        isSlideSong={true}
+                                        songs={content.contents}
+                                    />
+                                )}
+                            </div>
+                        )}
+                        {content == contents[10] && (
+                            <div className={styles.content}>
+                                {content.contents[0].playlistId ? (
+                                    <ListPlaylists
+                                        isSlidePlaylist={true}
+                                        playlists={content.contents}
+                                    />
+                                ) : (
+                                    <ListSongs
+                                        isSlideSong={true}
+                                        songs={content.contents}
+                                    />
+                                )}
+                            </div>
+                        )} */}
                     </div>
                 </div>
             ))}

@@ -29,12 +29,12 @@
 .headerAndContent {
     position: absolute;
     left: 250px;
-    padding: 0 320px 0 0;
+    margin: 0 320px 0 0;
     flex: 1;
     display: flex;
     flex-direction: column;
     width: calc(
-        100% - 250px
+        100% - 570px
     ); /* Adjust the width to leave space for the left sidebar */
 }
 
@@ -47,7 +47,7 @@
     display: flex;
     flex-direction: column;
     z-index: 0;
-    margin: 0 10px 100px 40px;
+    margin: 0 20px 100px 40px;
     height: calc(100% - 180px);
 }
 
@@ -59,7 +59,6 @@
 
 .bottom {
     width: 100%;
-    padding: 10px; /* Adjust the padding as needed */
 }
 
 .left,
