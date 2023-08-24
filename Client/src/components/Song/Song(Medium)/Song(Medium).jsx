@@ -17,42 +17,29 @@ function MediumSong(props) {
         currentSongIndex,
         setCurrentSongIndex,
     } = useSongContext();
-    const {
-        _id,
-        songName,
-        songImage,
-        songSlug,
-        artistID,
-        lyrics,
-        category,
-        region,
-        likes,
-    } = props;
-
+    const { videoId, title, album, thumbnails, artists, category, duration } =
+        props;
     const songToAdd = {
-        _id,
-        songName,
-        songImage,
-        songSlug,
-        artistID,
-        lyrics,
+        videoId,
+        title,
+        album,
+        thumbnails,
+        url: "https://www.youtube.com/watch?v=" + videoId,
+        artists,
         category,
-        region,
-        likes,
+        duration,
     };
 
-    const addToList = (song) => {
-        if (dispatch(addSong(song)) && songsList.length === 0) {
-            console.log("add: ", song);
-            dispatch(changeCurrentSong(song));
-            setCurrentSongIndex(0);
-            setCurrentSong(song);
-        }
-    };
     const handleClickPlay = (e) => {
         e.preventDefault();
-        addToList(songToAdd);
+        if (dispatch(addSong(songToAdd)) && songsList.length === 0) {
+            console.log("add: ", songToAdd);
+            dispatch(changeCurrentSong(songToAdd));
+            setCurrentSongIndex(0);
+            setCurrentSong(songToAdd);
+        }
     };
+
     return (
         <>
             <div className={styles.mediumSong}>

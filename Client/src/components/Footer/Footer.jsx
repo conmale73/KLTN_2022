@@ -5,6 +5,7 @@ import AudioPlayer from "../AudioPlayer";
 import { GiSpeaker, GiSpeakerOff } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import { useSongContext } from "../../context/SongContext";
+import { Link } from "react-router-dom";
 
 function Footer() {
     const { currentSongIndex, setCurrentSongIndex } = useSongContext();
@@ -38,21 +39,43 @@ function Footer() {
                     >
                         <img
                             className="object-cover"
-                            src={currentSongRedux?.songImage || "null"}
+                            src={
+                                currentSongRedux?.thumbnails[0]?.url ||
+                                currentSongRedux?.thumbnails[1]?.url ||
+                                "null"
+                            }
                         />
                     </div>
                     <div className={styles.infoContainer}>
                         <div
                             className={styles.name}
-                            title={currentSongRedux?.songName}
+                            title={currentSongRedux?.title}
                         >
-                            {currentSongRedux?.songName}
+                            {currentSongRedux?.title}
                         </div>
-                        <div
-                            className={styles.artist}
-                            title={currentSongRedux?.artists}
-                        >
-                            {currentSongRedux?.artists}
+                        <div className={styles.artistList}>
+                            {currentSongRedux?.artists.map((artist, index) => (
+                                <Link to={`/music/artists/?id=${artist.id}`}>
+                                    {artist.id !== null ? (
+                                        <p
+                                            key={index}
+                                            className={styles.artist}
+                                            title={artist.name}
+                                        >
+                                            {artist.name}
+                                            {index <
+                                            currentSongRedux.artists.length -
+                                                1 ? (
+                                                <span> </span>
+                                            ) : (
+                                                ""
+                                            )}
+                                        </p>
+                                    ) : (
+                                        <></>
+                                    )}
+                                </Link>
+                            ))}
                         </div>
                     </div>
                 </div>

@@ -31,14 +31,15 @@ const SongsSearchResult = (props) => {
             {searchResults.map((song) => {
                 return (
                     <LongSong
-                        _id={song?.videoId}
-                        songName={song?.title}
-                        artists={song?.artists[0]?.name}
-                        songImage={song?.thumbnails[1]?.url}
+                        videoId={song?.videoId}
+                        title={song?.title}
+                        artists={song?.artists}
+                        thumbnails={song?.thumbnails}
                         album={song?.album?.name}
                         duration={song?.duration}
                         category={song?.category}
                         liked={song?.liked}
+                        isInHistory={false}
                     />
                 );
             })}

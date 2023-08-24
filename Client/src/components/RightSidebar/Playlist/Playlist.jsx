@@ -11,9 +11,9 @@ const Playlist = () => {
         <div className="playlist mt-6">
             {songs.map((song) => (
                 <SmallSong
-                    songName={song.songName}
-                    artistID={song.artistID}
-                    songImage={song.songImage}
+                    title={song.title}
+                    artists={song.artists}
+                    thumbnails={song.thumbnails}
                 />
             ))}
         </div>

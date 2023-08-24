@@ -36,6 +36,8 @@
     width: calc(
         100% - 570px
     ); /* Adjust the width to leave space for the left sidebar */
+    height: fit-content;
+    margin: 0 0 100px 0;
 }
 
 .header {
@@ -48,7 +50,7 @@
     flex-direction: column;
     z-index: 0;
     margin: 0 20px 100px 40px;
-    height: calc(100% - 180px);
+    height: fit-content;
 }
 
 .left,

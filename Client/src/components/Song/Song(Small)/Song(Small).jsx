@@ -12,6 +12,7 @@ import {
     changeCurrentSong,
 } from "../../../redux/listSong/listSongSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const SmallSong = (props) => {
     const [list, setList] = useState(
@@ -34,7 +35,7 @@ const SmallSong = (props) => {
     }, [currentSongRedux]);
 
     const handleClickPlay = () => {
-        const song = list.find((song) => song._id === props._id);
+        const song = list.find((song) => song.videoId === props.videoId);
         setCurrentSong(song);
         setCurrentSongIndex(list.indexOf(song));
         if (!isPlaying) {
@@ -48,13 +49,13 @@ const SmallSong = (props) => {
 
     const handleRemoveFromPlaylist = (e) => {
         try {
-            dispatch(removeSong(props._id));
-            if (props._id === currentSong._id && currentSongIndex > 0) {
+            dispatch(removeSong(props.videoId));
+            if (props.videoId === currentSong.videoId && currentSongIndex > 0) {
                 dispatch(changeCurrentSong(list[currentSongIndex - 1]));
                 setCurrentSongIndex(currentSongIndex - 1);
                 setCurrentSong(currentSongRedux);
             } else if (
-                props._id === currentSong._id &&
+                props.videoId === currentSong.videoId &&
                 currentSongIndex === 0
             ) {
                 setCurrentSongIndex(0);
@@ -76,10 +77,10 @@ const SmallSong = (props) => {
                 <ContextMenu.Trigger>
                     <div
                         className={clsx(`${styles.smallSong}`)}
-                        title={props.songName + " - " + props.artists}
+                        title={props.title}
                         style={{
                             backgroundColor:
-                                props._id === currentSong?._id
+                                props.videoId === currentSong?.videoId
                                     ? playingSongStyle
                                     : null,
                         }}
@@ -87,21 +88,22 @@ const SmallSong = (props) => {
                         <div className={styles.songImageContainer}>
                             <img
                                 className={styles.songImage}
-                                src={props.songImage}
+                                src={props?.thumbnails[0].url}
                             />
                             <div className={styles.playButtonContainer}>
-                                {isPlaying && props._id === currentSong?._id ? (
+                                {isPlaying &&
+                                props.videoId === currentSong?.videoId ? (
                                     <BsFillPauseFill
                                         size="30px"
                                         className={styles.playButton}
-                                        title={"Pause " + props.songName}
+                                        title={"Pause " + props.title}
                                         onClick={handleClickPause}
                                     />
                                 ) : (
                                     <BsFillPlayFill
                                         size="30px"
                                         className={styles.playButton}
-                                        title={"Play " + props.songName}
+                                        title={"Play " + props.title}
                                         onClick={handleClickPlay}
                                     />
                                 )}
@@ -109,14 +111,34 @@ const SmallSong = (props) => {
                         </div>
 
                         <div className={styles.info}>
-                            <div className={styles.songName}>
-                                {props.songName}
-                            </div>
+                            <div className={styles.songName}>{props.title}</div>
                             <div
-                                className={styles.artist}
+                                className={styles.artistList}
                                 title={props.artists}
                             >
-                                {props.artists}
+                                {props.artists.map((artist, index) => (
+                                    <Link
+                                        to={`/music/artists/?id=${artist.id}`}
+                                    >
+                                        {artist.id !== null ? (
+                                            <p
+                                                key={index}
+                                                className={styles.artist}
+                                                title={artist.name}
+                                            >
+                                                {artist.name}
+                                                {index <
+                                                props.artists.length - 1 ? (
+                                                    <span> </span>
+                                                ) : (
+                                                    ""
+                                                )}
+                                            </p>
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </Link>
+                                ))}
                             </div>
                         </div>
                     </div>

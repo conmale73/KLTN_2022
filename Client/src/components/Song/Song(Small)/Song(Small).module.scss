@@ -68,15 +68,27 @@
         text-decoration: underline;
     }
 
-    .artist {
-        font-size: 14px;
-        color: #888888;
-
-        --max-lines: 1;
-        display: -webkit-box;
-        -webkit-line-clamp: var(--max-lines);
-        -webkit-box-orient: vertical;
+    .artistList {
+        display: flex;
+        width: 100%;
         overflow: hidden;
+
+        .artist {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-right: 5px;
+
+            --max-lines: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: var(--max-lines);
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            &:hover {
+                text-decoration: underline;
+                cursor: pointer;
+                color: #04aefe;
+            }
+        }
     }
     .artist:hover {
         cursor: pointer;

@@ -11,7 +11,7 @@ function App() {
         console.log("Encoded JWT ID token: " + response.credential);
     }
     useEffect(() => {
-        google.accounts.id.initialize({
+        google?.accounts.id.initialize({
             client_id:
                 "424626895989-uiicjbj1fk9205u8n1kk5g9tjqgn7p3p.apps.googleusercontent.com",
             callback: handleCallbackResponse,

@@ -71,20 +71,26 @@
                 text-decoration: underline;
             }
         }
-        .artist {
-            width: fit-content;
-            font-size: 13px;
-            font-weight: 400;
-            color: #c5c5c5;
-
-            --max-lines: 1;
-            display: -webkit-box;
-            -webkit-line-clamp: var(--max-lines);
-            -webkit-box-orient: vertical;
+        .artistList {
+            display: flex;
+            width: 100%;
             overflow: hidden;
-            &:hover {
-                cursor: pointer;
-                text-decoration: underline;
+
+            .artist {
+                font-size: 1.2rem;
+                font-weight: 500;
+                margin-right: 5px;
+
+                --max-lines: 1;
+                display: -webkit-box;
+                -webkit-line-clamp: var(--max-lines);
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                &:hover {
+                    text-decoration: underline;
+                    cursor: pointer;
+                    color: #04aefe;
+                }
             }
         }
     }

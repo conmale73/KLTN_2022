@@ -2,13 +2,47 @@ import styles from "./ShortSmallSong.module.scss";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaPlay } from "react-icons/fa";
+import { useSongContext } from "../../../context/SongContext";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    addSong,
+    removeSong,
+    changeCurrentSong,
+} from "../../../redux/listSong/listSongSlice";
 
 const ShortSmallSong = (props) => {
     const [item, setItem] = useState(props.item);
+    const songsList = useSelector((state) => state.listSongs.list);
+    const dispatch = useDispatch();
+    const {
+        currentSong,
+        setCurrentSong,
+        currentSongIndex,
+        setCurrentSongIndex,
+    } = useSongContext();
+
+    const { videoId, title, album, thumbnails, artists, category, duration } =
+        props.item;
+
+    const songToAdd = {
+        videoId,
+        title,
+        album,
+        thumbnails,
+        url: "https://www.youtube.com/watch?v=" + videoId,
+        artists,
+        category,
+        duration,
+    };
 
     const handleClickPlay = (e) => {
         e.preventDefault();
-        console.log("Add to Now Playing: ", item.title);
+        if (dispatch(addSong(songToAdd)) && songsList.length === 0) {
+            console.log("add: ", songToAdd);
+            dispatch(changeCurrentSong(songToAdd));
+            setCurrentSongIndex(0);
+            setCurrentSong(songToAdd);
+        }
     };
     return (
         <div className={styles.shortSmallSong}>

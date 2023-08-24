@@ -21,22 +21,23 @@ const listSongsSlice = createSlice({
     reducers: {
         addSong(state, action) {
             const newSong = action.payload;
-            const duplicate = state.list.filter((e) => e._id === newSong._id);
+            const duplicate = state.list.filter(
+                (e) => e.videoId === newSong.videoId
+            );
 
             if (duplicate.length > 0) {
-                state.list = state.list.filter((e) => e._id !== newSong._id);
+                state.list = state.list.filter(
+                    (e) => e.videoId !== newSong.videoId
+                );
                 state.list = [
                     ...state.list,
                     {
-                        _id: duplicate[0]._id,
-                        songName: newSong.songName,
-                        artistID: newSong.artistID,
-                        lyrics: newSong.lyrics,
-                        songImage: newSong.songImage,
-                        songSlug: newSong.songSlug,
+                        videoId: duplicate[0].videoId,
+                        title: newSong.title,
+                        artists: newSong.artists,
+                        thumbnails: newSong.thumbnails,
+                        url: newSong.url,
                         category: newSong.category,
-                        likes: newSong.likes,
-                        region: newSong.region,
                     },
                 ];
                 localStorage.setItem("listSong", JSON.stringify(state.list));
@@ -56,7 +57,7 @@ const listSongsSlice = createSlice({
         },
         removeSong(state, action) {
             const songID = action.payload;
-            state.list = state.list.filter((song) => song._id !== songID);
+            state.list = state.list.filter((song) => song.videoId !== songID);
             localStorage.setItem("listSong", JSON.stringify(state.list));
         },
     },

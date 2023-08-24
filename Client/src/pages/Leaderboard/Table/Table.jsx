@@ -17,7 +17,6 @@ const Table = (props) => {
         }
     };
     const [songs, setSongs] = useState(props.songs);
-    console.log(songs);
     return (
         <div className="table">
             {numbers.map((number, index) => (
@@ -28,14 +27,14 @@ const Table = (props) => {
                     <div className="cell">
                         {songs[index] && (
                             <LongSong
-                                id={songs[index].id}
-                                name={songs[index].name}
-                                artist={songs[index].artist}
-                                cover={songs[index].cover}
+                                videoId={songs[index].videoId}
+                                title={songs[index].title}
+                                artists={songs[index].artists}
+                                thumbnails={songs[index].thumbnails}
                                 album={songs[index].album}
                                 duration={songs[index].duration}
                                 liked={songs[index].liked}
-                                // Add more song information props if needed
+                                isInHistory={false}
                             />
                         )}
                     </div>
