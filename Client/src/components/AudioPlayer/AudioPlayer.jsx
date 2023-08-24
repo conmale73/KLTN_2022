@@ -58,10 +58,7 @@ const AudioPlayer = (props) => {
                 (currentSongIndex - 1 + props.soundList.length) %
                 props.soundList.length;
             setCurrentSongIndex(previousSongIndex);
-            playerRef.current.url =
-                "http://localhost:3001/music/" +
-                props.soundList[currentSongIndex]?.videoId +
-                ".mp3";
+            playerRef.current.url = currentSongRedux?.url;
             setIsPlaying(true);
         }
     };
