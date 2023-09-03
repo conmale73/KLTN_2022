@@ -29,15 +29,12 @@
 .headerAndContent {
     position: absolute;
     left: 250px;
-    margin: 0 320px 0 0;
+    margin: 0 320px 100px 0;
     flex: 1;
     display: flex;
     flex-direction: column;
-    width: calc(
-        100% - 570px
-    ); /* Adjust the width to leave space for the left sidebar */
+    width: var(--globalContentWidth);
     height: fit-content;
-    margin: 0 0 100px 0;
 }
 
 .header {

@@ -1,10 +1,11 @@
 import React from "react";
 import "./rightSidebar.scss";
-import SmallSong from "../Song/Song(Small)";
+import SmallSong from "../Song/SongSmall";
 import { useState } from "react";
 import clsx from "clsx";
 import NowPlaying from "./NowPlaying";
 import Playlist from "./Playlist";
+
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 function RightSidebar() {

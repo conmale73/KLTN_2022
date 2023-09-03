@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./nowPlaying.module.scss";
 import { Link } from "react-router-dom";
-import SmallSong from "../../Song/Song(Small)/Song(Small)";
+import SmallSong from "../../Song/SongSmall/SongSmall";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { songService } from "../../../services/song.service";

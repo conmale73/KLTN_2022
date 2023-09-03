@@ -931,7 +931,7 @@ def get_explore_charts():
 
 
 # PLAYLISTS
-@app.route("/playlists")
+@app.route("/playlists/")
 def get_playlist():
     playlistId = request.args.get("id")
     region = request.args.get("r")

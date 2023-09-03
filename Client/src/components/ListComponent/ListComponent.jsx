@@ -1,5 +1,5 @@
 import "./ListComponent.scss";
-import MediumSong from "../Song/Song(Medium)";
+import MediumSong from "../Song/SongMedium";
 import Playlist from "../Playlist";
 import SingerComponent from "../Singer";
 import { useState } from "react";

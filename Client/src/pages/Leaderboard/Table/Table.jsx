@@ -1,6 +1,6 @@
 import "./Table.scss";
 import { useState, useEffect } from "react";
-import LongSong from "../../../components/Song/Song(Long)/Song(Long)";
+import LongSong from "../../../components/Song/SongLong";
 
 const Table = (props) => {
     const numbers = Array.from({ length: 100 }, (_, index) => index + 1);
@@ -34,7 +34,7 @@ const Table = (props) => {
                                 album={songs[index].album}
                                 duration={songs[index].duration}
                                 liked={songs[index].liked}
-                                isInHistory={false}
+                                buttons={false}
                             />
                         )}
                     </div>

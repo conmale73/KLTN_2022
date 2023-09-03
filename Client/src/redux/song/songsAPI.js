@@ -1,12 +1,12 @@
 import { songService } from "../../services";
-import { getAllSongs, getOneSong } from "./songsSlice";
+import { getListSong, getSongDetail } from "./songsSlice";
 
-export const getAllSongsAPI = () => async (dispatch) => {
+export const getListSongAPI = () => async (dispatch) => {
     let res = await songService.getSongs();
-    dispatch(getAllSongs(res));
+    dispatch(getListSong(res));
 };
 
-export const getOneSongAPI = (id) => async (dispatch) => {
+export const getSongDetailAPI = (id) => async (dispatch) => {
     let res = await songService.getSong(id);
-    dispatch(getOneSong(res));
+    dispatch(getSongDetail(res));
 };

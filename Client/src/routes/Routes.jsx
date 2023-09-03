@@ -14,10 +14,6 @@ export default function Routes() {
             children: [
                 ...publishRoutes,
                 { path: "/music/", element: <Home title="MY SPACE" /> },
-                {
-                    path: "/music/search-results",
-                    element: <SearchResult />,
-                },
                 { path: "*", element: <NotFound title="Not found" /> },
             ],
         },

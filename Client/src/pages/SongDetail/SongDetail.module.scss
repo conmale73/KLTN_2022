@@ -1,0 +1,231 @@
+.songDetail {
+    display: flex;
+    padding: 5% 0 0 0;
+    width: 100%;
+    height: fit-content;
+    .selectedSong {
+        display: flex;
+        width: 35%;
+        flex-direction: column;
+        align-items: center;
+        flex-shrink: 0;
+
+        .songImage {
+            display: flex;
+            width: 360px;
+            height: 360px;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+            &:hover img {
+                opacity: 0.5;
+            }
+
+            &:hover .imagePlayButton {
+                opacity: 1;
+            }
+            .imagePlayButton {
+                opacity: 0;
+                position: absolute;
+                top: 50%;
+                left: 45%;
+                cursor: pointer;
+                &:hover {
+                    color: #04aefe;
+                }
+            }
+        }
+
+        .songInfo {
+            display: flex;
+            width: 360px;
+            height: fit-content;
+            padding-top: 9px;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            margin: 0 0 10px 0;
+            .songName {
+                font-size: 25px;
+                width: fit-content;
+                font-weight: 500;
+                color: #ffffff;
+                display: flex;
+                align-items: center;
+            }
+
+            .artistList {
+                display: flex;
+                width: fit-content;
+                overflow: hidden;
+
+                .artist {
+                    font-size: 20px;
+                    font-weight: 500;
+                    margin-right: 5px;
+                    color: #a8a8a8;
+
+                    --max-lines: 1;
+                    display: -webkit-box;
+                    -webkit-line-clamp: var(--max-lines);
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    &:hover {
+                        text-decoration: underline;
+                        cursor: pointer;
+                        color: #04aefe;
+                    }
+                }
+            }
+        }
+        .buttons {
+            display: flex;
+            width: 360px;
+            height: fit-content;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 9px;
+
+            .playButton {
+                width: 100px;
+                height: 40px;
+                border-radius: 5px;
+                background-color: #424242;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: #696969;
+                }
+                &:hover .buttonIcon {
+                    color: #04aefe;
+                }
+                &:hover .buttonText {
+                    color: #04aefe;
+                }
+                .buttonIcon {
+                    width: fit-content;
+                    height: fit-content;
+                }
+                .buttonText {
+                    font-size: 20px;
+                    font-weight: 500;
+                    color: #ffffff;
+                }
+            }
+            .toolButtons {
+                height: 55px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .likeButton {
+                    width: 20px;
+                    height: 20px;
+                    margin: 0 10px 0 0;
+                    & :hover {
+                        cursor: pointer;
+                        color: #04aefe;
+                    }
+                }
+                .optionsButton {
+                    width: 20px;
+                    height: 20px;
+                    margin: 0 10px 0 0;
+                    & :hover {
+                        cursor: pointer;
+                        color: #04aefe;
+                    }
+                }
+            }
+        }
+    }
+    .listSong {
+        width: 65%;
+        height: fit-content;
+        margin: 0 0 0 3%;
+        border-radius: 5px;
+        .listSongHeader {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgb(201, 201, 201);
+            background-color: #53535362;
+            .infoCollumn {
+                width: 40%;
+                margin: 0 0 0 75px;
+                display: flex;
+            }
+            .durationCollumn {
+                width: 5%;
+                height: 55px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .duration {
+                    font-size: 13px;
+                    font-weight: 400;
+                    color: #c5c5c5;
+                }
+            }
+            .albumCollumn {
+                width: 35%;
+                height: 55px;
+                display: flex;
+                margin: 0 0 0 7%;
+                justify-content: flex-start;
+                align-items: center;
+            }
+            .buttonsCollumn {
+                width: 10%;
+                height: 55px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        .selectedSongList {
+            width: 100%;
+            height: fit-content;
+            display: flex;
+            align-items: center;
+        }
+
+        .para {
+            font-size: 25px;
+            font-weight: 600;
+            margin: 0 0 0 5px;
+        }
+
+        .listSongBody {
+            width: 100%;
+            height: 440px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: scroll;
+            gap: 10px;
+            border-radius: 5px;
+
+            &::-webkit-scrollbar {
+                width: 5px;
+            }
+            &::-webkit-scrollbar-track {
+                background: #424242;
+            }
+            &::-webkit-scrollbar-thumb {
+                background: #696969;
+            }
+            &::-webkit-scrollbar-thumb:hover {
+                background: #04aefe;
+            }
+        }
+    }
+}

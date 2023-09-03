@@ -4,6 +4,8 @@
     margin: 10px 0 10px 0;
     padding: 10px;
     border-radius: 5px;
+    height: fit-content;
+    min-height: 75px;
     &:hover {
         background-color: rgb(35, 30, 110, 0.8);
     }
@@ -51,7 +53,7 @@
 
     .infoContainer {
         width: 40%;
-        height: 55px;
+        height: fit-content;
         display: flex;
         flex-direction: column;
 
@@ -69,6 +71,7 @@
             &:hover {
                 cursor: pointer;
                 text-decoration: underline;
+                color: #04aefe;
             }
         }
         .artistList {
@@ -121,6 +124,7 @@
             &:hover {
                 cursor: pointer;
                 text-decoration: underline;
+                color: #04aefe;
             }
         }
     }

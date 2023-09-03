@@ -23,12 +23,6 @@
                 display: flex;
 
                 .quickPicksItems {
-                    --quickPicksItemWidth: 300px;
-                    --quickPicksItemHeight: 60px;
-                    --quickPicksItemPerCollumn: 5;
-                    --quickPicksItemMarginBottom: 16px;
-                    --quickPicksItemMarginRight: 24px;
-
                     display: flex;
                     flex-flow: column wrap;
                     height: calc(

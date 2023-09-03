@@ -6,7 +6,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { BsChevronRight, BsChevronLeft } from "react-icons/bs";
-import MediumSong from "../../Song/Song(Medium)";
+import MediumSong from "../../Song/SongMedium";
 const ListSongs = (props) => {
     const isSlideSong = props.isSlideSong;
     const songs = props.songs;

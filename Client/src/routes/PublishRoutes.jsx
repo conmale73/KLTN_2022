@@ -7,12 +7,13 @@ const LibraryPlaylist = lazy(() => import("../pages/LibraryPlaylist"));
 const Leaderboard = lazy(() => import("../pages/Leaderboard"));
 const SearchResult = lazy(() => import("../pages/SearchResult"));
 const AuthenticationPage = lazy(() => import("../pages/AuthenticationPage"));
-
+const SongDetail = lazy(() => import("../pages/SongDetail"));
+const PlaylistDetail = lazy(() => import("../pages/PlaylistDetail"));
 export const publishRoutes = [
     {
         index: true,
         element: (
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<Loading isFullScreen={true} />}>
                 <Home title="MY SPACE" />
             </Suspense>
         ),
@@ -20,7 +21,7 @@ export const publishRoutes = [
     {
         path: "/authentication",
         element: (
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<Loading isFullScreen={true} />}>
                 <AuthenticationPage title="Login" />
             </Suspense>
         ),
@@ -28,7 +29,7 @@ export const publishRoutes = [
     {
         path: "/music/home",
         element: (
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<Loading isFullScreen={true} />}>
                 <Home title="MY SPACE" />
             </Suspense>
         ),
@@ -36,7 +37,7 @@ export const publishRoutes = [
     {
         path: "/music/history",
         element: (
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<Loading isFullScreen={true} />}>
                 <History title="Recently Songs/Playlists" />
             </Suspense>
         ),
@@ -44,7 +45,7 @@ export const publishRoutes = [
     {
         path: "/music/library",
         element: (
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<Loading isFullScreen={true} />}>
                 <Library title="Library" />
             </Suspense>
         ),
@@ -52,7 +53,7 @@ export const publishRoutes = [
     {
         path: "/music/library/playlists",
         element: (
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<Loading isFullScreen={true} />}>
                 <LibraryPlaylist title="My Playlists" />
             </Suspense>
         ),
@@ -60,16 +61,32 @@ export const publishRoutes = [
     {
         path: "/music/leaderboard",
         element: (
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<Loading isFullScreen={true} />}>
                 <Leaderboard title="Top 100 songs" />
             </Suspense>
         ),
     },
     {
-        path: "/music/search-results?q=:query",
+        path: "/music/search-results",
         element: (
-            <Suspense fallback={<Loading />}>
+            <Suspense fallback={<Loading isFullScreen={true} />}>
                 <SearchResult />
+            </Suspense>
+        ),
+    },
+    {
+        path: "/music/songs/:id",
+        element: (
+            <Suspense fallback={<Loading isFullScreen={true} />}>
+                <SongDetail />
+            </Suspense>
+        ),
+    },
+    {
+        path: "/music/playlists/:id",
+        element: (
+            <Suspense fallback={<Loading isFullScreen={true} />}>
+                <PlaylistDetail />
             </Suspense>
         ),
     },

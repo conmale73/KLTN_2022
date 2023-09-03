@@ -13,6 +13,12 @@ export const songService = {
     //     );
     // },
     querySong(query) {
-        return axiosClient.get(`/search/?q=${query}&f=songs&r=VN&l=vi_VN`);
+        return axiosClient.get(`/search/?q=${query}&f=songs&r=VN`);
+    },
+    getYoutubeSongMetadata(id) {
+        return axiosClient.get(`/songs/metadata/?videoId=${id}`);
+    },
+    getSongRelated(id) {
+        return axiosClient.get(`/songs/related/?videoId=${id}&r=VN`);
     },
 };

@@ -1,7 +1,7 @@
 import styles from "./HomeModules.module.scss";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import ShortSmallSong from "../../../components/Song/Song(ShortSmall)";
+import ShortSmallSong from "../../../components/Song/SongShortSmall";
 import ListPlaylists from "../../../components/ListComponent/ListPlaylists";
 import ListSongs from "../../../components/ListComponent/ListSongs";
 import { Swiper, SwiperSlide } from "swiper/react";

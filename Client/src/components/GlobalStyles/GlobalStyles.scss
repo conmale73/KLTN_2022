@@ -1,8 +1,36 @@
 // @import 'normalize.css';
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap");
 :root {
-    --primary-bg: #ffd400;
-    --primary-bg-btn: #ffac0a;
+    @media (min-width: 1578px) {
+        --globalScrollbarWidth: 10px;
+        --guide-width: 370px;
+        --globalContentWidth: min(
+            calc(
+                100vw - 200px - var(--guide-width) - var(--globalScrollbarWidth)
+            ),
+            1478px
+        );
+        //QuickPicks
+        --quickPicksItemWidth: 300px;
+        --quickPicksItemHeight: 60px;
+        --quickPicksItemPerCollumn: 5;
+        --quickPicksItemMarginBottom: 16px;
+        --quickPicksItemMarginRight: 24px;
+
+        //PlaylistDetail image
+        --playlistDetailImageWidth: 300px;
+        --playlistDetailImageHeight: 300px;
+
+        //Detail
+        --detail-header-thumbnails-size: 264px;
+
+        --divider-height: 50px;
+
+        --detail-header-renderer-collapsed-description-height: calc(
+            2 * 14px * var(--body-line-height)
+        );
+        --body-line-height: 1.4;
+    }
 }
 * {
     padding: 0;
@@ -12,6 +40,7 @@
 
 html {
     font-size: 62.5%;
+    scroll-behavior: smooth;
 }
 
 body {
@@ -62,7 +91,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 ::-webkit-scrollbar {
-    width: 5px;
+    width: var(--globalScrollbarWidth);
     background-color: #525252;
 }
 
@@ -73,7 +102,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 ::-webkit-scrollbar-thumb:hover {
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    background-color: #242424;
+    background: #2185d0;
 }
 
 .swiper {

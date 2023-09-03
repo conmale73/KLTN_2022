@@ -111,15 +111,17 @@ const SmallSong = (props) => {
                         </div>
 
                         <div className={styles.info}>
-                            <div className={styles.songName}>{props.title}</div>
+                            <Link to={`/music/songs/${props.videoId}`}>
+                                <div className={styles.songName}>
+                                    {props.title}
+                                </div>
+                            </Link>
                             <div
                                 className={styles.artistList}
                                 title={props.artists}
                             >
                                 {props.artists.map((artist, index) => (
-                                    <Link
-                                        to={`/music/artists/?id=${artist.id}`}
-                                    >
+                                    <Link to={`/music/artists/${artist.id}`}>
                                         {artist.id !== null ? (
                                             <p
                                                 key={index}

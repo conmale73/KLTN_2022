@@ -1,5 +1,5 @@
 import styles from "./SongsSearchResult.module.scss";
-import LongSong from "../../../components/Song/Song(Long)";
+import LongSong from "../../../components/Song/SongLong";
 import { searchService } from "../../../services";
 import { useEffect, useState } from "react";
 
@@ -28,18 +28,19 @@ const SongsSearchResult = (props) => {
     }, [searchResults]);
     return (
         <div className={styles.songsSearchResult}>
-            {searchResults.map((song) => {
+            {searchResults.map((song, index) => {
                 return (
                     <LongSong
+                        key={index}
                         videoId={song?.videoId}
                         title={song?.title}
                         artists={song?.artists}
                         thumbnails={song?.thumbnails}
-                        album={song?.album?.name}
+                        album={song?.album}
                         duration={song?.duration}
                         category={song?.category}
                         liked={song?.liked}
-                        isInHistory={false}
+                        buttons={false}
                     />
                 );
             })}

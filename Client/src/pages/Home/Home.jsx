@@ -35,7 +35,7 @@ const Home = (props) => {
     return (
         <div className={styles.home}>
             {loading ? (
-                <Loading />
+                <Loading isFullScreen={true} />
             ) : error ? (
                 <p>{error}</p>
             ) : (

@@ -3,22 +3,22 @@ import { createSlice } from "@reduxjs/toolkit";
 const songsSlice = createSlice({
     name: "songs",
     initialState: {
-        allSongs: {
+        listSong: {
             data: [],
         },
-        oneSong: {
+        songDetail: {
             data: {},
         },
     },
     reducers: {
-        getAllSongs(state, action) {
-            state.allSongs.data = action.payload;
+        getListSong(state, action) {
+            state.listSong.data = action.payload;
         },
-        getOneSong(state, action) {
-            state.oneSong.data = action.payload;
+        getSongDetail(state, action) {
+            state.songDetail.data = action.payload;
         },
     },
 });
-export const { getAllSongs, getOneSong } = songsSlice.actions;
+export const { getListSong, getSongDetail } = songsSlice.actions;
 
 export default songsSlice.reducer;

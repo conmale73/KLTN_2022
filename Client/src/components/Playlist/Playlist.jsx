@@ -36,7 +36,7 @@ const Playlist = (props) => {
 
             <div className={styles.info}>
                 <Link
-                    to={`/music/playlist/${props.playlistId}`}
+                    to={`/music/playlists/${props.playlistId}`}
                     key={props.playlistId}
                 >
                     <div className={styles.playlistName} title={props.title}>

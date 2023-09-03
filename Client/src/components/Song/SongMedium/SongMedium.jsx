@@ -46,17 +46,17 @@ function MediumSong(props) {
                 <div className={styles.songImageContainer}>
                     <img
                         src={
-                            props.thumbnails[0]?.url ||
-                            props.thumbnails[1]?.url ||
-                            props.thumbnails[2]?.url ||
-                            props.thumbnails[3]?.url ||
-                            props.thumbnails[4]?.url
+                            props?.thumbnails[0]?.url ||
+                            props?.thumbnails[1]?.url ||
+                            props?.thumbnails[2]?.url ||
+                            props?.thumbnails[3]?.url ||
+                            props?.thumbnails[4]?.url
                         }
                         className={styles.songImage}
                     />
                     <div
                         className={styles.playButtonContainer}
-                        key={props.videoId}
+                        key={props?.videoId}
                         onClick={(e) => handleClickPlay(e)}
                     >
                         <FaPlay
@@ -67,18 +67,18 @@ function MediumSong(props) {
                     </div>
                 </div>
                 <div className={styles.info}>
-                    <Link to={`/music/song/${props.videoId}`}>
+                    <Link to={`/music/songs/${props?.videoId}`}>
                         <div
                             className={styles.songName}
-                            title={props.title}
-                            key={props.videoId}
+                            title={props?.title}
+                            key={props?.videoId}
                         >
-                            {props.title}
+                            {props?.title}
                         </div>
                     </Link>
                     <div className={styles.artistList}>
-                        {props.artists.map((artist, index) => (
-                            <Link to={`/music/artists/?id=${artist.id}`}>
+                        {props?.artists?.map((artist, index) => (
+                            <Link to={`/music/artists/${artist.id}`}>
                                 {artist.id !== null ? (
                                     <p
                                         key={index}
@@ -86,7 +86,7 @@ function MediumSong(props) {
                                         title={artist.name}
                                     >
                                         {artist.name}
-                                        {index < props.artists.length - 1 ? (
+                                        {index < props?.artists.length - 1 ? (
                                             <span> </span>
                                         ) : (
                                             ""

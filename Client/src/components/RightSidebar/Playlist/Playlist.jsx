@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import styles from "./playlist.module.scss";
-import SmallSong from "../../Song/Song(Small)/Song(Small)";
+import SmallSong from "../../Song/SongSmall/SongSmall";
 
 const Playlist = () => {
     const songs = useSelector((state) => state.listSongs.list);

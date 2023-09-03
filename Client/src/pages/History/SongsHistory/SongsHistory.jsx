@@ -1,5 +1,5 @@
 import styles from "./SongsHistory.module.scss";
-import LongSong from "../../../components/Song/Song(Long)";
+import LongSong from "../../../components/Song/SongLong";
 const soundList = [
     {
         videoId: 0,
@@ -129,6 +129,7 @@ const SongsHistory = (props) => {
                         album={song.album}
                         duration={song.duration}
                         liked={song.liked}
+                        buttons={true}
                     />
                 );
             })}
