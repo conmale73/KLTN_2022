@@ -9,10 +9,10 @@ Back-end: Flask Python, Express, NodeJS, MongoDB
 - Play music, change volumn, loop, random, next/prev song
 - Search music from YouTube
 - Add/remove song to/from current playlist
+- Get data of a song/playlist
 
 ### In Development:
 - Like/commend a song
-- Get data of a song/playlist
 - Add your own music
 - Play a playlist
 - Create playlists
