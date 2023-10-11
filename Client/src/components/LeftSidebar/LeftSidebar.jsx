@@ -23,12 +23,14 @@ function LeftSidebar() {
 
             <div className="info">
                 <div className="avatar">
-                    <img src="/photos/avatar.jpg"></img>
+                    <Link to="/profile/">
+                        <img src="/photos/avatar.jpg"></img>
+                    </Link>
                 </div>
                 <div className="name">
                     <AnimatedText text={"Welcome, " + user} />
                 </div>
-                <div className="membership">Premium Membership</div>
+                {/* <div className="membership">Premium Membership</div> */}
             </div>
             <Menu />
             <button

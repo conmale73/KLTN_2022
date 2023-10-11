@@ -81,40 +81,34 @@ const LongSong = (props) => {
                         <Link to={`/music/songs/${props?.videoId}`}>
                             <div className={styles.name}>{props?.title}</div>
                         </Link>
-                        <div className={styles.artistList}>
-                            {props?.artists.map((artist, index) => (
-                                <Link to={`/music/artists/${artist.id}`}>
-                                    {artist.id !== null ? (
-                                        <p
-                                            key={index}
-                                            className={styles.artist}
-                                            title={artist.name}
-                                        >
-                                            {artist.name}
-                                            {index <
-                                            props?.artists.length - 1 ? (
-                                                <span> </span>
-                                            ) : (
-                                                ""
-                                            )}
-                                        </p>
-                                    ) : (
-                                        <></>
-                                    )}
-                                </Link>
-                            ))}
-                        </div>
                     </div>
-                    <div className={styles.durationContainer}>
-                        <p className={styles.duration}>{props?.duration}</p>
+                    <div className={styles.artistList}>
+                        {props?.artists.map((artist, index) => (
+                            <Link to={`/music/users/${artist.id}`}>
+                                {artist.id !== null ? (
+                                    <p
+                                        key={index}
+                                        className={styles.artist}
+                                        title={artist.name}
+                                    >
+                                        {artist.name}
+                                        {index < props?.artists.length - 1 ? (
+                                            <span> </span>
+                                        ) : (
+                                            ""
+                                        )}
+                                    </p>
+                                ) : (
+                                    <></>
+                                )}
+                            </Link>
+                        ))}
                     </div>
-
                     <div className={styles.albumContainer}>
                         <Link to={`/music/albums/${props?.album?.id}`}>
                             <p className={styles.album}>{props?.album?.name}</p>
                         </Link>
                     </div>
-
                     {buttons && (
                         <div className={styles.buttonsContainer}>
                             <div
@@ -135,6 +129,10 @@ const LongSong = (props) => {
                             </div>
                         </div>
                     )}
+
+                    <div className={styles.durationContainer}>
+                        <p className={styles.duration}>{props?.duration}</p>
+                    </div>
                 </div>
             ) : (
                 <></>

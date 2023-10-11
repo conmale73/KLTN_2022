@@ -6,8 +6,15 @@
     border-radius: 5px;
     height: fit-content;
     min-height: 75px;
+    gap: 2%;
     &:hover {
         background-color: rgb(35, 30, 110, 0.8);
+        .buttonsContainer {
+            display: flex;
+        }
+        .durationContainer {
+            display: none;
+        }
     }
     &:hover img {
         opacity: 0.7;
@@ -52,7 +59,7 @@
     }
 
     .infoContainer {
-        width: 40%;
+        width: 30%;
         height: fit-content;
         display: flex;
         flex-direction: column;
@@ -74,26 +81,21 @@
                 color: #04aefe;
             }
         }
-        .artistList {
-            display: flex;
-            width: 100%;
-            overflow: hidden;
+    }
+    .artistList {
+        display: flex;
+        width: 25%;
+        overflow: hidden;
 
-            .artist {
-                font-size: 1.2rem;
-                font-weight: 500;
-                margin-right: 5px;
+        .artist {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-right: 5px;
 
-                --max-lines: 1;
-                display: -webkit-box;
-                -webkit-line-clamp: var(--max-lines);
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-                &:hover {
-                    text-decoration: underline;
-                    cursor: pointer;
-                    color: #04aefe;
-                }
+            &:hover {
+                text-decoration: underline;
+                cursor: pointer;
+                color: #04aefe;
             }
         }
     }
@@ -110,7 +112,7 @@
         }
     }
     .albumContainer {
-        width: 35%;
+        width: 25%;
         height: 55px;
         display: flex;
         margin: 0 0 0 5%;
@@ -131,9 +133,10 @@
     .buttonsContainer {
         width: 10%;
         height: 55px;
-        display: flex;
+        display: none;
         justify-content: space-between;
         align-items: center;
+
         .likeButton {
             width: 20px;
             height: 20px;

@@ -68,7 +68,7 @@ const ShortSmallSong = (props) => {
 
                 <div className={styles.artistList}>
                     {item.artists.map((artist, index) => (
-                        <Link to={`/music/artists/${artist.id}`}>
+                        <Link to={`/music/users/${artist.id}`}>
                             <p
                                 key={index}
                                 className={styles.artist}

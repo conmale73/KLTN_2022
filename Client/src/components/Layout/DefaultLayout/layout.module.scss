@@ -6,6 +6,7 @@
 
 .top {
     flex: 1;
+    height: calc(100% - var(--globalFooterHeight));
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -19,7 +20,7 @@
 
 .left {
     width: 250px; /* Adjust the width of the left sidebar */
-    height: 100%;
+    height: calc(100% - var(--globalFooterHeight));
     position: fixed;
     top: 0;
     left: 0;
@@ -57,7 +58,10 @@
 }
 
 .bottom {
+    position: fixed;
     width: 100%;
+    height: var(--globalFooterHeight);
+    bottom: 0;
 }
 
 .left,

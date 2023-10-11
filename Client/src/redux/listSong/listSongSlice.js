@@ -12,6 +12,7 @@ items = items.filter(function (item) {
 
 const initialState = {
     list: items,
+    isPlaying: false,
     currentSong: items[0],
 };
 
@@ -60,9 +61,21 @@ const listSongsSlice = createSlice({
             state.list = state.list.filter((song) => song.videoId !== songID);
             localStorage.setItem("listSong", JSON.stringify(state.list));
         },
+        clearListSong(state) {
+            state.list = [];
+            localStorage.setItem("listSong", JSON.stringify(state.list));
+        },
+        setIsPlaying(state, action) {
+            state.isPlaying = action.payload;
+        },
     },
 });
-export const { addSong, removeSong, changeCurrentSong } =
-    listSongsSlice.actions;
+export const {
+    addSong,
+    removeSong,
+    changeCurrentSong,
+    clearListSong,
+    setIsPlaying,
+} = listSongsSlice.actions;
 
 export default listSongsSlice.reducer;

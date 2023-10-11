@@ -58,7 +58,7 @@ function Footer() {
 
                         <div className={styles.artistList}>
                             {currentSongRedux?.artists.map((artist, index) => (
-                                <Link to={`/music/artists/${artist.id}`}>
+                                <Link to={`/music/users/${artist.id}`}>
                                     {artist.id !== null ? (
                                         <p
                                             key={index}

@@ -93,30 +93,24 @@
             gap: 9px;
 
             .playButton {
-                width: 100px;
+                width: 150px;
                 height: 40px;
                 border-radius: 5px;
-                background-color: #424242;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 cursor: pointer;
-
+                border: 1px solid #04aefe;
                 &:hover {
-                    background-color: #696969;
+                    background-color: #04aefe;
                 }
-                &:hover .buttonIcon {
-                    color: #04aefe;
+                .playIcon {
+                    width: 20px;
+                    height: 20px;
+                    margin: 0 10px 0 0;
                 }
-                &:hover .buttonText {
-                    color: #04aefe;
-                }
-                .buttonIcon {
-                    width: fit-content;
-                    height: fit-content;
-                }
-                .buttonText {
-                    font-size: 20px;
+                .playText {
+                    font-size: 15px;
                     font-weight: 500;
                     color: #ffffff;
                 }
@@ -150,7 +144,6 @@
     .listSong {
         width: 65%;
         height: fit-content;
-        margin: 0 0 0 3%;
         border-radius: 5px;
         .listSongHeader {
             width: 100%;
@@ -215,16 +208,7 @@
             border-radius: 5px;
 
             &::-webkit-scrollbar {
-                width: 5px;
-            }
-            &::-webkit-scrollbar-track {
-                background: #424242;
-            }
-            &::-webkit-scrollbar-thumb {
-                background: #696969;
-            }
-            &::-webkit-scrollbar-thumb:hover {
-                background: #04aefe;
+                width: 0px;
             }
         }
     }

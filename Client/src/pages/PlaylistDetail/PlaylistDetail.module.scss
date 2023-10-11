@@ -68,6 +68,59 @@
                 }
             }
         }
+        .buttons {
+            grid-area: actions;
+            align-self: start;
+            display: flex;
+            gap: 10px;
+            .playButton {
+                width: 150px;
+                height: 40px;
+                border-radius: 5px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                border: 1px solid #04aefe;
+                &:hover {
+                    background-color: #04aefe;
+                }
+                .playIcon {
+                    width: 20px;
+                    height: 20px;
+                    margin: 0 10px 0 0;
+                }
+                .playText {
+                    font-size: 15px;
+                    font-weight: 500;
+                    color: #ffffff;
+                }
+            }
+            .saveButton {
+                width: 150px;
+                height: 40px;
+                border-radius: 5px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                border: 1px solid #04aefe;
+
+                &:hover {
+                    background-color: #04aefe;
+                }
+                .saveIcon {
+                    width: 20px;
+                    height: 20px;
+                    margin: 0 10px 0 0;
+                }
+                .saveText {
+                    font-size: 15px;
+                    font-weight: 500;
+                    color: #ffffff;
+                }
+            }
+        }
     }
     .listSong {
         width: 100%;

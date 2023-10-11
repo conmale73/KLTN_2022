@@ -42,64 +42,69 @@ function MediumSong(props) {
 
     return (
         <>
-            <div className={styles.mediumSong}>
-                <div className={styles.songImageContainer}>
-                    <img
-                        src={
-                            props?.thumbnails[0]?.url ||
-                            props?.thumbnails[1]?.url ||
-                            props?.thumbnails[2]?.url ||
-                            props?.thumbnails[3]?.url ||
-                            props?.thumbnails[4]?.url
-                        }
-                        className={styles.songImage}
-                    />
-                    <div
-                        className={styles.playButtonContainer}
-                        key={props?.videoId}
-                        onClick={(e) => handleClickPlay(e)}
-                    >
-                        <FaPlay
-                            size="20px"
-                            title="Add to Now Playing"
-                            className={styles.playButton}
+            {props ? (
+                <div className={styles.mediumSong}>
+                    <div className={styles.songImageContainer}>
+                        <img
+                            src={
+                                props?.thumbnails[0]?.url ||
+                                props?.thumbnails[1]?.url ||
+                                props?.thumbnails[2]?.url ||
+                                props?.thumbnails[3]?.url ||
+                                props?.thumbnails[4]?.url
+                            }
+                            className={styles.songImage}
                         />
-                    </div>
-                </div>
-                <div className={styles.info}>
-                    <Link to={`/music/songs/${props?.videoId}`}>
                         <div
-                            className={styles.songName}
-                            title={props?.title}
+                            className={styles.playButtonContainer}
                             key={props?.videoId}
+                            onClick={(e) => handleClickPlay(e)}
                         >
-                            {props?.title}
+                            <FaPlay
+                                size="20px"
+                                title="Add to Now Playing"
+                                className={styles.playButton}
+                            />
                         </div>
-                    </Link>
-                    <div className={styles.artistList}>
-                        {props?.artists?.map((artist, index) => (
-                            <Link to={`/music/artists/${artist.id}`}>
-                                {artist.id !== null ? (
-                                    <p
-                                        key={index}
-                                        className={styles.artist}
-                                        title={artist.name}
-                                    >
-                                        {artist.name}
-                                        {index < props?.artists.length - 1 ? (
-                                            <span> </span>
-                                        ) : (
-                                            ""
-                                        )}
-                                    </p>
-                                ) : (
-                                    <></>
-                                )}
-                            </Link>
-                        ))}
+                    </div>
+                    <div className={styles.info}>
+                        <Link to={`/music/songs/${props?.videoId}`}>
+                            <div
+                                className={styles.songName}
+                                title={props?.title}
+                                key={props?.videoId}
+                            >
+                                {props?.title}
+                            </div>
+                        </Link>
+                        <div className={styles.artistList}>
+                            {props?.artists?.map((artist, index) => (
+                                <Link to={`/music/users/${artist.id}`}>
+                                    {artist.id !== null ? (
+                                        <p
+                                            key={index}
+                                            className={styles.artist}
+                                            title={artist.name}
+                                        >
+                                            {artist.name}
+                                            {index <
+                                            props?.artists.length - 1 ? (
+                                                <span> </span>
+                                            ) : (
+                                                ""
+                                            )}
+                                        </p>
+                                    ) : (
+                                        <></>
+                                    )}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
+            ) : (
+                <></>
+            )}
         </>
     );
 }

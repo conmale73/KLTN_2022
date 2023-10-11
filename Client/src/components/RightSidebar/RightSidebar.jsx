@@ -39,7 +39,9 @@ function RightSidebar() {
                     <p className="text-2xl font-medium">Playlist</p>
                 </div>
             </div>
-            <div>{tab === 0 ? <NowPlaying /> : <Playlist />}</div>
+            <div className="rightSidebarContent">
+                {tab === 0 ? <NowPlaying /> : <Playlist />}
+            </div>
             <button
                 className="toggleButtonRight"
                 onClick={toggleSidebar}

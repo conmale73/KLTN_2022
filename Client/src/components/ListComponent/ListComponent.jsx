@@ -17,7 +17,7 @@ const ListComponent = (props) => {
             <div className="listComponent">
                 {isSlideSong ? (
                     <div className="inlineList">
-                        {songs.map((song) => (
+                        {songs?.map((song) => (
                             <MediumSong {...song} />
                         ))}
                     </div>

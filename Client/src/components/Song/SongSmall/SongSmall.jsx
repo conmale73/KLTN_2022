@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styles from "./Song(Small).module.scss";
 import clsx from "clsx";
 import { BsFillPlayFill, BsFillPauseFill } from "react-icons/bs";
@@ -7,9 +7,9 @@ import * as ContextMenu from "@radix-ui/react-context-menu";
 import "./SongContextMenu.css";
 
 import {
-    addSong,
     removeSong,
     changeCurrentSong,
+    setIsPlaying,
 } from "../../../redux/listSong/listSongSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -19,13 +19,12 @@ const SmallSong = (props) => {
         JSON.parse(localStorage.getItem("listSong"))
     );
     const {
-        isPlaying,
-        setIsPlaying,
         currentSongIndex,
         setCurrentSongIndex,
         currentSong,
         setCurrentSong,
     } = useSongContext();
+    const isPlaying = useSelector((state) => state.listSongs.isPlaying);
 
     const dispatch = useDispatch();
     let currentSongRedux = useSelector((state) => state.listSongs.currentSong);
@@ -39,11 +38,11 @@ const SmallSong = (props) => {
         setCurrentSong(song);
         setCurrentSongIndex(list.indexOf(song));
         if (!isPlaying) {
-            setIsPlaying(true); // Start playing the song
+            dispatch(setIsPlaying(true)); // Start playing the song
         }
     };
     const handleClickPause = () => {
-        setIsPlaying(false);
+        dispatch(setIsPlaying(false));
     };
     const playingSongStyle = "#2c239c";
 
@@ -61,7 +60,7 @@ const SmallSong = (props) => {
                 setCurrentSongIndex(0);
                 dispatch(changeCurrentSong(list[currentSongIndex]));
                 setCurrentSong(currentSongRedux);
-                setIsPlaying(false);
+                dispatch(setIsPlaying(false));
             }
         } catch (err) {
             console.log(err);
@@ -120,8 +119,8 @@ const SmallSong = (props) => {
                                 className={styles.artistList}
                                 title={props.artists}
                             >
-                                {props.artists.map((artist, index) => (
-                                    <Link to={`/music/artists/${artist.id}`}>
+                                {props.artists?.map((artist, index) => (
+                                    <Link to={`/music/users/${artist.id}`}>
                                         {artist.id !== null ? (
                                             <p
                                                 key={index}

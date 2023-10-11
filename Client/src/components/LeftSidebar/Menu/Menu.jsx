@@ -80,7 +80,7 @@ const Menu = () => {
                             <div className="icon">
                                 <Chart />
                             </div>
-                            <div className="text">Top 100</div>
+                            <div className="text">Leaderboard</div>
                         </div>
                     </Link>
 

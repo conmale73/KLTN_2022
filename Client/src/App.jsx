@@ -4,6 +4,7 @@ import "./App.css";
 import useShowScrollbar from "./hooks/useShowScrollbar";
 import { SongProvider } from "./context/SongContext";
 import { useEffect } from "react";
+
 function App() {
     useShowScrollbar();
 

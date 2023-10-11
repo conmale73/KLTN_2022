@@ -4,9 +4,11 @@ import clsx from "clsx";
 import Divider from "../../components/Divider";
 import SongsSearchResult from "./Songs";
 import PlaylistsSearchResult from "./Playlists";
+import { useSelector, useDispatch } from "react-redux";
 
 const SearchResult = () => {
-    const query = localStorage.getItem("searchInput");
+    const query = useSelector((state) => state.search.input);
+
     document.title = "Search results for " + query;
     const [tab, setTab] = useState(0);
     const activeTabStyle = "underline";

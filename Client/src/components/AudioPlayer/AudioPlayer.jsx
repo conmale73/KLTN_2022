@@ -8,10 +8,13 @@ import ReactPlayer from "react-player/youtube";
 import Duration from "./Duration";
 import { useSongContext } from "../../context/SongContext";
 import { useDispatch, useSelector } from "react-redux";
-import { changeCurrentSong } from "../../redux/listSong/listSongSlice";
+import {
+    changeCurrentSong,
+    setIsPlaying,
+} from "../../redux/listSong/listSongSlice";
 
 const AudioPlayer = (props) => {
-    const { isPlaying, setIsPlaying } = useSongContext();
+    const isPlaying = useSelector((state) => state.listSongs.isPlaying);
     const [isRepeat, setIsRepeat] = useState("off");
     const [isRandom, setIsRandom] = useState(false);
     const [loop, setLoop] = useState(false);
@@ -38,12 +41,12 @@ const AudioPlayer = (props) => {
                 Math.random() * props.soundList.length
             );
             setCurrentSongIndex(nextSongIndex);
-            setIsPlaying(true);
+            dispatch(setIsPlaying(true));
         } else {
             const nextSongIndex =
                 (currentSongIndex + 1) % props.soundList.length;
             setCurrentSongIndex(nextSongIndex);
-            setIsPlaying(true);
+            dispatch(setIsPlaying(true));
         }
     };
     const playPrevSong = () => {
@@ -52,14 +55,14 @@ const AudioPlayer = (props) => {
                 Math.random() * props.soundList.length
             );
             setCurrentSongIndex(prevSongIndex);
-            setIsPlaying(true);
+            dispatch(setIsPlaying(true));
         } else {
             const previousSongIndex =
                 (currentSongIndex - 1 + props.soundList.length) %
                 props.soundList.length;
             setCurrentSongIndex(previousSongIndex);
             playerRef.current.url = currentSongRedux?.url;
-            setIsPlaying(true);
+            dispatch(setIsPlaying(true));
         }
     };
 
@@ -81,9 +84,9 @@ const AudioPlayer = (props) => {
         console.log("currentSongRedux: ", currentSongRedux);
 
         if (!isPlaying) {
-            setIsPlaying(true);
+            dispatch(setIsPlaying(true));
         } else {
-            setIsPlaying(false);
+            dispatch(setIsPlaying(false));
         }
     };
     const handleClickRepeat = (e) => {
@@ -109,14 +112,14 @@ const AudioPlayer = (props) => {
     const handleOnEnded = () => {
         const isLastSong = currentSongIndex + 1 === props.soundList.length;
         if (isRepeat === "once") {
-            setIsPlaying(true);
+            dispatch(setIsPlaying(true));
             playerRef.current.seekTo(0);
         } else if (isRepeat === "all") {
-            setIsPlaying(true);
+            dispatch(setIsPlaying(true));
             playNextSong();
         } else if (isRepeat === "off" && isLastSong && !isRandom) {
             // Stop the player or perform any other desired action
-            setIsPlaying(false);
+            dispatch(setIsPlaying(false));
         } else {
             playNextSong();
         }
@@ -203,14 +206,14 @@ const AudioPlayer = (props) => {
                         playerRef.current.seekTo(currentTime, "seconds");
                     }}
                     onMouseDown={(e) => {
-                        setIsPlaying(false);
+                        dispatch(setIsPlaying(false));
                     }}
                     onChange={(e) => {
                         setCurrentTime(e.target.value);
                         playerRef.current.seekTo(currentTime, "seconds");
                     }}
                     onMouseUp={(e) => {
-                        setIsPlaying(true);
+                        dispatch(setIsPlaying(true));
                     }}
                 />
 

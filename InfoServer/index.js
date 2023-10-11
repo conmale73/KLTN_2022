@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
@@ -8,6 +9,7 @@ const albumsRouter = require("./routes/albums");
 const artistsRouter = require("./routes/artists");
 const usersRoutes = require("./routes/users");
 const authRoutes = require("./routes/auth");
+const morgan = require("morgan");
 
 // Initialize Express app
 const app = express();
@@ -18,7 +20,7 @@ database.connect();
 
 // Middlewares
 app.use(express.json());
-
+app.use(morgan("dev"));
 app.use(cors());
 // Routes
 app.use("/api/auth", authRoutes);

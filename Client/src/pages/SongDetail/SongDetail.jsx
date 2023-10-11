@@ -2,7 +2,6 @@ import styles from "./SongDetail.module.scss";
 import { BsPlayCircle, BsFillPlayFill } from "react-icons/bs";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { SlOptions } from "react-icons/sl";
-import { getSongDetail } from "../../redux/song/songsSlice";
 import { songService } from "../../services";
 import { useState, useEffect, Suspense, lazy } from "react";
 import { useParams, Link } from "react-router-dom";
@@ -10,6 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../components/Loading";
 const LongSong = lazy(() => import("../../components/Song/SongLong"));
 import SongRelated from "./SongRelated";
+import {
+    addSong,
+    removeSong,
+    changeCurrentSong,
+} from "../../redux/listSong/listSongSlice";
+import { useSongContext } from "../../context/SongContext";
 
 const SongDetail = (props) => {
     let { id } = useParams();
@@ -37,6 +42,35 @@ const SongDetail = (props) => {
         }
     }, [id]);
 
+    const dispatch = useDispatch();
+    const songsList = useSelector((state) => state.listSongs.list);
+    const {
+        currentSong,
+        setCurrentSong,
+        currentSongIndex,
+        setCurrentSongIndex,
+    } = useSongContext();
+
+    const songToAdd = {
+        videoId: data?.videoId,
+        title: data?.title,
+        album: data?.album,
+        thumbnails: data?.thumbnails,
+        url: "https://www.youtube.com/watch?v=" + data?.videoId,
+        artists: data?.artists,
+        duration: data?.duration,
+    };
+
+    const handleClickPlay = (e) => {
+        e.preventDefault();
+        if (dispatch(addSong(songToAdd)) && songsList.length === 0) {
+            console.log("add: ", songToAdd);
+            dispatch(changeCurrentSong(songToAdd));
+            setCurrentSongIndex(0);
+            setCurrentSong(songToAdd);
+        }
+    };
+
     return (
         <div className={styles.songDetail}>
             {loading ? (
@@ -60,13 +94,14 @@ const SongDetail = (props) => {
                             <BsPlayCircle
                                 size="40px"
                                 className={styles.imagePlayButton}
+                                onClick={(e) => handleClickPlay(e)}
                             />
                         </div>
                         <div className={styles.songInfo}>
                             <div className={styles.songName}>{data?.title}</div>
                             <div className={styles.artistList}>
                                 {data?.artists?.map((artist, index) => (
-                                    <Link to={`/music/artists/${artist.id}`}>
+                                    <Link to={`/music/users/${artist.id}`}>
                                         <p
                                             key={index}
                                             className={styles.artist}
@@ -85,13 +120,15 @@ const SongDetail = (props) => {
                             </div>
                         </div>
                         <div className={styles.buttons}>
-                            <div className={styles.playButton}>
+                            <div
+                                className={styles.playButton}
+                                onClick={(e) => handleClickPlay(e)}
+                            >
                                 <BsFillPlayFill
                                     size="30px"
-                                    className={styles.buttonIcon}
+                                    className={styles.playIcon}
                                 />
-
-                                <p className={styles.buttonText}>Play</p>
+                                <p className={styles.playText}>Play</p>
                             </div>
                             <div className={styles.toolButtons}>
                                 {/* <div
@@ -112,12 +149,6 @@ const SongDetail = (props) => {
                     </div>
 
                     <div className={styles.listSong}>
-                        <div className={styles.listSongHeader}>
-                            <p className={styles.infoCollumn}>Name</p>
-                            <p className={styles.durationCollumn}></p>
-                            <p className={styles.albumCollumn}>Album</p>
-                            <p className={styles.buttonsCollumn}></p>
-                        </div>
                         <div className={styles.selectedSongList}>
                             <Suspense fallback={<Loading />}>
                                 <LongSong

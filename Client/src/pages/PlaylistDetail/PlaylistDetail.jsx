@@ -2,17 +2,29 @@ import styles from "./PlaylistDetail.module.scss";
 import { BsPlayCircle, BsFillPlayFill } from "react-icons/bs";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { SlOptions } from "react-icons/sl";
+import { MdOutlineLibraryAdd } from "react-icons/md";
 import { playlistService } from "../../services";
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
 import Loading from "../../components/Loading";
 import LongSong from "../../components/Song/SongLong";
+
+import {
+    addSong,
+    removeSong,
+    changeCurrentSong,
+    clearListSong,
+} from "../../redux/listSong/listSongSlice";
+import { useSongContext } from "../../context/SongContext";
+
 const PlaylistDetail = (props) => {
     let { id } = useParams();
     const [data, setData] = useState();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const dispatch = useDispatch();
 
     async function fetchData() {
         try {
@@ -34,6 +46,40 @@ const PlaylistDetail = (props) => {
         }
     }, [id]);
 
+    const songsList = useSelector((state) => state.listSongs.list);
+    const {
+        currentSong,
+        setCurrentSong,
+        currentSongIndex,
+        setCurrentSongIndex,
+        isPlaying,
+        setIsPlaying,
+    } = useSongContext();
+
+    const handleClickPlay = (e) => {
+        let index = 0;
+        dispatch(clearListSong());
+        while (index < data?.tracks?.length) {
+            const songToAdd = {
+                videoId: data?.tracks[index]?.videoId,
+                title: data?.tracks[index]?.title,
+                album: data?.tracks[index]?.album,
+                thumbnails: data?.tracks[index]?.thumbnails,
+                url:
+                    "https://www.youtube.com/watch?v=" +
+                    data?.tracks[index]?.videoId,
+                artists: data?.tracks[index]?.artists,
+                category: data?.tracks[index]?.category,
+                duration: data?.tracks[index]?.duration,
+            };
+            dispatch(addSong(songToAdd));
+            index++;
+        }
+        dispatch(changeCurrentSong(data?.tracks[0]));
+        setCurrentSongIndex(0);
+        setCurrentSong(data?.tracks[0]);
+        setIsPlaying(true);
+    };
     return (
         <div className={styles.playlistDetail}>
             {loading ? (
@@ -63,7 +109,7 @@ const PlaylistDetail = (props) => {
                                     <span className={styles.dot}>•</span>
                                     {data?.author?.id != null ? (
                                         <Link
-                                            to={`/music/user/${data?.author?.id}`}
+                                            to={`/music/users/${data?.author?.id}`}
                                         >
                                             <span
                                                 className={`${styles.text} ${styles.underline}`}
@@ -107,15 +153,29 @@ const PlaylistDetail = (props) => {
                                 </div>
                             </div>
                         </div>
+                        <div className={styles.buttons}>
+                            <div
+                                className={styles.playButton}
+                                onClick={(e) => handleClickPlay(e)}
+                            >
+                                <BsFillPlayFill
+                                    size="30px"
+                                    className={styles.playIcon}
+                                />
+                                <p className={styles.playText}>Play</p>
+                            </div>
+                            <div className={styles.saveButton}>
+                                <MdOutlineLibraryAdd
+                                    size="30px"
+                                    className={styles.saveIcon}
+                                />
+                                <p className={styles.saveText}>
+                                    Save to Library
+                                </p>
+                            </div>
+                        </div>
                     </div>
                     <div className={styles.listSong}>
-                        <div className={styles.listSongHeader}>
-                            <p className={styles.infoCollumn}>Name</p>
-                            <p className={styles.durationCollumn}>Duration</p>
-                            <p className={styles.artistCollumn}>Album</p>
-                            {/*<p className={styles.buttonsCollumn}></p> */}
-                        </div>
-
                         <div className={styles.listSongBody}>
                             {data?.tracks?.map((item, index) => (
                                 <LongSong

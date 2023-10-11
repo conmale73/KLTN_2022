@@ -1,11 +1,11 @@
-import { axiosClient } from "~/api";
+import { axiosYoutube } from "~/api";
 
 export const songService = {
     getSongs() {
-        return axiosClient.get("/api/songs");
+        return axiosYoutube.get("/api/songs");
     },
     getSong(id) {
-        return axiosClient.get(`/api/songs/${id}`);
+        return axiosYoutube.get(`/api/songs/${id}`);
     },
     // querySong(query, maxResults) {
     //     return axiosClient.get(
@@ -13,12 +13,12 @@ export const songService = {
     //     );
     // },
     querySong(query) {
-        return axiosClient.get(`/search/?q=${query}&f=songs&r=VN`);
+        return axiosYoutube.get(`/search/?q=${query}&f=songs&r=VN`);
     },
     getYoutubeSongMetadata(id) {
-        return axiosClient.get(`/songs/metadata/?videoId=${id}`);
+        return axiosYoutube.get(`/songs/metadata/?videoId=${id}`);
     },
     getSongRelated(id) {
-        return axiosClient.get(`/songs/related/?videoId=${id}&r=VN`);
+        return axiosYoutube.get(`/songs/related/?videoId=${id}&r=VN`);
     },
 };

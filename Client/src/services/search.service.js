@@ -1,12 +1,12 @@
-import { axiosClient } from "~/api";
+import { axiosYoutube } from "~/api";
 
 export const searchService = {
     search(query, type, region, language) {
-        return axiosClient.get(
+        return axiosYoutube.get(
             `/search/?q=${query}&f=${type}&r=${region}&l=${language}`
         );
     },
     query(query) {
-        return axiosClient.get(`/query/?q=${query}`);
+        return axiosYoutube.get(`/query/?q=${query}`);
     },
 };

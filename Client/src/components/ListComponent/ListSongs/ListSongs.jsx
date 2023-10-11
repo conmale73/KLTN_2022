@@ -76,11 +76,17 @@ const ListSongs = (props) => {
                     },
                 }}
             >
-                {songs.map((song, index) => (
-                    <SwiperSlide key={index}>
-                        <MediumSong {...song} />
-                    </SwiperSlide>
-                ))}
+                {songs ? (
+                    <>
+                        {songs?.map((song, index) => (
+                            <SwiperSlide key={index}>
+                                <MediumSong {...song} />
+                            </SwiperSlide>
+                        ))}
+                    </>
+                ) : (
+                    <></>
+                )}
             </Swiper>
         </div>
     );

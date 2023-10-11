@@ -10,6 +10,7 @@
             ),
             1478px
         );
+        --globalFooterHeight: 100px;
         //QuickPicks
         --quickPicksItemWidth: 300px;
         --quickPicksItemHeight: 60px;
@@ -30,6 +31,8 @@
             2 * 14px * var(--body-line-height)
         );
         --body-line-height: 1.4;
+
+        --general-background: #030303;
     }
 }
 * {

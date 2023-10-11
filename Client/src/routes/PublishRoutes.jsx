@@ -9,6 +9,8 @@ const SearchResult = lazy(() => import("../pages/SearchResult"));
 const AuthenticationPage = lazy(() => import("../pages/AuthenticationPage"));
 const SongDetail = lazy(() => import("../pages/SongDetail"));
 const PlaylistDetail = lazy(() => import("../pages/PlaylistDetail"));
+const ArtistDetail = lazy(() => import("../pages/ArtistDetail"));
+const Profile = lazy(() => import("../pages/Profile"));
 export const publishRoutes = [
     {
         index: true,
@@ -19,10 +21,18 @@ export const publishRoutes = [
         ),
     },
     {
-        path: "/authentication",
+        path: "/authentication/:type",
         element: (
             <Suspense fallback={<Loading isFullScreen={true} />}>
-                <AuthenticationPage title="Login" />
+                <AuthenticationPage />
+            </Suspense>
+        ),
+    },
+    {
+        path: "/profile",
+        element: (
+            <Suspense fallback={<Loading isFullScreen={true} />}>
+                <Profile title="Profile" />
             </Suspense>
         ),
     },
@@ -87,6 +97,14 @@ export const publishRoutes = [
         element: (
             <Suspense fallback={<Loading isFullScreen={true} />}>
                 <PlaylistDetail />
+            </Suspense>
+        ),
+    },
+    {
+        path: "/music/users/:id",
+        element: (
+            <Suspense fallback={<Loading isFullScreen={true} />}>
+                <ArtistDetail />
             </Suspense>
         ),
     },

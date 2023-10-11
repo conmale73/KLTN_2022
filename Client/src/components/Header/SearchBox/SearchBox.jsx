@@ -4,13 +4,14 @@ import { FaSearch } from "react-icons/fa";
 import { AiOutlineSearch } from "react-icons/ai";
 import { searchService } from "../../../services";
 import { useNavigate } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import { setInput } from "../../../redux/search/searchSlice";
 const SearchBox = () => {
     const [searchInput, setSearchInput] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
-
-    const navigator = useNavigate(); // Access the history object
+    const dispatch = useDispatch();
+    const navigator = useNavigate();
 
     const handleSearchInput = (e) => {
         setSearchInput(e.target.value);
@@ -24,11 +25,12 @@ const SearchBox = () => {
         } catch (error) {}
     };
 
-    const handleSubmitSearch = async (e) => {
+    const handleSubmitSearch = (e) => {
         e.preventDefault();
         setIsSearching(false);
         navigator(`/music/search-results?q=${encodeURIComponent(searchInput)}`);
-        localStorage.setItem("searchInput", searchInput);
+        dispatch(setInput(searchInput));
+        localStorage.setItem("searchInput", JSON.stringify(searchInput));
     };
     const handleClickResult = (e) => {
         setSearchInput(e.target.innerText);
@@ -36,7 +38,8 @@ const SearchBox = () => {
         navigator(
             `/music/search-results?q=${encodeURIComponent(e.target.innerText)}`
         );
-        localStorage.setItem("searchInput", e.target.innerText);
+        dispatch(setInput(e.target.innerText));
+        localStorage.setItem("searchInput", JSON.stringify(e.target.innerText));
     };
 
     return (

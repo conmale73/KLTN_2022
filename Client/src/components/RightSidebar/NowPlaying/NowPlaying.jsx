@@ -12,7 +12,7 @@ const NowPlaying = () => {
     const { currentSongIndex, setCurrentSongIndex } = useSongContext();
 
     return (
-        <div className="nowPlaying mt-6">
+        <div className={styles.nowPlaying}>
             {songs.map((song, index) => (
                 <SmallSong
                     key={index}
