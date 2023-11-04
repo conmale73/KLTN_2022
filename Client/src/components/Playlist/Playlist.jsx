@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { BsPlayCircle } from "react-icons/bs";
 import { AiFillPlayCircle } from "react-icons/ai";
 import styles from "./Playlist.module.scss";
-import { parseStringToSlug } from "../../utils/parseStringToSlug";
 
 const Playlist = (props) => {
     const handleClickPlay = (e) => {

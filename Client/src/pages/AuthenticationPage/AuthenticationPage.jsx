@@ -1,4 +1,3 @@
-import Authentication from "../../components/Authentication/Authentication";
 import "./AuthenticationPage.scss";
 import LoginForm from "./AuthenticationForms/LoginForm";
 import RegisterForm from "./AuthenticationForms/RegisterForm";

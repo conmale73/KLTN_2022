@@ -4,6 +4,7 @@ import NotFound from "../pages/NotFound";
 import { publishRoutes } from "./PublishRoutes";
 import { Outlet } from "react-router-dom";
 import Home from "../pages/Home/Home";
+import SocialHome from "../pages/SocialHome";
 import SearchResult from "../pages/SearchResult";
 
 export default function Routes() {
@@ -13,7 +14,8 @@ export default function Routes() {
             element: <DefaultLayout />,
             children: [
                 ...publishRoutes,
-                { path: "/music/", element: <Home title="MY SPACE" /> },
+                { path: "/music/", element: <Home title="Music" /> },
+                { path: "/social/", element: <SocialHome title="Social" /> },
                 { path: "*", element: <NotFound title="Not found" /> },
             ],
         },

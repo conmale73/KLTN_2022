@@ -1,6 +1,6 @@
 import styles from "./SongRelated.module.scss";
 import { songService } from "../../../services";
-import { useState, useEffect, Suspense, lazy } from "react";
+import { useState, useEffect, Suspense } from "react";
 import LongSong from "../../../components/Song/SongLong";
 import Loading from "../../../components/Loading";
 

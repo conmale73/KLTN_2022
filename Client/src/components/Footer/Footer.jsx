@@ -99,9 +99,15 @@ function Footer() {
                         onClick={(e) => handleClickVolume(e)}
                     >
                         {mute ? (
-                            <GiSpeakerOff size="24px" />
+                            <GiSpeakerOff
+                                size="24px"
+                                className={styles.volumeIcon}
+                            />
                         ) : (
-                            <GiSpeaker size="24px" />
+                            <GiSpeaker
+                                size="24px"
+                                className={styles.volumeIcon}
+                            />
                         )}
                     </div>
                     <input

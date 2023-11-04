@@ -11,6 +11,10 @@ const SongDetail = lazy(() => import("../pages/SongDetail"));
 const PlaylistDetail = lazy(() => import("../pages/PlaylistDetail"));
 const ArtistDetail = lazy(() => import("../pages/ArtistDetail"));
 const Profile = lazy(() => import("../pages/Profile"));
+
+const Feed = lazy(() => import("../pages/Feed"));
+const SocialHome = lazy(() => import("../pages/SocialHome"));
+
 export const publishRoutes = [
     {
         index: true,
@@ -33,6 +37,22 @@ export const publishRoutes = [
         element: (
             <Suspense fallback={<Loading isFullScreen={true} />}>
                 <Profile title="Profile" />
+            </Suspense>
+        ),
+    },
+    {
+        path: "/social/home",
+        element: (
+            <Suspense fallback={<Loading isFullScreen={true} />}>
+                <SocialHome title="Home" />
+            </Suspense>
+        ),
+    },
+    {
+        path: "/social/feed",
+        element: (
+            <Suspense fallback={<Loading isFullScreen={true} />}>
+                <Feed title="News feed" />
             </Suspense>
         ),
     },

@@ -1,10 +1,10 @@
 import { axiosClient } from "~/api";
 
 export const userService = {
-    login(email, password) {
-        return axiosClient.post("/api/auth/login", {
-            email: email,
-            password: password,
-        });
+    getUserById(id) {
+        return axiosClient.get(`/api/users/${id}`);
+    },
+    getUserByEmail(email) {
+        return axiosClient.get(`/api/users/email/${email}`);
     },
 };

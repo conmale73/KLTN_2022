@@ -5,7 +5,7 @@ import { FaRandom } from "react-icons/fa";
 import { BiSkipPrevious, BiSkipNext } from "react-icons/bi";
 import { TbRepeat, TbRepeatOnce, TbRepeatOff } from "react-icons/tb";
 import ReactPlayer from "react-player/youtube";
-import Duration from "./Duration";
+import Duration from "../Duration";
 import { useSongContext } from "../../context/SongContext";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -156,20 +156,20 @@ const AudioPlayer = (props) => {
             <div className={styles.controllerButtons}>
                 <div onClick={(e) => handleClickRandom(e)}>
                     {isRandom ? (
-                        <FaRandom size="24px" color="#04aefe" />
+                        <FaRandom size="24px" className={styles.icon} />
                     ) : (
-                        <FaRandom size="24px" />
+                        <FaRandom size="24px" className={styles.icon} />
                     )}
                 </div>
 
                 <div onClick={(e) => handleClickPrev(e)}>
-                    <BiSkipPrevious size="30px" />
+                    <BiSkipPrevious size="30px" className={styles.icon} />
                 </div>
                 <div onClick={(e) => handleClickPlay(e)}>
                     {isPlaying ? (
-                        <BsFillPauseFill size="50px" />
+                        <BsFillPauseFill size="50px" className={styles.icon} />
                     ) : (
-                        <BsFillPlayFill size="50px" />
+                        <BsFillPlayFill size="50px" className={styles.icon} />
                     )}
                 </div>
 
@@ -178,15 +178,23 @@ const AudioPlayer = (props) => {
                         handleClickNext(e);
                     }}
                 >
-                    <BiSkipNext size="30px" />
+                    <BiSkipNext size="30px" className={styles.icon} />
                 </div>
                 <div onClick={(e) => handleClickRepeat(e)}>
                     {isRepeat === "off" ? (
-                        <TbRepeatOff size="24px" />
+                        <TbRepeatOff size="24px" className={styles.icon} />
                     ) : isRepeat === "once" ? (
-                        <TbRepeatOnce size="24px" color="#04aefe" />
+                        <TbRepeatOnce
+                            size="24px"
+                            color="#fff"
+                            className={styles.icon}
+                        />
                     ) : (
-                        <TbRepeat size="24px" color="#04aefe" />
+                        <TbRepeat
+                            size="24px"
+                            color="#fff"
+                            className={styles.icon}
+                        />
                     )}
                 </div>
             </div>

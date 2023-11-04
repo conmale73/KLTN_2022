@@ -1,0 +1,29 @@
+.container {
+    .thumb {
+        display: flex;
+        position: relative;
+
+        .editButton {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background-color: var(--general-button-color);
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            color: var(--general-text-color);
+            gap: 10px;
+            &:hover {
+                background-color: var(--general-button-hover);
+            }
+        }
+        &:hover {
+            background-color: var(--level-1);
+        }
+    }
+}

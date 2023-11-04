@@ -7,7 +7,7 @@
     align-items: center;
     border-radius: 5px;
     &:hover {
-        background-color: rgb(38, 32, 119, 0.7);
+        background-color: var(--general-button-hover);
     }
     &:hover .playButton {
         opacity: 1;
@@ -20,12 +20,12 @@
         top: 50%;
         left: 55%;
         opacity: 0;
-        color: #fff;
+        color: var(--general-icon-color);
         cursor: pointer;
         transform: translate(-50%, -50%);
         transition: all 0.3s ease;
         & :hover {
-            color: #04aefe;
+            color: var(--icon-hover);
         }
     }
     .imageContainer {
@@ -50,7 +50,7 @@
             font-size: 1.3rem;
             font-weight: 700;
             margin-bottom: 5px;
-
+            color: var(--general-text-color);
             --max-lines: 1;
             display: -webkit-box;
             -webkit-line-clamp: var(--max-lines);
@@ -60,7 +60,7 @@
             &:hover {
                 text-decoration: underline;
                 cursor: pointer;
-                color: #04aefe;
+                color: var(--text-hover);
             }
         }
         .artistList {
@@ -72,7 +72,7 @@
                 font-size: 1.2rem;
                 font-weight: 500;
                 margin-right: 5px;
-
+                color: var(--small-text-color);
                 --max-lines: 1;
                 display: -webkit-box;
                 -webkit-line-clamp: var(--max-lines);
@@ -81,7 +81,7 @@
                 &:hover {
                     text-decoration: underline;
                     cursor: pointer;
-                    color: #04aefe;
+                    color: var(--text-hover);
                 }
             }
         }

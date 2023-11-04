@@ -4,13 +4,15 @@ import axios from "axios";
 const apiProduction = "http://localhost:3000";
 const apiDev = "http://localhost:3000";
 const apiYoutube = "http://localhost:5000";
-const baseURL = import.meta.env.MODE === "production" ? apiProduction : apiDev;
+const baseURL = process.env.NODE_ENV === "production" ? apiProduction : apiDev;
 
 const axiosClient = axios.create({
     baseURL,
     headers: {
         "Content-Type": "application/json",
+        Accept: "*/*",
     },
+    maxContentLength: 100000000,
 });
 
 axiosClient.interceptors.request.use(

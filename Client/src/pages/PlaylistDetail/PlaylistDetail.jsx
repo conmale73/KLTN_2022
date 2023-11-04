@@ -18,34 +18,11 @@ import {
     clearListSong,
 } from "../../redux/listSong/listSongSlice";
 import { useSongContext } from "../../context/SongContext";
+import { useQuery, useMutation } from "@tanstack/react-query";
 
 const PlaylistDetail = (props) => {
     let { id } = useParams();
-    const [data, setData] = useState();
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const dispatch = useDispatch();
-
-    async function fetchData() {
-        try {
-            const res = await playlistService.getYoutubePlaylist(id);
-            setData(res.data);
-            console.log("playlist data: ", data);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-            setError("An error occurred while fetching data.");
-        } finally {
-            setLoading(false);
-        }
-    }
-
-    useEffect(() => {
-        fetchData();
-        if (data) {
-            setLoading(true);
-        }
-    }, [id]);
-
     const songsList = useSelector((state) => state.listSongs.list);
     const {
         currentSong,
@@ -55,6 +32,15 @@ const PlaylistDetail = (props) => {
         isPlaying,
         setIsPlaying,
     } = useSongContext();
+
+    const { isLoading, error, data, isFetching } = useQuery({
+        queryKey: ["playlistDetail", id],
+        queryFn: () =>
+            playlistService.getYoutubePlaylist(id).then((res) => res.data),
+    });
+    if (isLoading) return <Loading isFullScreen={true} />;
+
+    if (error) return <p>{error.message}</p>;
 
     const handleClickPlay = (e) => {
         let index = 0;
@@ -82,117 +68,99 @@ const PlaylistDetail = (props) => {
     };
     return (
         <div className={styles.playlistDetail}>
-            {loading ? (
-                <Loading isFullScreen={true} />
-            ) : error ? (
-                <p>{error}</p>
-            ) : (
-                <>
-                    <div className={styles.playlistInfo}>
-                        <div className={styles.imageContainer}>
-                            <img
-                                src={
-                                    data?.thumbnails[3]?.url ||
-                                    data?.thumbnails[2]?.url ||
-                                    data?.thumbnails[1]?.url ||
-                                    data?.thumbnails[0]?.url
-                                }
-                            />
-                        </div>
-                        <div className={styles.infoContainer}>
-                            <p className={styles.title}>{data?.title}</p>
-                            <div className={styles.metadata}>
-                                <div className={styles.row}>
-                                    <span className={styles.text}>
-                                        Playlist
+            <div className={styles.playlistInfo}>
+                <div className={styles.imageContainer}>
+                    <img
+                        src={
+                            data?.thumbnails[3]?.url ||
+                            data?.thumbnails[2]?.url ||
+                            data?.thumbnails[1]?.url ||
+                            data?.thumbnails[0]?.url
+                        }
+                    />
+                </div>
+                <div className={styles.infoContainer}>
+                    <p className={styles.title}>{data?.title}</p>
+                    <div className={styles.metadata}>
+                        <div className={styles.row}>
+                            <span className={styles.text}>Playlist</span>
+                            <span className={styles.dot}>•</span>
+                            {data?.author?.id != null ? (
+                                <Link to={`/music/users/${data?.author?.id}`}>
+                                    <span
+                                        className={`${styles.text} ${styles.underline}`}
+                                    >
+                                        {data?.author?.name}
                                     </span>
-                                    <span className={styles.dot}>•</span>
-                                    {data?.author?.id != null ? (
-                                        <Link
-                                            to={`/music/users/${data?.author?.id}`}
-                                        >
-                                            <span
-                                                className={`${styles.text} ${styles.underline}`}
-                                            >
-                                                {data?.author?.name}
-                                            </span>
-                                        </Link>
-                                    ) : (
-                                        <span className={styles.text}>
-                                            {data?.author?.name}
-                                        </span>
-                                    )}
+                                </Link>
+                            ) : (
+                                <span className={styles.text}>
+                                    {data?.author?.name}
+                                </span>
+                            )}
 
-                                    <span className={styles.dot}>•</span>
-                                    <span className={styles.text}>
-                                        {data?.year}
-                                    </span>
-                                </div>
-                                <div className={styles.row}>
-                                    {data?.views != null && (
-                                        <>
-                                            <span className={styles.text}>
-                                                {`${data?.views}k views`}
-                                            </span>
-                                            <span className={styles.dot}>
-                                                •
-                                            </span>
-                                        </>
-                                    )}
-
-                                    <span className={styles.text}>
-                                        {`${data?.trackCount} songs`}
-                                    </span>
-                                    <span className={styles.dot}>•</span>
-                                    <span className={styles.text}>
-                                        {data?.duration}
-                                    </span>
-                                </div>
-                                <div className={styles.description}>
-                                    {data?.description}
-                                </div>
-                            </div>
+                            <span className={styles.dot}>•</span>
+                            <span className={styles.text}>{data?.year}</span>
                         </div>
-                        <div className={styles.buttons}>
-                            <div
-                                className={styles.playButton}
-                                onClick={(e) => handleClickPlay(e)}
-                            >
-                                <BsFillPlayFill
-                                    size="30px"
-                                    className={styles.playIcon}
-                                />
-                                <p className={styles.playText}>Play</p>
-                            </div>
-                            <div className={styles.saveButton}>
-                                <MdOutlineLibraryAdd
-                                    size="30px"
-                                    className={styles.saveIcon}
-                                />
-                                <p className={styles.saveText}>
-                                    Save to Library
-                                </p>
-                            </div>
+                        <div className={styles.row}>
+                            {data?.views != null && (
+                                <>
+                                    <span className={styles.text}>
+                                        {`${data?.views}k views`}
+                                    </span>
+                                    <span className={styles.dot}>•</span>
+                                </>
+                            )}
+
+                            <span className={styles.text}>
+                                {`${data?.trackCount} songs`}
+                            </span>
+                            <span className={styles.dot}>•</span>
+                            <span className={styles.text}>
+                                {data?.duration}
+                            </span>
+                        </div>
+                        <div className={styles.description}>
+                            {data?.description}
                         </div>
                     </div>
-                    <div className={styles.listSong}>
-                        <div className={styles.listSongBody}>
-                            {data?.tracks?.map((item, index) => (
-                                <LongSong
-                                    key={index}
-                                    videoId={item?.videoId}
-                                    title={item?.title}
-                                    album={item?.album}
-                                    artists={item?.artists}
-                                    duration={item?.duration}
-                                    thumbnails={item?.thumbnails}
-                                    buttons={false}
-                                />
-                            ))}
-                        </div>
+                </div>
+                <div className={styles.buttons}>
+                    <div
+                        className={styles.playButton}
+                        onClick={(e) => handleClickPlay(e)}
+                    >
+                        <BsFillPlayFill
+                            size="30px"
+                            className={styles.playIcon}
+                        />
+                        <p className={styles.playText}>Play</p>
                     </div>
-                </>
-            )}
+                    <div className={styles.saveButton}>
+                        <MdOutlineLibraryAdd
+                            size="30px"
+                            className={styles.saveIcon}
+                        />
+                        <p className={styles.saveText}>Save to Library</p>
+                    </div>
+                </div>
+            </div>
+            <div className={styles.listSong}>
+                <div className={styles.listSongBody}>
+                    {data?.tracks?.map((item, index) => (
+                        <LongSong
+                            key={index}
+                            videoId={item?.videoId}
+                            title={item?.title}
+                            album={item?.album}
+                            artists={item?.artists}
+                            duration={item?.duration}
+                            thumbnails={item?.thumbnails}
+                            buttons={false}
+                        />
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };

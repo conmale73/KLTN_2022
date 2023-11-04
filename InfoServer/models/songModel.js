@@ -1,34 +1,48 @@
 const mongoose = require("mongoose");
 
 const songSchema = new mongoose.Schema({
-    songName: {
+    title: {
         type: String,
         required: true,
     },
-    artistID: {
-        type: String,
-        required: true,
-    },
+    artist: [
+        {
+            name: {
+                type: String,
+                required: true,
+            },
+            id: {
+                type: String,
+                required: true,
+            },
+        },
+    ],
     lyrics: {
         type: String,
-        required: true,
+        required: false,
     },
-    songImage: {
-        type: String,
-        required: true,
-    },
-    songSlug: {
-        type: String,
-        required: true,
-    },
-    category: {
-        type: String,
-        required: true,
-    },
-    region: {
-        type: String,
-        required: true,
-    },
+    thumbnails: [
+        {
+            url: {
+                type: String,
+                required: true,
+            },
+            width: {
+                type: Number,
+                required: true,
+            },
+            height: {
+                type: Number,
+                required: true,
+            },
+        },
+    ],
+    genre: [
+        {
+            type: String,
+            required: true,
+        },
+    ],
     likes: {
         type: Number,
         default: 0,

@@ -1,9 +1,9 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const ErrorResponse = require("../utils/errorResponse");
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 // Get all users
 exports.getUsers = async (req, res, next) => {
@@ -27,14 +27,41 @@ exports.getUser = async (req, res, next) => {
         next(error);
     }
 };
+// Get a single user by email
+exports.getUserByEmail = async (req, res, next) => {
+    try {
+        const user = await User.findOne({ email: req.params.email });
+        if (!user) {
+            throw new ErrorResponse("User not found", 404);
+        }
+        res.status(200).json({ success: true, data: user });
+    } catch (error) {
+        next(error);
+    }
+};
 
 // Create a user
 exports.createUser = async (req, res, next) => {
     try {
-        const newUser = await User.create(req.body);
-        res.status(201).json({ success: true, data: newUser });
+        const { username, email, password } = req.body;
+
+        // Check if the email is already registered
+        const existingUser = await User.findOne({ email });
+
+        if (existingUser) {
+            return res.status(400).json({ message: "Email is already in use" });
+        }
+
+        // Create a new user
+        const newUser = new User({ username, email, password });
+
+        // Save the user to the database
+        await newUser.save();
+
+        res.status(201).json({ message: "User created successfully" });
     } catch (error) {
-        next(error);
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
     }
 };
 

@@ -15,9 +15,13 @@
         gap: 16px;
         transition: all 0.3s ease;
 
-        & :hover {
-            color: #04aefe;
-            cursor: pointer;
+        .icon {
+            color: var(--general-icon-color);
+
+            &:hover {
+                color: var(--icon-hover);
+                cursor: pointer;
+            }
         }
     }
     .progressBarContainer {
@@ -49,7 +53,6 @@
         }
         .progress {
             height: 100%;
-            background-color: #ffffff;
             width: 10%;
             transition: width 0.2s ease-in-out;
         }

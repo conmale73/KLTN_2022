@@ -51,26 +51,24 @@ exports.getSongById = async (req, res, next) => {
 exports.addSong = async (req, res, next) => {
     try {
         const {
-            songName,
-            artistID,
-            songSlug,
+            title,
+            artist: [{ name, id }],
+            genre,
             lyrics,
-            songImage,
-            category,
-            region,
+            thumbnails: [{ url, width, height }],
+            duration,
             likes,
             createAt,
             updateAt,
         } = req.body;
 
         const newSong = new Song({
-            songName,
-            artistID,
-            songSlug,
+            title,
+            artist: [{ name, id }],
+            genre,
             lyrics,
-            songImage,
-            category,
-            region,
+            thumbnails: [{ url, width, height }],
+            duration,
             likes,
             createAt,
             updateAt,

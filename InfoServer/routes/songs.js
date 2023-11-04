@@ -6,13 +6,26 @@ const Joi = require("joi");
 
 // Validation schema for the request body
 const songSchema = Joi.object({
-    songName: Joi.string().required(),
-    artistID: Joi.string().required(),
-    songSlug: Joi.string().required(),
-    lyrics: Joi.string().required(),
-    songImage: Joi.string().required(),
-    category: Joi.string().required(),
-    region: Joi.string().required(),
+    title: Joi.string().required(),
+    artist: Joi.array()
+        .items(
+            Joi.object({
+                name: Joi.string().required(),
+                id: Joi.string().required(),
+            })
+        )
+        .required(),
+    lyrics: Joi.string().allow(""),
+    thumbnails: Joi.array()
+        .items(
+            Joi.object({
+                url: Joi.string().required(),
+                width: Joi.number().required(),
+                height: Joi.number().required(),
+            })
+        )
+        .required(),
+    genre: Joi.array().items(Joi.string().required()),
     likes: Joi.number().default(0),
     createAt: Joi.date().default(Date.now),
     updateAt: Joi.date().default(Date.now),

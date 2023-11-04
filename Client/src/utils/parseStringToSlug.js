@@ -1,3 +1,4 @@
-export function parseStringToSlug(string) {
+function parseStringToSlug(string) {
     return string?.toLowerCase().split(" ").join("-");
 }
+export default parseStringToSlug;

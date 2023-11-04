@@ -5,3 +5,5 @@ export { playlistService } from "./playlist.service";
 export { exploreService } from "./explore.service";
 export { browseService } from "./browse.service";
 export { userService } from "./user.service";
+export { authService } from "./auth.service";
+export { postService } from "./post.service";

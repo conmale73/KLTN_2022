@@ -10,6 +10,7 @@ import {
     removeSong,
     changeCurrentSong,
     setIsPlaying,
+    clearListSong,
 } from "../../../redux/listSong/listSongSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -44,7 +45,7 @@ const SmallSong = (props) => {
     const handleClickPause = () => {
         dispatch(setIsPlaying(false));
     };
-    const playingSongStyle = "#2c239c";
+    const playingSongStyle = "#555555";
 
     const handleRemoveFromPlaylist = (e) => {
         try {
@@ -62,6 +63,14 @@ const SmallSong = (props) => {
                 setCurrentSong(currentSongRedux);
                 dispatch(setIsPlaying(false));
             }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const handleClearPlaylist = (e) => {
+        try {
+            dispatch(clearListSong());
         } catch (err) {
             console.log(err);
         }
@@ -156,6 +165,7 @@ const SmallSong = (props) => {
                         >
                             Remove From Playlist
                         </ContextMenu.Item>
+
                         <ContextMenu.Item className="ContextMenuItem" disabled>
                             Foward
                         </ContextMenu.Item>
@@ -243,6 +253,12 @@ const SmallSong = (props) => {
                                 Colm Tuite
                             </ContextMenu.RadioItem>
                         </ContextMenu.RadioGroup>
+                        <ContextMenu.Item
+                            className="ContextMenuItem"
+                            onClick={(e) => handleClearPlaylist(e)}
+                        >
+                            Clear Playlist
+                        </ContextMenu.Item>
                     </ContextMenu.Content>
                 </ContextMenu.Portal>
             </ContextMenu.Root>

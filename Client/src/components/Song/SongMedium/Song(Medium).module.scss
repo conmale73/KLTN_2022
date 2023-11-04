@@ -37,9 +37,12 @@
         opacity: 0;
         transition: opacity 0.3s ease;
     }
+    .playButton {
+        color: var(--general-icon-color);
+    }
     .playButton:hover {
         cursor: pointer;
-        color: #04aefe;
+        color: var(--icon-hover);
         transition: all 0.3s ease;
         &:hover {
             transform: scale(1.1);
@@ -56,7 +59,7 @@
             width: 100%;
             font-size: 1.4rem;
             font-weight: 600;
-            color: #fff;
+            color: var(--general-text-color);
             padding: 0 0 0 10px;
 
             --max-lines: 1;
@@ -80,7 +83,7 @@
             flex-wrap: nowrap;
             overflow: visible;
             white-space: nowrap;
-            color: #04aefe;
+            color: var(--text-hover);
             text-decoration: underline;
             animation: slide-left 20s linear infinite;
         }
@@ -95,11 +98,11 @@
                 font-weight: 500;
                 margin-right: 5px;
                 flex-wrap: wrap;
-
+                color: var(--small-text-color);
                 &:hover {
                     text-decoration: underline;
                     cursor: pointer;
-                    color: #04aefe;
+                    color: var(--text-hover);
                 }
             }
         }

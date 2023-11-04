@@ -293,33 +293,35 @@ def get_song_metadata():
     search_keyword_for_spotify_id = re.sub(r'[^\w\s]', '', search_keyword_for_spotify_id)
     print(search_keyword_for_spotify_id)
     # print(search_keyword_for_spotify_id)
-    def lyrics(search_keyword_for_spotify_id):
-        trackId = find_track_id(search_keyword_for_spotify_id)
-        if trackId == None:
-            return {"error": True}
-        else:
-            url = "https://spotify-lyric-api.herokuapp.com/?trackid=" + trackId
-            request = requests.get(url)
-            return request.json()
-    for key in result:
-        if key == 'category':
-            result.pop(key)
-            break
-    for key in result:
-        if key == 'feedbackTokens':
-            result.pop(key)
-            break
-    if result['resultType'] == "video":
-        result.update({"year": None})
-        result.update({"isExplicit": False})
-        result.update({"album": None})
-        result.pop('views')
-    # result.pop("category")
-    # result.pop("feedbackTokens")
-    result.pop("thumbnails")
-    result.update({"thumbnails": thumbnails})
-    # result.update({"streamData": str(streamData)})
-    result.update({"lyrics": lyrics(search_keyword_for_spotify_id)})
+
+    # Get lyrics
+    # def lyrics(search_keyword_for_spotify_id):
+    #     trackId = find_track_id(search_keyword_for_spotify_id)
+    #     if trackId == None:
+    #         return {"error": True}
+    #     else:
+    #         url = "https://spotify-lyric-api.herokuapp.com/?trackid=" + trackId
+    #         request = requests.get(url)
+    #         return request.json()
+    # for key in result:
+    #     if key == 'category':
+    #         result.pop(key)
+    #         break
+    # for key in result:
+    #     if key == 'feedbackTokens':
+    #         result.pop(key)
+    #         break
+    # if result['resultType'] == "video":
+    #     result.update({"year": None})
+    #     result.update({"isExplicit": False})
+    #     result.update({"album": None})
+    #     result.pop('views')
+    # # result.pop("category")
+    # # result.pop("feedbackTokens")
+    # result.pop("thumbnails")
+    # result.update({"thumbnails": thumbnails})
+    # # result.update({"streamData": str(streamData)})
+    # result.update({"lyrics": lyrics(search_keyword_for_spotify_id)})
     return convert_to_json(result)
 @app.route('/thumbnails/', methods=['GET', 'POST'])
 def get_thumbnails():

@@ -6,21 +6,25 @@ const bcrypt = require("bcrypt");
 // Sign up
 exports.signup = async (req, res, next) => {
     try {
-        const { name, email, password } = req.body;
+        const { username, email, password } = req.body;
 
-        // Create the user
-        const user = await User.create({
-            name,
-            email,
-            password,
-        });
+        // Check if the email is already registered
+        const existingUser = await User.findOne({ email });
 
-        // Generate JWT token
-        const token = user.generateAuthToken();
+        if (existingUser) {
+            return res.status(400).json({ message: "Email is already in use" });
+        }
 
-        res.status(201).json({ success: true, token });
+        // Create a new user
+        const newUser = new User({ username, email, password });
+
+        // Save the user to the database
+        await newUser.save();
+
+        res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
-        next(error);
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
     }
 };
 
@@ -47,7 +51,16 @@ exports.login = async (req, res, next) => {
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
         // Send the token as a response
-        res.json({ token });
+        res.json({
+            token,
+            user: {
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+                avatar: user.avatar,
+                registration_date: user.registration_date,
+            },
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: error });

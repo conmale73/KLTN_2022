@@ -4,43 +4,23 @@ import { useState, useEffect } from "react";
 import { recommendationService } from "../../services/recommendation.service";
 import HomeModules from "./HomeModules";
 import Loading from "../../components/Loading";
+import { useQuery, useMutation } from "@tanstack/react-query";
 
 const Home = (props) => {
     document.title = props.title;
-    const [searchResults, setSearchResults] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await recommendationService.getHome(
-                    "VN",
-                    "en"
-                );
-                setSearchResults(response.data);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setError("An error occurred while fetching data.");
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchData();
-    }, []);
-    useEffect(() => {
-        console.log("searchResults: ", searchResults);
-    }, [searchResults]);
+    const homeQuery = useQuery({
+        queryKey: ["home"],
+        queryFn: () =>
+            recommendationService.getHome("VN", "en").then((res) => res.data), // Return the data directly
+    });
+    if (homeQuery.isLoading) return <Loading isFullScreen={true} />;
+
+    if (homeQuery.isError) return <p>{homeQuery.error.message}</p>;
 
     return (
         <div className={styles.home}>
-            {loading ? (
-                <Loading isFullScreen={true} />
-            ) : error ? (
-                <p>{error}</p>
-            ) : (
-                <HomeModules data={searchResults} />
-            )}
+            <HomeModules data={homeQuery.data} />
         </div>
     );
 };
