@@ -81,9 +81,9 @@
                 justify-content: center;
                 align-items: center;
                 cursor: pointer;
-                border: 1px solid #04aefe;
+                border: 1px solid var(--general-button-color);
                 &:hover {
-                    background-color: #04aefe;
+                    background-color: var(--general-button-hover);
                 }
                 .playIcon {
                     width: 20px;
@@ -93,7 +93,7 @@
                 .playText {
                     font-size: 15px;
                     font-weight: 500;
-                    color: #ffffff;
+                    color: var(--general-text-color);
                 }
             }
             .saveButton {
@@ -104,10 +104,10 @@
                 justify-content: center;
                 align-items: center;
                 cursor: pointer;
-                border: 1px solid #04aefe;
+                border: 1px solid var(--general-button-color);
 
                 &:hover {
-                    background-color: #04aefe;
+                    background-color: var(--general-button-color);
                 }
                 .saveIcon {
                     width: 20px;
@@ -117,7 +117,7 @@
                 .saveText {
                     font-size: 15px;
                     font-weight: 500;
-                    color: #ffffff;
+                    color: var(--general-text-color);
                 }
             }
         }

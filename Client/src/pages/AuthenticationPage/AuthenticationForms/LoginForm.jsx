@@ -7,6 +7,7 @@ import { authService } from "../../../services";
 import * as Dialog from "@radix-ui/react-dialog";
 import { userService } from "../../../services";
 import { useQuery } from "@tanstack/react-query";
+import io from "socket.io-client";
 
 const LoginForm = () => {
     const [email, setEmail] = useState("");
@@ -17,6 +18,8 @@ const LoginForm = () => {
     let [errorLogin, setErrorLogin] = useState("");
 
     const [openLogin, setOpenLogin] = useState(false);
+
+    const [socket, setSocket] = useState(null);
 
     const navigator = useNavigate();
     const dispatch = useDispatch();
@@ -81,6 +84,12 @@ const LoginForm = () => {
             const user = response.data.user;
             localStorage.setItem("user", JSON.stringify(user));
             dispatch(setUser(user));
+
+            const socket = io("http://localhost:3000");
+            socket.emit("addNewOnlineUser", user._id);
+            io.on("go-online", (data) => {
+                console.log(data);
+            });
             navigator("/profile");
         } catch (err) {
             console.error("Message:", err.response.data.message);
@@ -89,6 +98,7 @@ const LoginForm = () => {
     };
 
     const handleSubmitForm = (e) => {
+        e.preventDefault();
         if (passwordError.length == 0 && emailError.length == 0) {
             console.log("Submit form");
             try {
@@ -112,7 +122,11 @@ const LoginForm = () => {
             <div className={styles.title}>
                 <h1>Sign In</h1>
             </div>
-            <form className={styles.form} onSubmit={(e) => handleSubmitForm(e)}>
+            <form
+                id="signin-form"
+                className={styles.form}
+                onSubmit={(e) => handleSubmitForm(e)}
+            >
                 <div className={styles.input}>
                     <label htmlFor="email">Email</label>
                     <input
@@ -153,9 +167,11 @@ const LoginForm = () => {
                 >
                     <Dialog.Trigger asChild>
                         <button
+                            form="signin-form"
                             type="submit"
                             className={styles.loginButton}
                             onClick={(e) => handleClickSubmit(e)}
+                            autoFocus={true}
                         >
                             Sign In
                         </button>

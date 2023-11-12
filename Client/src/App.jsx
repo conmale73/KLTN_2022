@@ -4,20 +4,38 @@ import "./App.css";
 import useShowScrollbar from "./hooks/useShowScrollbar";
 import { SongProvider } from "./context/SongContext";
 import { useEffect } from "react";
-
+import io from "socket.io-client";
+import { useSelector, useDispatch } from "react-redux";
+import { setOnlineUsers } from "./redux/onlineUsers/onlineUsersSlice";
 function App() {
     useShowScrollbar();
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.data);
 
-    // function handleCallbackResponse(response) {
-    //     console.log("Encoded JWT ID token: " + response.credential);
-    // }
-    // useEffect(() => {
-    //     google?.accounts.id.initialize({
-    //         client_id:
-    //             "424626895989-uiicjbj1fk9205u8n1kk5g9tjqgn7p3p.apps.googleusercontent.com",
-    //         callback: handleCallbackResponse,
-    //     });
-    // }, []);
+    useEffect(() => {
+        if (user) {
+            // Connect to the Socket.IO server (use your server URL)
+            const socket = new io("http://localhost:3000");
+
+            socket.on("connect", () => {
+                socket.emit("addNewOnlineUser", user._id);
+            });
+
+            socket.on("getOnlineUsers", (data) => {
+                console.log(data);
+                dispatch(setOnlineUsers(data));
+            });
+
+            return () => {
+                socket.emit("deleteOnlineUser", user._id);
+                socket.on("getOnlineUsers", (data) => {
+                    console.log(data);
+                    dispatch(setOnlineUsers(data));
+                });
+                socket.disconnect();
+            };
+        }
+    }, [user]);
     return (
         <Router>
             <SongProvider>

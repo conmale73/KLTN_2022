@@ -16,7 +16,6 @@ import {
 } from "../../redux/listSong/listSongSlice";
 import { useSongContext } from "../../context/SongContext";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import io from "socket.io-client";
 
 const SongDetail = (props) => {
     let { id } = useParams();
@@ -30,20 +29,6 @@ const SongDetail = (props) => {
         setCurrentSongIndex,
     } = useSongContext();
 
-    useEffect(() => {
-        // Connect to the Socket.IO server (use your server URL)
-        const socket = io("http://localhost:3000"); // Replace with your server URL
-
-        // Handle events or emit data to the server as needed
-        socket.on("customEvent", (data) => {
-            console.log("Received data from the server:", data);
-        });
-
-        // Clean up when the component unmounts
-        return () => {
-            socket.disconnect();
-        };
-    }, []);
     const { isLoading, error, data, isFetching } = useQuery({
         queryKey: ["songDetail", id],
         queryFn: () =>

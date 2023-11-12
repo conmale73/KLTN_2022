@@ -14,8 +14,8 @@ export default function Routes() {
             element: <DefaultLayout />,
             children: [
                 ...publishRoutes,
-                { path: "/music/", element: <Home title="Music" /> },
                 { path: "/social/", element: <SocialHome title="Social" /> },
+                { path: "/music/", element: <Home title="Music" /> },
                 { path: "*", element: <NotFound title="Not found" /> },
             ],
         },

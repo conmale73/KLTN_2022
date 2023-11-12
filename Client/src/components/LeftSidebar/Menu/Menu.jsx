@@ -4,7 +4,7 @@ import { CiLogin } from "react-icons/ci";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { FaUserFriends } from "react-icons/fa";
-import { BsCalendarEventFill } from "react-icons/bs";
+import { BsCalendarEventFill, BsBox } from "react-icons/bs";
 import { MdOutlineGroups2, MdOutlinePlaylistPlay } from "react-icons/md";
 import { PiPlaylistFill } from "react-icons/pi";
 import { CgFeed } from "react-icons/cg";
@@ -15,14 +15,15 @@ import {
     AiFillStar,
 } from "react-icons/ai";
 const Menu = () => {
-    const user = useSelector((state) => state.user);
+    const user = useSelector((state) => state.user.data);
     const mode = useSelector((state) => state.mode.mode);
     return (
         <>
-            {user.data ? (
+            {user ? (
                 <>
                     {mode === "music" ? (
                         <>
+                            {/* Basic routes */}
                             <div className="menu">
                                 <div className="menu_wrapper">
                                     <Link to="/music/home">
@@ -73,7 +74,7 @@ const Menu = () => {
                                     </Link>
                                 </div>
                             </div>
-
+                            {/* Playlists*/}
                             <div className="menu">
                                 <div className="menu_wrapper">
                                     <Link to="/music/library/playlists">
@@ -116,7 +117,7 @@ const Menu = () => {
                                     </Link>
                                 </div>
                             </div>
-                            <div className="menu">
+                            {/* <div className="menu">
                                 <div className="menu_wrapper">
                                     <Link to="/music/leaderboard">
                                         <div className="button">
@@ -146,7 +147,7 @@ const Menu = () => {
                                         </div>
                                     </Link>
                                 </div>
-                            </div>
+                            </div> */}
                         </>
                     ) : (
                         <>
@@ -185,6 +186,19 @@ const Menu = () => {
                                             <div className="text">Friends</div>
                                         </div>
                                     </Link>
+                                    <Link to="/playground">
+                                        <div className="button">
+                                            <div className="icon">
+                                                <BsBox
+                                                    className="icon"
+                                                    size="25px"
+                                                />
+                                            </div>
+                                            <div className="text">
+                                                Playground
+                                            </div>
+                                        </div>
+                                    </Link>
                                     <Link to="/social/events">
                                         <div className="button">
                                             <div className="icon">
@@ -214,19 +228,39 @@ const Menu = () => {
                 </>
             ) : (
                 <>
-                    <div className="menu">
-                        <div className="menu_wrapper">
-                            <Link to="/authentication/login">
-                                <div className="button">
-                                    <div className="icon">
-                                        <CiLogin className="icon" size="25px" />
-                                    </div>
-                                    <div className="text">Sign In</div>
+                    {mode === "music" ? (
+                        <>
+                            <div className="menu">
+                                <div className="menu_wrapper">
+                                    <Link to="/authentication/login">
+                                        <div className="button">
+                                            <div className="icon">
+                                                <CiLogin
+                                                    className="icon"
+                                                    size="25px"
+                                                />
+                                            </div>
+                                            <div className="text">Sign In</div>
+                                        </div>
+                                    </Link>
                                 </div>
-                            </Link>
-                        </div>
-                    </div>
-                    <div className="menu">
+                            </div>
+                            <div className="menu">
+                                <div className="menu_wrapper">
+                                    <Link to="/music/home">
+                                        <div className="button">
+                                            <div className="icon">
+                                                <AiFillHome
+                                                    className="icon"
+                                                    size="25px"
+                                                />
+                                            </div>
+                                            <div className="text">Home</div>
+                                        </div>
+                                    </Link>
+                                </div>
+                            </div>
+                            {/* <div className="menu">
                         <div className="menu_wrapper">
                             <Link to="/music/leaderboard">
                                 <div className="button">
@@ -252,7 +286,27 @@ const Menu = () => {
                                 </div>
                             </Link>
                         </div>
-                    </div>
+                    </div> */}
+                        </>
+                    ) : (
+                        <>
+                            <div className="menu">
+                                <div className="menu_wrapper">
+                                    <Link to="/authentication/login">
+                                        <div className="button">
+                                            <div className="icon">
+                                                <CiLogin
+                                                    className="icon"
+                                                    size="25px"
+                                                />
+                                            </div>
+                                            <div className="text">Sign In</div>
+                                        </div>
+                                    </Link>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </>
             )}
         </>

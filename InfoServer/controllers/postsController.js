@@ -83,7 +83,8 @@ exports.getPublicPostsByUserID = async (req, res, next) => {
         const totalPosts = await Post.countDocuments();
         const totalPages = Math.ceil(totalPosts / limit);
 
-        const posts = await Post.find({ user_id }, { privacy: "public" })
+        const posts = await Post.find({ user_id, privacy: "PUBLIC" }) // Filter by user_id and privacy
+            .sort({ timeStamp: -1 }) // Sort by timeStamp in ascending order
             .skip(startIndex)
             .limit(limit);
 

@@ -4,13 +4,17 @@
 :root {
     //Dark mode
     --general-background: #18191a;
-    --general-button-color: #3a3b3c;
-    --general-button-hover: #606060;
+    --general-button-color: #555555;
+    --general-button-danger-color: #4a1c1c;
+    --general-button-hover: #676668;
+    --general-button-danger-hover: #6d3e3e;
     --general-icon-color: #bbbbbb;
     --general-text-color: #e4e6eb;
     --small-text-color: #adadad;
     --icon-hover: #ffffff;
+    --icon-danger: #ff1313;
     --text-hover: #ffffff;
+    --text-danger: #ff1414;
     --level-1: #303030;
     --level-2: #545454;
     --level-3: #818181;
@@ -36,9 +40,9 @@
         --playlistDetailImageHeight: 300px;
 
         //Detail
-        --detail-header-thumbnails-size: 264px;
+        --detail-header-thumbnails-size: 200px;
 
-        --divider-height: 50px;
+        --divider-height: 30px;
 
         --detail-header-renderer-collapsed-description-height: calc(
             2 * 14px * var(--body-line-height)
@@ -115,7 +119,6 @@ input[type="number"] {
 }
 
 .swiper-slide {
-    text-align: center;
     font-size: 18px;
 
     /* Center slide text vertically */
@@ -182,8 +185,12 @@ input[type="number"] {
 .mySwiper {
     height: 20%;
     max-height: 100px;
-    box-sizing: border-box;
     padding: 10px 0;
+}
+.mySwiper img {
+    width: 100%;
+    height: 100%;
+    object-fit: scale-down;
 }
 .mySwiper img:hover {
     cursor: pointer;

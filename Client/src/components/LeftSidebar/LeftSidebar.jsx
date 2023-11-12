@@ -18,7 +18,7 @@ function LeftSidebar() {
 
     return (
         <div className={`leftSidebar ${sidebarVisible ? "" : "hide"}`}>
-            <Link to="/music/">
+            <Link to="/">
                 <div className="logo">
                     <img src="/photos/MySPACE-Logo.png"></img>
                 </div>
@@ -26,7 +26,7 @@ function LeftSidebar() {
             {user ? (
                 <div className="info">
                     <div className="avatar">
-                        <Link to={`/profile/id=${user._id}`}>
+                        <Link to={`/profile/?id=${user._id}`}>
                             <img src={user.avatar}></img>
                         </Link>
                     </div>

@@ -229,7 +229,7 @@ const FilePicker = ({ files, setFiles }) => {
                 <div className="flex flex-col justify-center items-center">
                     <input {...getInputProps()} />
                     <p className="text-[20px] font-bold select-none text-[#e4e6eb]">
-                        Add Photos
+                        Add Photos/Audios
                     </p>
                     <p className="text-[13px] text-[#adadad] select-none">
                         or drag and drop

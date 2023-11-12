@@ -9,6 +9,6 @@ router.post("/", postsController.post);
 router.get("/:user_id", postsController.getPostsByUserID);
 
 // GET /api/posts/:user_id
-router.get("/:user_id?public=true", postsController.getPublicPostsByUserID);
+router.get("/public/:user_id", postsController.getPublicPostsByUserID);
 
 module.exports = router;

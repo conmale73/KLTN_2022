@@ -36,7 +36,6 @@ const Post = ({ key, user_id, text, timeStamp, privacy, files }) => {
 
     if (error) return <p>{error.message}</p>;
 
-    console.log(audios);
     return (
         <>
             <div className={styles.post} key={key}>

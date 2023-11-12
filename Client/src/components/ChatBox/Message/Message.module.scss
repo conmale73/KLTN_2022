@@ -1,0 +1,27 @@
+.message {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin-top: 10px;
+    &:hover {
+        background-color: var(--level-2);
+    }
+
+    .messageAvatar {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        .messageTime {
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--small-text-color);
+            margin: 0 0 0 10px;
+        }
+    }
+    .messageContent {
+        word-wrap: break-word;
+        font-size: 15px;
+    }
+}

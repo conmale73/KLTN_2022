@@ -10,9 +10,12 @@ const artistsRouter = require("./routes/artists");
 const usersRoutes = require("./routes/users");
 const authRoutes = require("./routes/auth");
 const postRoutes = require("./routes/posts");
+const roomsRoutes = require("./routes/rooms");
+const groupChatsRoutes = require("./routes/groupChats");
+const messagesRoutes = require("./routes/messages");
+
 const morgan = require("morgan");
 const http = require("http");
-const jsonParser = express.json({ limit: "50mb" });
 
 // Initialize Express app
 const app = express();
@@ -33,13 +36,17 @@ app.use("/api/songs", songsRouter);
 app.use("/api/albums", albumsRouter);
 app.use("/api/artists", artistsRouter);
 app.use("/api/users", usersRoutes);
-app.use("/api/posts", jsonParser, postRoutes);
+app.use("/api/posts", postRoutes);
+app.use("/api/rooms", roomsRoutes);
+app.use("/api/groupChats", groupChatsRoutes);
+app.use("/api/messages", messagesRoutes);
 
 // Error Handler Middleware
 app.use(errorHandler);
 
 // Create an HTTP server and wrap it with Socket.IO
 const server = http.createServer(app);
+
 const socketIo = require("socket.io")(server, {
     cors: {
         origin: "http://localhost:5173",
@@ -47,13 +54,28 @@ const socketIo = require("socket.io")(server, {
     },
 });
 
+let onlineUsers = [];
 // Define Socket.IO logic here
 socketIo.on("connection", (socket) => {
-    console.log("A user connected");
+    console.log(`connection ${socket.id} connected`);
 
-    // Handle custom events here
+    socket.on("addNewOnlineUser", (user_id) => {
+        !onlineUsers.some((user) => user.user_id === user_id) &&
+            onlineUsers.push({
+                user_id: user_id,
+                socket_id: socket.id,
+            });
+        console.log("onlineUsers: ", onlineUsers);
+        socketIo.emit("getOnlineUsers", onlineUsers);
+    });
+
+    socket.on("deleteOnlineUser", (user_id) => {
+        onlineUsers = onlineUsers.filter((user) => user.user_id !== user_id);
+        console.log("onlineUsers: ", onlineUsers);
+        socketIo.emit("getOnlineUsers", onlineUsers);
+    });
     socket.on("disconnect", () => {
-        console.log("A user disconnected");
+        console.log(`connection ${socket.id} disconnected`);
     });
 });
 

@@ -56,7 +56,7 @@ const ListPlaylists = (props) => {
                     prevEl: `.${uniqueId}.custom_prev`, // Use unique ID class to target specific navigation
                 }}
                 modules={[Navigation]}
-                className="mySwiper"
+                className="mySwiper2"
                 slidesPerView={5}
                 spaceBetween={10}
                 onReachBeginning={handleReachBeginning}

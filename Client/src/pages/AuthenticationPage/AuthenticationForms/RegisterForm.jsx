@@ -93,7 +93,7 @@ const RegisterForm = () => {
 
                 const token = response.data.token;
                 localStorage.setItem("token", JSON.stringify(token));
-                const user = { email: email };
+                const user = response.data.user;
                 localStorage.setItem("user", JSON.stringify(user));
                 dispatch(setUser(user));
                 navigator("/profile");

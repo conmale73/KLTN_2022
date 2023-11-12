@@ -18,7 +18,7 @@ function FormatDate(props) {
         return `${Math.floor(diff / 3600)} hours ago`;
     }
 
-    return dateObj.moment().format("LLLL");
+    return dateObj.format("LLLL");
 }
 
 export default FormatDate;

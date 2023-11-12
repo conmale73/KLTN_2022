@@ -6,6 +6,8 @@ import userSlice from "./user/userSlice";
 import modeSlice from "./mode/modeSlice";
 import imageStoreSlice from "./imageStore/imageStoreSlice";
 import editingImage from "./editingImage/editingImageSlice";
+import onlineUsersSlice from "./onlineUsers/onlineUsersSlice";
+
 //khoi tao store
 export const store = configureStore({
     reducer: {
@@ -16,5 +18,6 @@ export const store = configureStore({
         mode: modeSlice,
         image: imageStoreSlice,
         editingImage: editingImage,
+        onlineUsers: onlineUsersSlice,
     },
 });

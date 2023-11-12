@@ -11,7 +11,8 @@ const SongDetail = lazy(() => import("../pages/SongDetail"));
 const PlaylistDetail = lazy(() => import("../pages/PlaylistDetail"));
 const ArtistDetail = lazy(() => import("../pages/ArtistDetail"));
 const Profile = lazy(() => import("../pages/Profile"));
-
+const Playground = lazy(() => import("../pages/Playground"));
+const Room = lazy(() => import("../pages/Room"));
 const Feed = lazy(() => import("../pages/Feed"));
 const SocialHome = lazy(() => import("../pages/SocialHome"));
 
@@ -20,7 +21,7 @@ export const publishRoutes = [
         index: true,
         element: (
             <Suspense fallback={<Loading isFullScreen={true} />}>
-                <Home title="MY SPACE" />
+                <SocialHome title="MY SPACE" />
             </Suspense>
         ),
     },
@@ -37,6 +38,22 @@ export const publishRoutes = [
         element: (
             <Suspense fallback={<Loading isFullScreen={true} />}>
                 <Profile title="Profile" />
+            </Suspense>
+        ),
+    },
+    {
+        path: "/playground",
+        element: (
+            <Suspense fallback={<Loading isFullScreen={true} />}>
+                <Playground title="Playground" />
+            </Suspense>
+        ),
+    },
+    {
+        path: "/room/:id",
+        element: (
+            <Suspense fallback={<Loading isFullScreen={true} />}>
+                <Room title="Relaxing room" />
             </Suspense>
         ),
     },

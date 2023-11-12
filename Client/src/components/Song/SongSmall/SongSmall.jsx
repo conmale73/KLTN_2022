@@ -166,12 +166,6 @@ const SmallSong = (props) => {
                             Remove From Playlist
                         </ContextMenu.Item>
 
-                        <ContextMenu.Item className="ContextMenuItem" disabled>
-                            Foward
-                        </ContextMenu.Item>
-                        <ContextMenu.Item className="ContextMenuItem">
-                            Reload
-                        </ContextMenu.Item>
                         <ContextMenu.Sub>
                             <ContextMenu.SubTrigger className="ContextMenuSubTrigger">
                                 More Tools
