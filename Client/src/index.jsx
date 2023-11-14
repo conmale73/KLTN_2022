@@ -15,14 +15,12 @@ const root = createRoot(container);
 const queryClient = new QueryClient();
 
 root.render(
-    <StrictMode>
-        <QueryClientProvider client={queryClient}>
-            <Provider store={store}>
-                <GlobalStyles>
-                    <App />
-                    <ReactQueryDevtools />
-                </GlobalStyles>
-            </Provider>
-        </QueryClientProvider>
-    </StrictMode>
+    <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+            <GlobalStyles>
+                <App />
+                <ReactQueryDevtools />
+            </GlobalStyles>
+        </Provider>
+    </QueryClientProvider>
 );

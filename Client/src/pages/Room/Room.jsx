@@ -11,32 +11,28 @@ import React, { useRef, useState, useEffect } from "react";
 import { AiOutlineClose, AiFillSetting } from "react-icons/ai";
 import { FaMicrophone, FaHeadphones, FaSignInAlt } from "react-icons/fa";
 import TextareaAutosize from "react-textarea-autosize";
-import { PiPaperPlaneRightFill, PiShareFatFill } from "react-icons/pi";
+import { PiShareFatFill } from "react-icons/pi";
 import { useSelector } from "react-redux";
 import VoiceChatChannel from "../../components/VoiceChatChannel";
+import io from "socket.io-client";
+
 const Room = () => {
     const { id } = useParams();
     const [open, setOpen] = useState(false);
     const [text, setText] = useState("");
     const user = useSelector((state) => state.user.data);
-    const [isJoined, setIsJoined] = useState(false);
-
-    const handleTextChange = (e) => {
-        setText(e.target.value);
-    };
 
     const { isLoading, error, data, isFetching } = useQuery({
         queryKey: ["room", id],
         queryFn: () => roomService.getRoomById(id).then((res) => res.data.data),
     });
+
     if (isLoading) return <Loading />;
     if (error) return <p>{error.message}</p>;
 
     const handleClickJoin = (e) => {
         try {
             const res = roomService.joinRoom(data._id, user._id);
-            console.log(res);
-            console.log(data._id, user._id);
         } catch (err) {
             console.log(err);
         }
@@ -46,21 +42,6 @@ const Room = () => {
         setOpen(!open);
     };
 
-    const handleClickSendMsg = (e) => {
-        if (text !== "") {
-            try {
-                const res = messageService.createMessage(
-                    data.chat_id[0],
-                    user._id,
-                    text
-                );
-                console.log(res);
-                setText("");
-            } catch (err) {
-                console.log(err);
-            }
-        }
-    };
     const handleClickQuit = () => {
         try {
             const res = roomService.quitRoom(data._id, user._id);
@@ -186,25 +167,11 @@ const Room = () => {
                                         <div className="w-[1300px] h-full bg-[#303030] flex-col justify-end items-center inline-flex">
                                             <ChatBox
                                                 chat_id={data.chat_id[0]}
+                                                text={text}
+                                                setText={setText}
+                                                showTextarea={true}
+                                                participants={data.participants}
                                             />
-
-                                            <div className="self-stretch px-[9px] pt-[13px] pb-3.5 items-center flex">
-                                                <TextareaAutosize
-                                                    maxRows="6"
-                                                    value={text}
-                                                    onChange={handleTextChange}
-                                                    className="resize-none grow shrink basis-0 self-stretch pl-[15px] mr-[20px] pt-[13px] pb-3 bg-[#404040] 
-                                                rounded-[10px] border justify-end items-center gap-[1127px] inline-flex"
-                                                    placeholder="Message..."
-                                                />
-                                                <PiPaperPlaneRightFill
-                                                    onClick={(e) =>
-                                                        handleClickSendMsg(e)
-                                                    }
-                                                    size="30px"
-                                                    className="right-[50px] bottom-[20px] cursor-pointer hover:text-[#ffffff]"
-                                                />
-                                            </div>
                                         </div>
                                         {/* Right */}
                                         <div className="w-[300px] pl-[13px] pr-3 pt-[9px]  flex-col justify-start items-start gap-3 inline-flex">
@@ -279,7 +246,10 @@ const Room = () => {
                             Live Chat:
                         </div>
                         <div className={styles.chatBox}>
-                            <ChatBox chat_id={data.chat_id[0]} />
+                            <ChatBox
+                                chat_id={data.chat_id[0]}
+                                showTextarea={false}
+                            />
                         </div>
                     </div>
                 </div>

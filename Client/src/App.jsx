@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import io from "socket.io-client";
 import { useSelector, useDispatch } from "react-redux";
 import { setOnlineUsers } from "./redux/onlineUsers/onlineUsersSlice";
+
 function App() {
     useShowScrollbar();
     const dispatch = useDispatch();
@@ -22,14 +23,12 @@ function App() {
             });
 
             socket.on("getOnlineUsers", (data) => {
-                console.log(data);
                 dispatch(setOnlineUsers(data));
             });
 
             return () => {
                 socket.emit("deleteOnlineUser", user._id);
                 socket.on("getOnlineUsers", (data) => {
-                    console.log(data);
                     dispatch(setOnlineUsers(data));
                 });
                 socket.disconnect();
