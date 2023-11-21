@@ -52,11 +52,54 @@ exports.joinRoom = async (req, res, next) => {
         } else {
             const { participants } = room;
 
-            if (participants.includes(req.body.user_id)) {
+            const groupChat = await GroupChat.findOne({
+                group_id: room_id,
+            });
+
+            const { members } = groupChat;
+
+            if (
+                participants.includes(req.body.user_id) &&
+                members.includes(req.body.user_id)
+            ) {
                 return res.status(201).json(room);
-            } else {
+            } else if (
+                participants.includes(req.body.user_id) &&
+                !members.includes(req.body.user_id)
+            ) {
+                members.push(req.body.user_id);
+
+                const updatedGroupChat = await GroupChat.findOneAndUpdate(
+                    { group_id: room_id },
+                    { members },
+                    { new: true }
+                );
+                return res.status(201).json(room);
+            } else if (
+                !participants.includes(req.body.user_id) &&
+                members.includes(req.body.user_id)
+            ) {
                 participants.push(req.body.user_id);
 
+                const updatedRoom = await Room.findOneAndUpdate(
+                    { _id: room_id },
+                    { participants },
+                    { new: true }
+                );
+
+                res.status(201).json(updatedRoom);
+            } else if (
+                !participants.includes(req.body.user_id) &&
+                !members.includes(req.body.user_id)
+            ) {
+                participants.push(req.body.user_id);
+                members.push(req.body.user_id);
+
+                const updatedGroupChat = await GroupChat.findOneAndUpdate(
+                    { group_id: room_id },
+                    { members },
+                    { new: true }
+                );
                 const updatedRoom = await Room.findOneAndUpdate(
                     { _id: room_id },
                     { participants },

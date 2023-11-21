@@ -6,7 +6,6 @@
 
 .top {
     flex: 1;
-    height: calc(100% - var(--globalFooterHeight));
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -30,7 +29,7 @@
 .headerAndContent {
     position: absolute;
     left: 250px;
-    margin: 0 320px 100px 0;
+    margin: 0 320px var(--globalFooterHeight) 0;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -47,7 +46,7 @@
     display: flex;
     flex-direction: column;
     z-index: 0;
-    margin: 0 20px 100px 40px;
+    margin: 0 20px var(--globalFooterHeight) 40px;
     height: fit-content;
 }
 
@@ -62,6 +61,35 @@
     width: 100%;
     height: var(--globalFooterHeight);
     bottom: 0;
+    z-index: 0;
+    transition: 0.5s ease-in-out;
+
+    &.hide {
+        transform: translateY(var(--globalFooterHeight));
+        transition: transform 0.5s ease-in-out;
+    }
+    .toggleButton {
+        position: absolute;
+        top: -28px;
+        right: 20px;
+        width: 30px;
+        height: 30px;
+        border-radius: 5px;
+        background-color: var(--level-1);
+        border-top: 1px solid var(--general-button-color);
+        border-right: 1px solid var(--general-button-color);
+
+        border-left: 1px solid var(--general-button-color);
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem;
+        &:hover {
+            cursor: pointer;
+            background-color: var(--general-button-hover);
+        }
+    }
 }
 
 .left,

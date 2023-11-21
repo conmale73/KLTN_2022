@@ -31,16 +31,6 @@ function Header() {
                 <div className={styles.navList}>
                     <div
                         className={`${styles.navItem} ${
-                            mode === "music" ? styles.selected : ""
-                        }`}
-                        onClick={() => {
-                            dispatch(setMode("music"));
-                        }}
-                    >
-                        <p title="Back to Homepage">Music</p>
-                    </div>
-                    <div
-                        className={`${styles.navItem} ${
                             mode === "social" ? styles.selected : ""
                         }`}
                         onClick={() => {
@@ -48,6 +38,16 @@ function Header() {
                         }}
                     >
                         <p title="Most listened songs">Explore</p>
+                    </div>
+                    <div
+                        className={`${styles.navItem} ${
+                            mode === "music" ? styles.selected : ""
+                        }`}
+                        onClick={() => {
+                            dispatch(setMode("music"));
+                        }}
+                    >
+                        <p title="Back to Homepage">Music</p>
                     </div>
                 </div>
                 <div className={styles.search}>

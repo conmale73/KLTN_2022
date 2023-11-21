@@ -2,8 +2,8 @@ import styles from "./RegisterForm.module.scss";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Toast } from "flowbite-react";
 
-import * as Dialog from "@radix-ui/react-dialog";
 import { authService } from "../../../services";
 import { setUser } from "../../../redux/user/userSlice";
 const RegisterForm = () => {
@@ -184,54 +184,24 @@ const RegisterForm = () => {
                     </ul>
                 </div>
                 <div className={styles.button}>
-                    <Dialog.Root
-                        open={openRegister}
-                        onOpenChange={(e) => handleStateModal(e)}
+                    <button
+                        type="submit"
+                        className={styles.signupButton}
+                        onClick={(e) => handleClickSubmit(e)}
                     >
-                        <Dialog.Trigger asChild>
-                            <button
-                                type="submit"
-                                className={styles.signupButton}
-                                onClick={(e) => handleClickSubmit(e)}
-                            >
-                                Sign Up
-                            </button>
-                        </Dialog.Trigger>
-                        <Dialog.Portal>
-                            <Dialog.Overlay className="bg-black/30 data-[state=open]:animate-overlayShow fixed inset-0" />
-                            {error != "" && (
-                                <Dialog.Content
-                                    className="data-[state=open]:animate-contentShow fixed top-[40%] 
-                        left-[50%] max-h-[85vh] w-[90vw] max-w-[350px] translate-x-[-50%] translate-y-[-50%] 
-                        rounded-[6px] bg-white p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none"
-                                >
-                                    <Dialog.Title className="text-red-600 m-0 text-[17px] font-medium">
-                                        Error
-                                    </Dialog.Title>
-                                    <Dialog.Description className="text-black mt-[10px] mb-5 text-[15px] leading-normal">
-                                        {error}
-                                    </Dialog.Description>
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            justifyContent: "flex-end",
-                                        }}
-                                    >
-                                        <Dialog.Close asChild>
-                                            <button
-                                                className="text-black bg-blue-100 hover:bg-blue-400 focus:shadow-blue-600 
-                                        inline-flex h-[35px] items-center justify-center self-end 
-                                        rounded-[4px] px-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]"
-                                            >
-                                                Close
-                                            </button>
-                                        </Dialog.Close>
-                                    </div>
-                                </Dialog.Content>
-                            )}
-                        </Dialog.Portal>
-                    </Dialog.Root>
+                        Sign Up
+                    </button>
                 </div>
+                {error && (
+                    <div className="flex justify-center">
+                        <Toast className="bg-[#303030]">
+                            <div className="ml-3 text-[15px] font-bold text-[#e4e6eb]">
+                                {error}
+                            </div>
+                            <Toast.Toggle onDismiss={() => setError("")} />
+                        </Toast>
+                    </div>
+                )}
             </div>
         </div>
     );

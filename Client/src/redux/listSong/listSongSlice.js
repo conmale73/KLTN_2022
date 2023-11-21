@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { useSongContext } from "../../context/SongContext";
 
 let items =
     localStorage.getItem("listSong") !== null

@@ -11,8 +11,9 @@
 
     .messageAvatar {
         display: flex;
-        justify-content: flex-start;
         align-items: center;
+        justify-content: flex-start;
+
         .messageTime {
             font-size: 12px;
             font-weight: 400;
@@ -21,7 +22,86 @@
         }
     }
     .messageContent {
+        white-space: pre-line;
         word-wrap: break-word;
         font-size: 15px;
+        margin-left: 45px;
+        text-align: start;
+    }
+}
+
+.singleChatMessage {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    align-items: center;
+    gap: 10px;
+    .myTime {
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--small-text-color);
+        margin-left: auto;
+    }
+    .myContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        width: fit-content;
+        max-width: 50%;
+        height: fit-content;
+        gap: 10px;
+        border: 1px solid var(--level-2);
+        border-radius: 10px;
+        padding: 10px;
+        &:hover {
+            background-color: var(--level-2);
+        }
+        .myAvatar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .myContent {
+            white-space: pre-line;
+            text-align: start;
+            word-wrap: break-word;
+            font-size: 12px;
+        }
+    }
+
+    .peerContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        width: fit-content;
+        height: fit-content;
+        gap: 10px;
+        border: 1px solid var(--level-2);
+        border-radius: 10px;
+        padding: 10px;
+        &:hover {
+            background-color: var(--level-2);
+        }
+        .peerAvatar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .peerContent {
+            word-wrap: break-word;
+            font-size: 12px;
+            white-space: pre-line;
+            text-align: start;
+        }
+    }
+    .peerTime {
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--small-text-color);
     }
 }

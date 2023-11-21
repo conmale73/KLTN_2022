@@ -6,20 +6,26 @@ import { GiSpeaker, GiSpeakerOff } from "react-icons/gi";
 import { useDispatch, useSelector } from "react-redux";
 import { useSongContext } from "../../context/SongContext";
 import { Link } from "react-router-dom";
+import ChatThumbnail from "../Chat/ChatThumbnail";
+import ChatContainer from "../Chat/ChatContainer";
 
 function Footer() {
     const { currentSongIndex, setCurrentSongIndex } = useSongContext();
-
     const soundList =
         useSelector((state) => state.listSongs.list) ||
         localStorage.getItem("listSongs") ||
         [];
+    const user = useSelector((state) => state.user.data);
+    const currentChatList = useSelector((state) => state.currentChatList.list);
+    const currentChat = useSelector(
+        (state) => state.currentChatList.currentChat
+    );
     let currentSongRedux = useSelector((state) => state.listSongs.currentSong);
     const [volumeSlider, setVolumeSlider] = useState(
         localStorage.getItem("volume")
     );
-
     const [mute, setMute] = useState(false);
+    const dispatch = useDispatch();
     const handleClickVolume = (e) => {
         if (!mute) {
             setMute(true);
@@ -31,7 +37,22 @@ function Footer() {
     };
 
     return (
-        <footer className={styles.footer}>
+        <footer className={`${styles.footer}`}>
+            {user && (
+                <div
+                    className="w-[50px] h-fit absolute flex flex-wrap flex-col-reverse 
+            bottom-[150px] right-[20px] gap-[25px] "
+                >
+                    {currentChatList.map((chat, index) => (
+                        <ChatThumbnail index={index} chat={chat} />
+                    ))}
+                </div>
+            )}
+            {currentChat && (
+                <div className="w-fit h-fit absolute bottom-[100px] right-[100px]">
+                    <ChatContainer />
+                </div>
+            )}
             <div className={styles.left}>
                 <div className={styles.leftContainer}>
                     <div
@@ -58,7 +79,10 @@ function Footer() {
 
                         <div className={styles.artistList}>
                             {currentSongRedux?.artists.map((artist, index) => (
-                                <Link to={`/music/users/${artist.id}`}>
+                                <Link
+                                    to={`/music/users/${artist.id}`}
+                                    key={index}
+                                >
                                     {artist.id !== null ? (
                                         <p
                                             key={index}

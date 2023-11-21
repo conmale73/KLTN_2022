@@ -26,7 +26,7 @@ function RightSidebar() {
                         0 === tab && activeTabStyle
                     )}
                 >
-                    <p className="text-2xl font-medium">Now Playing</p>
+                    <p className="text-2xl font-medium">Contacts</p>
                 </div>
                 <div
                     onClick={() => setTab(1)}
@@ -35,11 +35,11 @@ function RightSidebar() {
                         1 === tab && activeTabStyle
                     )}
                 >
-                    <p className="text-2xl font-medium">Contacts</p>
+                    <p className="text-2xl font-medium">Now Playing</p>
                 </div>
             </div>
             <div className="rightSidebarContent">
-                {tab === 0 ? <NowPlaying /> : <OnlineFriendList />}
+                {tab === 0 ? <OnlineFriendList /> : <NowPlaying />}
             </div>
             {/* <button
                 className="toggleButtonRight"

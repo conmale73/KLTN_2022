@@ -17,43 +17,84 @@ const UserInfoPreview = (props) => {
     return (
         <>
             <HoverCard.Root>
-                <div className="flex items-center gap-[5px]">
-                    <HoverCard.Trigger asChild>
-                        <div
-                            className="w-fit h-fit relative"
-                            style={{
-                                minWidth: props.thumbnailWidth,
-                                minHeight: props.thumbnailHeight,
-                                width: props.thumbnailWidth,
-                                height: props.thumbnailHeight,
-                            }}
-                        >
-                            <img
-                                className={`w-full h-full object-cover rounded-full`}
-                                src={data.avatar}
-                                alt={data.username}
-                            />
-                            {onlineUsers?.some(
-                                (user) => user?.user_id === data._id
-                            ) && (
-                                <div
-                                    className="w-[15px] h-[15px] absolute bottom-[-3px] 
-                            right-[-3px] rounded-full bg-[#23A55A] border-neutral-950 border-[2px]"
-                                ></div>
-                            )}
-                        </div>
-                    </HoverCard.Trigger>
-                    {props.showName && (
-                        <Link to={"/profile/?id=" + data._id}>
+                {props.bgStyles ? (
+                    <div
+                        className={`flex items-center gap-[5px] cursor-pointer hover:bg-[#676668] w-full p-[5px] rounded-[3px]`}
+                    >
+                        <HoverCard.Trigger asChild>
                             <div
-                                className="text-[20px] hover:underline line-clamp-1"
+                                className="w-fit h-fit relative"
+                                style={{
+                                    minWidth: props.thumbnailWidth,
+                                    minHeight: props.thumbnailHeight,
+                                    width: props.thumbnailWidth,
+                                    height: props.thumbnailHeight,
+                                }}
+                            >
+                                <img
+                                    className={`w-full h-full object-cover rounded-full`}
+                                    src={data.avatar}
+                                    alt={data.username}
+                                />
+                                {onlineUsers?.some(
+                                    (user) => user?.user_id === data._id
+                                ) && (
+                                    <div
+                                        className="w-[15px] h-[15px] absolute bottom-[-3px] 
+                            right-[-3px] rounded-full bg-[#23A55A] border-neutral-950 border-[2px]"
+                                    ></div>
+                                )}
+                            </div>
+                        </HoverCard.Trigger>
+                        {props.showName && (
+                            <div
+                                className="text-[20px] line-clamp-1"
                                 title={data.username}
                             >
                                 {data.username}
                             </div>
-                        </Link>
-                    )}
-                </div>
+                        )}
+                    </div>
+                ) : (
+                    <div className={`flex items-center gap-[5px]`}>
+                        <HoverCard.Trigger asChild>
+                            <div
+                                className="w-fit h-fit relative"
+                                style={{
+                                    minWidth: props.thumbnailWidth,
+                                    minHeight: props.thumbnailHeight,
+                                    width: props.thumbnailWidth,
+                                    height: props.thumbnailHeight,
+                                }}
+                            >
+                                <img
+                                    className={`w-full h-full object-cover rounded-full`}
+                                    src={data.avatar}
+                                    alt={data.username}
+                                />
+                                {onlineUsers?.some(
+                                    (user) => user?.user_id === data._id
+                                ) && (
+                                    <div
+                                        className="w-[15px] h-[15px] absolute bottom-[-3px] 
+                            right-[-3px] rounded-full bg-[#23A55A] border-neutral-950 border-[2px]"
+                                    ></div>
+                                )}
+                            </div>
+                        </HoverCard.Trigger>
+                        {props.showName && (
+                            <Link to={"/profile/?id=" + data._id}>
+                                <div
+                                    className="text-[20px] hover:underline line-clamp-1"
+                                    title={data.username}
+                                >
+                                    {data.username}
+                                </div>
+                            </Link>
+                        )}
+                    </div>
+                )}
+
                 <HoverCard.Portal>
                     <HoverCard.Content
                         className="data-[side=bottom]:animate-slideUpAndFade 

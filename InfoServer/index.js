@@ -4,6 +4,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const database = require("./config/database");
 const errorHandler = require("./middlewares/errorHandler");
+
+// Import routes
 const songsRouter = require("./routes/songs");
 const albumsRouter = require("./routes/albums");
 const artistsRouter = require("./routes/artists");
@@ -13,6 +15,7 @@ const postRoutes = require("./routes/posts");
 const roomsRoutes = require("./routes/rooms");
 const groupChatsRoutes = require("./routes/groupChats");
 const messagesRoutes = require("./routes/messages");
+const voiceChannelsRoutes = require("./routes/voiceChannels");
 
 const morgan = require("morgan");
 const http = require("http");
@@ -40,6 +43,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/rooms", roomsRoutes);
 app.use("/api/groupChats", groupChatsRoutes);
 app.use("/api/messages", messagesRoutes);
+app.use("/api/voiceChannels", voiceChannelsRoutes);
 
 // Error Handler Middleware
 app.use(errorHandler);
@@ -68,6 +72,10 @@ io.on("connection", (socket) => {
         console.log("onlineUsers: ", onlineUsers);
         io.emit("getOnlineUsers", onlineUsers);
     });
+    socket.on("joinRoom", (room_id, user_id) => {
+        socket.join(room_id);
+        console.log(`user ${user_id} joined room ${room_id}`);
+    });
 
     socket.on("joinChat", (user_id, chat_id) => {
         socket.join(chat_id);
@@ -79,11 +87,66 @@ io.on("connection", (socket) => {
 
         socket.to(newMessage.chat_id).emit("receiveMessage", newMessage);
     });
+
+    socket.on(
+        "joinVoiceChannel",
+        (voiceChannel_id, user_id, room_id, prevVoiceChannel_id) => {
+            socket.leave(prevVoiceChannel_id);
+            socket.join(voiceChannel_id);
+            console.log(
+                `user ${user_id} joined voice channel ${voiceChannel_id}`
+            );
+            const connectionsInRoom =
+                io.sockets.adapter.rooms.get(voiceChannel_id);
+
+            console.log(
+                `connections in voice channel ${voiceChannel_id}: `,
+                connectionsInRoom
+            );
+            socket
+                .to(voiceChannel_id)
+                .emit("receiveJoinVoiceChannel", voiceChannel_id);
+            console.log(`send join event to ${voiceChannel_id}`);
+            socket.to(room_id).emit("receiveJoinVoiceChannelRoom");
+
+            console.log(`Current rooms for socket ${socket.id}:`, socket.rooms);
+        }
+    );
+
+    socket.on("leaveVoiceChannel", (voiceChannel_id, user_id, room_id) => {
+        socket.leave(voiceChannel_id);
+        console.log(`user ${user_id} left voice channel ${voiceChannel_id}`);
+        socket.to(voiceChannel_id).emit("receiveLeaveVoiceChannel");
+        socket.to(room_id).emit("receiveLeaveVoiceChannelRoom", user_id);
+        const connectionsInRoom = io.sockets.adapter.rooms.get(voiceChannel_id);
+        console.log(
+            `connections in voice channel ${voiceChannel_id}: `,
+            connectionsInRoom
+        );
+        socket.leave(voiceChannel_id, (err) => {
+            if (err) {
+                console.error(
+                    `Error leaving room ${voiceChannel_id}: ${err.message}`
+                );
+            } else {
+                // After leaving the room, log the updated connections
+                const connectionsInRoom =
+                    io.sockets.adapter.rooms.get(voiceChannel_id);
+                console.log(
+                    `connectionssssssssss in voice channel ${voiceChannel_id}: `,
+                    connectionsInRoom
+                );
+            }
+        });
+        console.log(`Current rooms for socket ${socket.id}:`, socket.rooms);
+    });
+
     socket.on("deleteOnlineUser", (user_id) => {
         onlineUsers = onlineUsers.filter((user) => user.user_id !== user_id);
         console.log("onlineUsers: ", onlineUsers);
         socket.emit("getOnlineUsers", onlineUsers);
     });
+
     socket.on("disconnect", () => {
         console.log(`connection ${socket.id} disconnected`);
     });

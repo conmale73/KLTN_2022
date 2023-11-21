@@ -4,7 +4,7 @@ const { ObjectId } = require("mongodb");
 const groupChatSchema = new mongoose.Schema({
     group_id: {
         type: ObjectId,
-        required: true,
+        default: null,
     },
     members: [
         {

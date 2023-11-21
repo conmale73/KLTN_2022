@@ -17,7 +17,7 @@ import "swiper/css/thumbs";
 
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import MiniAudioPlayer from "../MiniAudioPlayer";
-
+import UserInfoPreview from "../UserInfoPreview";
 const Post = ({ key, user_id, text, timeStamp, privacy, files }) => {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const images = files.filter((file) => {
@@ -41,7 +41,13 @@ const Post = ({ key, user_id, text, timeStamp, privacy, files }) => {
             <div className={styles.post} key={key}>
                 <div className={styles.infoContainer}>
                     <div className={styles.avatar}>
-                        <img src={data.avatar} alt="" />
+                        <UserInfoPreview
+                            thumbnailHeight="40px"
+                            thumbnailWidth="40px"
+                            showName={false}
+                            user_id={user_id}
+                            bgStyles={false}
+                        />
                     </div>
                     <div className={styles.info}>
                         <div className={styles.name}>{data.username}</div>
@@ -67,7 +73,7 @@ const Post = ({ key, user_id, text, timeStamp, privacy, files }) => {
                 </div>
 
                 <div className={styles.content}>
-                    <div className={styles.text}>{text}</div>
+                    <p className={styles.text}>{text}</p>
                     <div className={styles.files}>
                         {audios.length > 0 && (
                             <>

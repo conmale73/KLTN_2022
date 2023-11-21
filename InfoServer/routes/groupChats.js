@@ -6,9 +6,12 @@ const groupChatController = require("../controllers/groupChatController");
 router.post("/", groupChatController.createGroupChat);
 
 // GET /api/groupChats/:group_chat_id
-router.get("/:group_chat_id", groupChatController.getGroupChatByID);
+router.get("/id/:group_chat_id", groupChatController.getGroupChatByID);
 
 // GET /api/groupChats/user/:user_id
 router.get("/user/:user_id", groupChatController.getGroupChatsByUserID);
+
+// GET /api/groupChats/two/
+router.post("/two/", groupChatController.getGroupChatOfTwoUsers);
 
 module.exports = router;

@@ -1,8 +1,12 @@
 import styles from "./Room.module.scss";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import Loading from "../../components/Loading";
-import { roomService, messageService } from "../../services";
+import {
+    roomService,
+    messageService,
+    voiceChannelService,
+} from "../../services";
 import UserInfoPreview from "../../components/UserInfoPreview";
 import { FiLogOut } from "react-icons/fi";
 import ChatBox from "../../components/ChatBox";
@@ -10,29 +14,101 @@ import * as Dialog from "@radix-ui/react-dialog";
 import React, { useRef, useState, useEffect } from "react";
 import { AiOutlineClose, AiFillSetting } from "react-icons/ai";
 import { FaMicrophone, FaHeadphones, FaSignInAlt } from "react-icons/fa";
+import { BsFillTelephoneXFill } from "react-icons/bs";
 import TextareaAutosize from "react-textarea-autosize";
 import { PiShareFatFill } from "react-icons/pi";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import VoiceChatChannel from "../../components/VoiceChatChannel";
+
+import {
+    setVoiceChannels,
+    removeUserFromVoiceChannel,
+} from "../../redux/voiceChannels/voiceChannelsSlice";
+import { setCurrentVoiceChannel } from "../../redux/currentVoiceChannel/currentVoiceChannelSlice";
 import io from "socket.io-client";
 
+var socket = io("http://localhost:3000");
 const Room = () => {
     const { id } = useParams();
     const [open, setOpen] = useState(false);
     const [text, setText] = useState("");
     const user = useSelector((state) => state.user.data);
+    const [roomData, setRoomData] = useState();
+    const voiceChannelData = useSelector((state) => state.voiceChannels.data);
+    const currentVoiceChannel = useSelector(
+        (state) => state.currentVoiceChannel.data
+    );
+    const dispatch = useDispatch();
 
-    const { isLoading, error, data, isFetching } = useQuery({
-        queryKey: ["room", id],
-        queryFn: () => roomService.getRoomById(id).then((res) => res.data.data),
+    const fetchRoomData = async () => {
+        const res = await roomService.getRoomById(id);
+        setRoomData(res.data.data);
+        return res.data.data;
+    };
+    const fetchVoiceChannelData = async () => {
+        const res = await voiceChannelService.getRoomVoiceChannels(id);
+        dispatch(setVoiceChannels(res.data));
+        return res.data;
+    };
+    const { isLoading, error, data } = useQueries({
+        queries: [
+            {
+                queryKey: ["room", id],
+                queryFn: () => fetchRoomData(),
+            },
+            {
+                queryKey: ["voiceChannels", id],
+                queryFn: () => fetchVoiceChannelData(),
+            },
+        ],
     });
+
+    useEffect(() => {
+        socket.on("receiveJoinVoiceChannelRoom", () => {
+            fetchVoiceChannelData();
+        });
+    }, [currentVoiceChannel]);
+
+    useEffect(() => {
+        socket.onAny((event, ...args) => {
+            console.log(`Received event '${event}':`, args);
+        });
+        socket.onAnyOutgoing((event, ...args) => {
+            console.log(`Sent event '${event}':`, args);
+        });
+        socket.on("receiveLeaveVoiceChannelRoom", (user_id) => {
+            var temp = [...voiceChannelData];
+
+            temp.forEach((voiceChannel, index) => {
+                if (voiceChannel.currentMembers.includes(user_id)) {
+                    // Create a new copy of the voiceChannel object
+                    const updatedVoiceChannel = { ...voiceChannel };
+
+                    // Update the currentMembers property in the new copy
+                    updatedVoiceChannel.currentMembers =
+                        updatedVoiceChannel.currentMembers.filter(
+                            (member) => member !== user_id
+                        );
+
+                    // Update the temp array with the modified voiceChannel
+                    temp[index] = updatedVoiceChannel;
+                }
+            });
+
+            dispatch(setVoiceChannels(temp));
+        });
+    });
+    useEffect(() => {
+        socket.emit("joinRoom", id, user._id);
+    }, []);
 
     if (isLoading) return <Loading />;
     if (error) return <p>{error.message}</p>;
 
     const handleClickJoin = (e) => {
         try {
-            const res = roomService.joinRoom(data._id, user._id);
+            const res = roomService.joinRoom(roomData._id, user._id);
+            fetchVoiceChannelData();
         } catch (err) {
             console.log(err);
         }
@@ -40,14 +116,49 @@ const Room = () => {
 
     const handleStateModal = (e) => {
         setOpen(!open);
+        voiceChannelService.leaveAllVoiceChannel(user._id);
     };
 
     const handleClickQuit = () => {
         try {
-            const res = roomService.quitRoom(data._id, user._id);
-            console.log(res);
+            const res = roomService.quitRoom(roomData._id, user._id);
         } catch (err) {
             console.log(err);
+        }
+    };
+    const handleClickLeaveVoiceChannel = () => {
+        try {
+            const res = voiceChannelService.leaveAllVoiceChannel(user._id);
+            var temp = [...voiceChannelData];
+
+            temp.forEach((voiceChannel, index) => {
+                if (voiceChannel.currentMembers.includes(user._id)) {
+                    // Create a new copy of the voiceChannel object
+                    const updatedVoiceChannel = { ...voiceChannel };
+
+                    // Update the currentMembers property in the new copy
+                    updatedVoiceChannel.currentMembers =
+                        updatedVoiceChannel.currentMembers.filter(
+                            (member) => member !== user._id
+                        );
+
+                    // Update the temp array with the modified voiceChannel
+                    temp[index] = updatedVoiceChannel;
+                }
+            });
+
+            dispatch(setVoiceChannels(temp));
+
+            socket.emit(
+                "leaveVoiceChannel",
+                currentVoiceChannel._id,
+                user._id,
+                currentVoiceChannel.room_id
+            );
+
+            dispatch(setCurrentVoiceChannel());
+        } catch (err) {
+            console.error(err);
         }
     };
     return (
@@ -55,21 +166,21 @@ const Room = () => {
             <div className={styles.room}>
                 <div className={styles.roomInfo}>
                     <div className={styles.roomThumbnail}>
-                        <img src={data.thumbnail} alt="thumbnail" />
+                        <img src={roomData?.thumbnail} alt="thumbnail" />
                     </div>
                     <div className={styles.infoContainer}>
-                        <div className={styles.roomName}>{data.name}</div>
+                        <div className={styles.roomName}>{roomData?.name}</div>
                         <div className={styles.roomCreator}>
                             <p>Creator: </p>
                             <UserInfoPreview
                                 thumbnailHeight="40px"
                                 thumbnailWidth="40px"
                                 showName={true}
-                                user_id={data.creator_id}
+                                user_id={roomData?.creator_id}
                             />
                         </div>
                         <div className={styles.roomDescription}>
-                            {`Description: ${data.description}`}
+                            {`Description: ${roomData?.description}`}
                         </div>
                     </div>
                     <div className={styles.buttons}>
@@ -95,10 +206,7 @@ const Room = () => {
                                 <Dialog.Content
                                     className="data-[state=open]:animate-contentShow fixed top-[50%] 
                                     left-[50%] w-full max-w-[1910px] h-full translate-x-[-50%] translate-y-[-50%] 
-                                    rounded-[6px] bg-[#18191a] overflow-y-scroll overflow-x-hidden"
-                                    onInteractOutside={(e) =>
-                                        e.preventDefault()
-                                    }
+                                    rounded-[6px] bg-[#18191a] overflow-y-auto overflow-x-hidden"
                                 >
                                     {/* Header */}
                                     <div
@@ -110,7 +218,7 @@ const Room = () => {
                                         }}
                                     >
                                         <Dialog.Title className="text-[#e4e6eb] m-0 text-[22px] font-sans font-bold flex justify-center flex-1">
-                                            {data.name}
+                                            {roomData?.name}
                                         </Dialog.Title>
                                         <Dialog.Close asChild>
                                             <button className="rounded-full bg-[#404040] p-[5px] hover:bg-[#505050] ">
@@ -132,27 +240,78 @@ const Room = () => {
                                                     src="https://scontent.fsgn2-11.fna.fbcdn.net/v/t1.6435-9/46496119_519018838597512_1156244267400691712_n.jpg?stp=dst-jpg_p180x540&_nc_cat=105&ccb=1-7&_nc_sid=300f58&_nc_ohc=C5v064vHSgUAX_UcJOm&_nc_ht=scontent.fsgn2-11.fna&oh=00_AfDnsJcw-Bc70xd4bi8Rhb4h7BrWzgb1DY1VaVJIjljGUA&oe=656EFDD3"
                                                 />
                                                 <div className="left-[32px] top-[10px] absolute text-white text-[25px] font-semibold font-['Inter'] line-clamp-1">
-                                                    {data.name}
+                                                    {roomData?.name}
                                                 </div>
                                             </div>
-                                            <div className="pl-1.5 pr-2 pt-[7px] pb-[79px] flex-col justify-start items-start gap-2 inline-flex">
+                                            <div className="w-full h-fit pl-1.5 pr-2 pt-[7px] pb-[79px] flex-col justify-start items-start gap-2 inline-flex">
                                                 <div className="text-neutral-200 text-lg font-normal font-['Inter']">
                                                     Voice Channels
                                                 </div>
-                                                <div className="w-[286px] h-[35px] relative flex-col justify-start items-start flex">
-                                                    <VoiceChatChannel />
+                                                <div className="w-full relative flex-col justify-start flex gap-[10px]">
+                                                    {voiceChannelData?.map(
+                                                        (
+                                                            voiceChannel,
+                                                            index
+                                                        ) => (
+                                                            <VoiceChatChannel
+                                                                key={index}
+                                                                index={index}
+                                                                _id={
+                                                                    voiceChannel?._id
+                                                                }
+                                                                room_id={
+                                                                    roomData?._id
+                                                                }
+                                                                name={
+                                                                    voiceChannel?.name
+                                                                }
+                                                                currentMembers={
+                                                                    voiceChannel?.currentMembers
+                                                                }
+                                                            />
+                                                        )
+                                                    )}
                                                 </div>
                                             </div>
+                                            {currentVoiceChannel ? (
+                                                <div className="p-[5px] w-full h-[70px] border-t-[1px] border-b-[1px] border-solid border-[#545454] absolute bottom-[70px]">
+                                                    <div className="w-full h-full flex">
+                                                        <div className="flex-1 flex flex-col">
+                                                            <div className="w-full h-[30px] text-green-500">
+                                                                Voice Connected
+                                                            </div>
+
+                                                            <div className="w-full h-[20px] text-[15px] text-[#adadad] text-ellipsis">
+                                                                {
+                                                                    currentVoiceChannel.name
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div className="w-[50px] h-[50px] flex justify-center items-center">
+                                                            <BsFillTelephoneXFill
+                                                                size="25px"
+                                                                className="text-[#bbbbbb] hover:text-[#ffffff] cursor-pointer"
+                                                                onClick={() => {
+                                                                    handleClickLeaveVoiceChannel();
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <></>
+                                            )}
+
                                             <div className=" flex w-[286px] h-[60px] absolute bottom-0">
                                                 <div className="w-fit h-fit right-[10px] top-[18px] absolute">
                                                     <AiFillSetting size="25px" />
                                                 </div>
-                                                <div className="w-fit h-fit right-[60px] top-[18px] absolute">
+                                                {/* <div className="w-fit h-fit right-[60px] top-[18px] absolute">
                                                     <FaHeadphones size="25px" />
                                                 </div>
                                                 <div className="w-fit h-fit right-[110px] top-[18px] absolute">
                                                     <FaMicrophone size="25px" />
-                                                </div>
+                                                </div> */}
                                                 <div className="absolute left-0 w-[140px] overflow-hidden">
                                                     <UserInfoPreview
                                                         thumbnailHeight="50px"
@@ -166,11 +325,14 @@ const Room = () => {
                                         {/* Middle */}
                                         <div className="w-[1300px] h-full bg-[#303030] flex-col justify-end items-center inline-flex">
                                             <ChatBox
-                                                chat_id={data.chat_id[0]}
+                                                chat_id={roomData?.chat_id[0]}
                                                 text={text}
                                                 setText={setText}
                                                 showTextarea={true}
-                                                participants={data.participants}
+                                                participants={
+                                                    roomData?.participants
+                                                }
+                                                singleChat={false}
                                             />
                                         </div>
                                         {/* Right */}
@@ -178,7 +340,7 @@ const Room = () => {
                                             <div className="text-white text-[25px] font-bold font-['Inter']">
                                                 Participants
                                             </div>
-                                            {data.participants.map(
+                                            {roomData?.participants.map(
                                                 (participant, index) => {
                                                     return (
                                                         <UserInfoPreview
@@ -186,6 +348,7 @@ const Room = () => {
                                                             thumbnailHeight="40px"
                                                             thumbnailWidth="40px"
                                                             showName={true}
+                                                            bgStyles={true}
                                                             user_id={
                                                                 participant
                                                             }
@@ -206,7 +369,7 @@ const Room = () => {
                             />
                             <p className={styles.shareText}>Share</p>
                         </div>
-                        {data.participants.includes(user._id) ? (
+                        {roomData?.participants.includes(user._id) ? (
                             <div
                                 className={styles.quitButton}
                                 onClick={handleClickQuit}
@@ -228,17 +391,19 @@ const Room = () => {
                             Participants:
                         </div>
                         <div className="flex gap-[10px] min-h-[100px] items-start">
-                            {data.participants.map((participant, index) => {
-                                return (
-                                    <UserInfoPreview
-                                        key={index}
-                                        thumbnailHeight="40px"
-                                        thumbnailWidth="40px"
-                                        showName={false}
-                                        user_id={participant}
-                                    />
-                                );
-                            })}
+                            {roomData?.participants.map(
+                                (participant, index) => {
+                                    return (
+                                        <UserInfoPreview
+                                            key={index}
+                                            thumbnailHeight="40px"
+                                            thumbnailWidth="40px"
+                                            showName={false}
+                                            user_id={participant}
+                                        />
+                                    );
+                                }
+                            )}
                         </div>
                     </div>
                     <div className={styles.roomChat}>
@@ -247,7 +412,7 @@ const Room = () => {
                         </div>
                         <div className={styles.chatBox}>
                             <ChatBox
-                                chat_id={data.chat_id[0]}
+                                chat_id={roomData?.chat_id[0]}
                                 showTextarea={false}
                             />
                         </div>

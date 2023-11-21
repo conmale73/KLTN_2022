@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { AiOutlineClose, AiOutlineCheck, AiFillLock } from "react-icons/ai";
+import TextareaAutosize from "react-textarea-autosize";
 import * as Select from "@radix-ui/react-select";
 import {
     BsChevronDown,
@@ -46,8 +47,7 @@ const PostTool = () => {
 
     const characterLimit = 100;
     const fontSize = textContent.length >= characterLimit ? "16px" : "28px";
-    const textareaHeight =
-        textContent.length >= characterLimit ? "350px" : "200px";
+
     const handleSubmitForm = (e) => {
         e.preventDefault();
     };
@@ -90,7 +90,17 @@ const PostTool = () => {
             setPlaceholder("What's on your mind?");
         }
     };
-
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            if (e.shiftKey) {
+                // Add a newline character at the cursor position
+                props.setText((prevText) => prevText + "\n");
+            } else {
+                e.preventDefault();
+                handleClickSendMsg(e);
+            }
+        }
+    };
     return (
         <div className={styles.postTool}>
             <div className={styles.top}>
@@ -244,24 +254,24 @@ const PostTool = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div>
+                                <div className={styles.formContainer}>
                                     <form
                                         onSubmit={(e) => handleSubmitForm(e)}
                                         className="mt-3"
                                     >
-                                        <textarea
-                                            className="w-full p-[10px] rounded-[4px] outline-none resize-none bg-transparent"
+                                        <TextareaAutosize
+                                            className={`${styles.textareaForm} w-full p-[10px] border-none focus:outline-none text-[20px] rounded-[4px] resize-none bg-transparent`}
                                             value={textContent}
+                                            minRows="5"
+                                            maxRows="8"
+                                            autoFocus
                                             onChange={(e) => {
                                                 setTextContent(e.target.value);
                                                 setPlaceholder(e.target.value);
                                             }}
+                                            onKeyDown={(e) => handleKeyDown(e)}
                                             placeholder="What's on your mind?"
-                                            style={{
-                                                fontSize: fontSize,
-                                                height: textareaHeight,
-                                            }}
-                                        ></textarea>
+                                        ></TextareaAutosize>
                                     </form>
                                 </div>
                             </Dialog.Description>

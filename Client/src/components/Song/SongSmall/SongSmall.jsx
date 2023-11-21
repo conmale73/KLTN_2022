@@ -14,7 +14,7 @@ import {
 } from "../../../redux/listSong/listSongSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-
+import { setShowFooter } from "../../../redux/showFooter/showFooterSlice";
 const SmallSong = (props) => {
     const [list, setList] = useState(
         JSON.parse(localStorage.getItem("listSong"))
@@ -41,6 +41,7 @@ const SmallSong = (props) => {
         if (!isPlaying) {
             dispatch(setIsPlaying(true)); // Start playing the song
         }
+        dispatch(setShowFooter(true));
     };
     const handleClickPause = () => {
         dispatch(setIsPlaying(false));
@@ -129,7 +130,10 @@ const SmallSong = (props) => {
                                 title={props.artists}
                             >
                                 {props.artists?.map((artist, index) => (
-                                    <Link to={`/music/users/${artist.id}`}>
+                                    <Link
+                                        to={`/music/users/${artist.id}`}
+                                        key={index}
+                                    >
                                         {artist.id !== null ? (
                                             <p
                                                 key={index}

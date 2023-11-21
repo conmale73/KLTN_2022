@@ -1,0 +1,69 @@
+import ChatBox from "../ChatBox";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { IoCloseSharp } from "react-icons/io5";
+import { MdOutlineMinimize, MdOutlineClose } from "react-icons/md";
+import { TiMinus } from "react-icons/ti";
+import UserInfoPreview from "../UserInfoPreview";
+import {
+    removeChat,
+    closeChat,
+} from "../../redux/currentChatList/currentChatListSlice";
+const ChatContainer = (props) => {
+    const user = useSelector((state) => state.user.data);
+    const currentChat = useSelector(
+        (state) => state.currentChatList.currentChat
+    );
+    const [text, setText] = useState("");
+
+    const dispatch = useDispatch();
+    return (
+        <div className="chatContainer flex flex-col w-[330px]  bg-[#303030] h-[455px] scroll rounded-t-md">
+            <div
+                className="flex w-full h-[48px] bg-[#303030] pl-2 pt-2 pb-1
+            border-b-[1px] border-[#545454] 
+            "
+            >
+                <div className="w-[50%]">
+                    <UserInfoPreview
+                        thumbnailHeight="40px"
+                        thumbnailWidth="40px"
+                        showName={true}
+                        bgStyles={false}
+                        user_id={currentChat.members.find(
+                            (member) => member !== user._id
+                        )}
+                    />
+                </div>
+                <div className="flex w-[45%] gap-[10px] justify-end items-center">
+                    <TiMinus
+                        size="20px"
+                        className="flex items-center w-fit h-fit hover:bg-[#545454] rounded-full cursor-pointer p-[5px]"
+                        onClick={() => {
+                            dispatch(closeChat());
+                        }}
+                    />
+                    <MdOutlineClose
+                        size="20px"
+                        className="flex items-center w-fit h-fit hover:bg-[#545454] rounded-full cursor-pointer p-[5px]"
+                        onClick={() => {
+                            dispatch(removeChat(currentChat._id));
+                            dispatch(closeChat());
+                        }}
+                    />
+                </div>
+            </div>
+            <div className="w-full h-[407px]">
+                <ChatBox
+                    chat_id={currentChat._id}
+                    showTextarea={true}
+                    text={text}
+                    setText={setText}
+                    singleChat={true}
+                />
+            </div>
+        </div>
+    );
+};
+
+export default ChatContainer;

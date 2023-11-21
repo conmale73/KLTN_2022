@@ -9,3 +9,5 @@ export { authService } from "./auth.service";
 export { postService } from "./post.service";
 export { roomService } from "./room.service";
 export { messageService } from "./message.service";
+export { voiceChannelService } from "./voiceChannel.service";
+export { groupChatService } from "./groupChat.service";

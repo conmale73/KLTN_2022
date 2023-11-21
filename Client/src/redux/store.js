@@ -7,17 +7,23 @@ import modeSlice from "./mode/modeSlice";
 import imageStoreSlice from "./imageStore/imageStoreSlice";
 import editingImage from "./editingImage/editingImageSlice";
 import onlineUsersSlice from "./onlineUsers/onlineUsersSlice";
-
-//khoi tao store
+import currentVoiceChannelSlice from "./currentVoiceChannel/currentVoiceChannelSlice";
+import voiceChannelsSlice from "./voiceChannels/voiceChannelsSlice";
+import showFooterSlice from "./showFooter/showFooterSlice";
+import currentChatListSlice from "./currentChatList/currentChatListSlice";
+//initializing store
 export const store = configureStore({
     reducer: {
-        songs: songsSlice,
+        // songs: songsSlice,
+        currentChatList: currentChatListSlice,
         listSongs: listSongsSlice,
         search: searchSlice,
         user: userSlice,
         mode: modeSlice,
-        image: imageStoreSlice,
-        editingImage: editingImage,
         onlineUsers: onlineUsersSlice,
+        editingImage: editingImage,
+        voiceChannels: voiceChannelsSlice,
+        currentVoiceChannel: currentVoiceChannelSlice,
+        showFooter: showFooterSlice,
     },
 });
