@@ -30,16 +30,16 @@ const HomeModules = (props) => {
                             </div>
                         ) : (
                             <div className={styles.content}>
-                                {content.contents[0].playlistId ? (
+                                {content?.contents[0]?.playlistId ? (
                                     <ListPlaylists
                                         isSlidePlaylist={true}
-                                        playlists={content.contents}
+                                        playlists={content?.contents}
                                         uniqueId={`playlist-swiper-${index}`} // Pass a unique ID for each Swiper
                                     />
                                 ) : (
                                     <ListSongs
                                         isSlideSong={true}
-                                        songs={content.contents}
+                                        songs={content?.contents}
                                         uniqueId={`song-swiper-${index}`} // Pass a unique ID for each Swiper
                                     />
                                 )}

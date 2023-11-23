@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 const UserInfoPreview = (props) => {
     const onlineUsers = useSelector((state) => state.onlineUsers.data);
+    const user = useSelector((state) => state.user.data);
     const { isLoading, error, data, isFetching } = useQuery({
         queryKey: ["userInfoPreview", props.user_id],
         queryFn: () =>
@@ -91,9 +92,14 @@ const UserInfoPreview = (props) => {
                                     {data.username}
                                 </div>
                             )}
-                            {props.chatPreview != "" && (
+                            {props.lastMessage && (
                                 <p className="text-[15px] text-ellipsis line-clamp-1 max-w-[100%] font-[400] text-[#adadad]">
-                                    {props.chatPreview}
+                                    {`${
+                                        props.lastMessage?.sender_id ===
+                                        user._id
+                                            ? "You"
+                                            : props.lastMessage?.sender_name
+                                    }: ${props.lastMessage?.content}`}
                                 </p>
                             )}
                         </div>

@@ -62,11 +62,14 @@ const ChatBox = (props) => {
                     chat_id: props.chat_id,
                     content: text,
                     sender_id: user._id,
+                    sender_name: user.username,
                     timeStamp: new Date(),
                 };
+                console.log(newMessage);
                 const res = messageService.createMessage(
                     props.chat_id,
                     user._id,
+                    user.username,
                     text
                 );
                 socket.emit("sendMessage", newMessage);

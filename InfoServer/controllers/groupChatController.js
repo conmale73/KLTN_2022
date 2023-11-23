@@ -1,5 +1,5 @@
 const GroupChat = require("../models/groupChatModel");
-
+const Message = require("../models/messageModel");
 // @desc    Create a new group chat
 // @route   POST /api/groupChats
 // @access  Public
@@ -68,9 +68,47 @@ exports.getAllChatsByUserID = async (req, res, next) => {
             members: user_id,
         });
 
+        const groupChatIDs = groupChats.map((groupChat) => groupChat._id);
+
         res.status(200).json({
             success: true,
             data: groupChats,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+// @desc    Get all chats by user id that have messages in it
+// @route   GET /api/groupChats/messages/:user_id
+// @access  Public
+exports.getAllChatsHaveMessagesByUserID = async (req, res, next) => {
+    try {
+        const { user_id } = req.params;
+
+        // Find group chats where members include user_id
+        const groupChats = await GroupChat.find({
+            members: user_id,
+        });
+
+        const groupChatIDs = groupChats.map((groupChat) => groupChat._id);
+
+        const chatsWithMessages = [];
+        for (let i = 0; i < groupChatIDs.length; i++) {
+            const messages = await Message.find({
+                chat_id: groupChatIDs[i],
+            });
+            if (messages.length > 0) {
+                chatsWithMessages.push(groupChatIDs[i]);
+            }
+        }
+
+        const chats = await GroupChat.find({
+            _id: chatsWithMessages,
+        });
+
+        res.status(200).json({
+            success: true,
+            data: chats,
         });
     } catch (error) {
         next(error);

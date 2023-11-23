@@ -9,7 +9,9 @@ const ChatList = () => {
     const [chats, setChats] = useState([]);
     const fetchData = async () => {
         try {
-            const res = await groupChatService.getAllChatsByUserID(user._id);
+            const res = await groupChatService.getChatsHaveMessagesByUserID(
+                user._id
+            );
             setChats(res.data.data);
             return res.data.data;
         } catch (err) {

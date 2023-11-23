@@ -31,6 +31,9 @@
                 font-size: 15px;
                 font-weight: 600;
                 color: var(--general-text-color);
+                &:hover {
+                    text-decoration: underline;
+                }
             }
             .timeStamp {
                 display: flex;

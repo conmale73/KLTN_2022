@@ -6,11 +6,15 @@ export const messageService = {
             `/api/messages/chat/${chat_id}?page=${page}&limit=${limit}`
         );
     },
-    createMessage(chat_id, sender_id, content) {
+    createMessage(chat_id, sender_id, sender_name, content) {
         return axiosClient.post("/api/messages/", {
             chat_id,
             sender_id,
+            sender_name,
             content,
         });
+    },
+    getLastMessage(chat_id) {
+        return axiosClient.get(`/api/messages/last/${chat_id}`);
     },
 };

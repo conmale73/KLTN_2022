@@ -39,19 +39,18 @@ function MediumSong(props) {
             setCurrentSong(songToAdd);
         }
     };
-
     return (
         <>
-            {props ? (
+            {props.thumbnails ? (
                 <div className={styles.mediumSong}>
                     <div className={styles.songImageContainer}>
                         <img
                             src={
-                                props?.thumbnails[0]?.url ||
-                                props?.thumbnails[1]?.url ||
-                                props?.thumbnails[2]?.url ||
-                                props?.thumbnails[3]?.url ||
-                                props?.thumbnails[4]?.url
+                                props.thumbnails[0]?.url ||
+                                props.thumbnails[1]?.url ||
+                                props.thumbnails[2]?.url ||
+                                props.thumbnails[3]?.url ||
+                                props.thumbnails[4]?.url
                             }
                             className={styles.songImage}
                         />

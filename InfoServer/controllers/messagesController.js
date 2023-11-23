@@ -5,9 +5,14 @@ const Message = require("../models/messageModel");
 // @access  Public
 exports.createMessage = async (req, res, next) => {
     try {
-        const { chat_id, sender_id, content } = req.body;
+        const { chat_id, sender_id, sender_name, content } = req.body;
 
-        const newMessage = new Message({ chat_id, sender_id, content });
+        const newMessage = new Message({
+            chat_id,
+            sender_id,
+            sender_name,
+            content,
+        });
 
         const savedMessage = await newMessage.save();
         res.status(201).json(savedMessage);
@@ -42,6 +47,27 @@ exports.getMessagesByChatID = async (req, res, next) => {
             data: messages,
             page,
             totalPages,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Get last message by chat id
+// @route   GET /api/messages/last/:chat_id
+// @access  Public
+
+exports.getLastMessageByChatID = async (req, res, next) => {
+    try {
+        const { chat_id } = req.params;
+
+        const lastMessage = await Message.findOne({ chat_id }).sort({
+            timeStamp: -1,
+        });
+
+        res.status(200).json({
+            success: true,
+            data: lastMessage,
         });
     } catch (error) {
         next(error);

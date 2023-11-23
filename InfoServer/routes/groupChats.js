@@ -14,6 +14,12 @@ router.get("/user/:user_id", groupChatController.getGroupChatsByUserID);
 // GET /api/groupChats/all/:user_id
 router.get("/all/:user_id", groupChatController.getAllChatsByUserID);
 
+// GET /api/groupChats/messages/:user_id
+router.get(
+    "/messages/:user_id",
+    groupChatController.getAllChatsHaveMessagesByUserID
+);
+
 // GET /api/groupChats/two/
 router.post("/two/", groupChatController.getGroupChatOfTwoUsers);
 

@@ -18,6 +18,7 @@ import "swiper/css/thumbs";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import MiniAudioPlayer from "../MiniAudioPlayer";
 import UserInfoPreview from "../UserInfoPreview";
+import { Link } from "react-router-dom";
 const Post = ({ key, user_id, text, timeStamp, privacy, files }) => {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const images = files.filter((file) => {
@@ -50,7 +51,10 @@ const Post = ({ key, user_id, text, timeStamp, privacy, files }) => {
                         />
                     </div>
                     <div className={styles.info}>
-                        <p className={styles.name}>{data.username}</p>
+                        <Link to={`/profile/?id=${user_id}`}>
+                            <p className={styles.name}>{data.username}</p>
+                        </Link>
+
                         <p className={styles.timeStamp}>
                             {FormatDate(timeStamp)}
 

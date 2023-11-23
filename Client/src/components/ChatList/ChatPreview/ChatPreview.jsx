@@ -5,14 +5,35 @@ import {
     openChat,
     addChat,
 } from "../../../redux/currentChatList/currentChatListSlice";
+import { useQuery } from "@tanstack/react-query";
+import { messageService } from "../../../services";
+import Loading from "../../Loading";
 const ChatPreview = (props) => {
     const user = useSelector((state) => state.user.data);
     const dispatch = useDispatch();
-
+    const [lastMessage, setLastMessage] = useState({});
     const handleOnClick = () => {
         dispatch(addChat(props.chat));
         dispatch(openChat(props.chat));
     };
+    const fetchData = async () => {
+        try {
+            const res = await messageService.getLastMessage(props.chat?._id);
+            setLastMessage(res.data.data);
+            return res.data.data;
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    const { isLoading, error, data } = useQuery({
+        queryKey: ["chatPreview", props.chat?._id],
+        queryFn: () => fetchData(),
+    });
+    if (isLoading) return <Loading />;
+    if (error) {
+        console.log(error);
+        return <p>{error.message}</p>;
+    }
     return (
         <div
             className="chatPreviewContainer w-full h-[80px] p-[5px] rounded-[5px]"
@@ -37,12 +58,11 @@ const ChatPreview = (props) => {
                                 className="text-[15px] text-ellipsis line-clamp-1 
                             max-w-[100%] font-[400] text-[#adadad]"
                             >
-                                Lorem, ipsum dolor sit amet consectetur
-                                adipisicing elit. Earum quae quis consequatur
-                                dicta tenetur perferendis excepturi facere
-                                repellendus voluptas aperiam officia enim
-                                temporibus harum ipsam, possimus quam nam
-                                asperiores fugit.
+                                {`${
+                                    lastMessage?.sender_id === user._id
+                                        ? "You"
+                                        : lastMessage?.sender_name
+                                }: ${lastMessage?.content}`}
                             </p>
                         </div>
                     </div>
@@ -56,7 +76,7 @@ const ChatPreview = (props) => {
                             user_id={props.chat?.members.find(
                                 (member) => member !== user._id
                             )}
-                            chatPreview="lorem  ipsum dolor sit amet, consectetur adipiscing elit."
+                            lastMessage={lastMessage}
                         />
                     </>
                 )}
