@@ -27,7 +27,12 @@ const ChatList = () => {
     }
     return (
         <div className="w-full h-fit max-h-[800px]">
-            {chats.map((chat, index) => {
+            {chats.length === 0 && (
+                <div className="text-center text-lg text-gray-500 mt-4">
+                    No chat found
+                </div>
+            )}
+            {chats?.map((chat, index) => {
                 return <ChatPreview index={index} chat={chat} key={index} />;
             })}
         </div>
