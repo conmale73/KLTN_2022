@@ -56,6 +56,27 @@ exports.getGroupChatsByUserID = async (req, res, next) => {
     }
 };
 
+// @desc    Get all chats by user id
+// @route   GET /api/groupChats/all/:user_id
+// @access  Public
+exports.getAllChatsByUserID = async (req, res, next) => {
+    try {
+        const { user_id } = req.params;
+
+        // Find group chats where members include user_id
+        const groupChats = await GroupChat.find({
+            members: user_id,
+        });
+
+        res.status(200).json({
+            success: true,
+            data: groupChats,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 // @desc    Get group chat of two users. If it doesn't exist, create one.
 // @route   GET /api/groupChats/two/
 // @access  Public

@@ -17,7 +17,6 @@ const Contact = (props) => {
                 members: members,
             };
             const res = await groupChatService.getGroupChatOfTwoUsers(dataPost);
-            console.log(res.data);
             dispatch(addChat(res.data));
             dispatch(openChat(res.data));
         } catch (err) {

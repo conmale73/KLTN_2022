@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    mode: JSON.parse(localStorage.getItem("mode")) || "music",
+    mode: JSON.parse(localStorage.getItem("mode")) || "social",
 };
 
 const modeSlice = createSlice({

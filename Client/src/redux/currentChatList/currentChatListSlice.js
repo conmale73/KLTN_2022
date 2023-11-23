@@ -34,7 +34,7 @@ const currentChatListSlice = createSlice({
                     createAt: newChat.createAt,
                     updateAt: newChat.updateAt,
                 },
-                ...state.list.slice(0, MAX_CHAT_LIST_SIZE), // Keep only the first MAX_CHAT_LIST_SIZE - 1 items
+                ...state.list.slice(0, MAX_CHAT_LIST_SIZE), // Keep only the first MAX_CHAT_LIST_SIZE items
             ];
         },
         removeChat(state, action) {

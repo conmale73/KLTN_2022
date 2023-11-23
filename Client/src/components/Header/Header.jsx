@@ -10,7 +10,9 @@ import SearchBox from "./SearchBox";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/user/userSlice";
 import * as HoverCard from "@radix-ui/react-hover-card";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { setMode } from "../../redux/mode/modeSlice";
+import ChatList from "../ChatList";
 function Header() {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.data);
@@ -63,14 +65,22 @@ function Header() {
                                     title="Notifications"
                                 />
                             </div>
-
-                            <div className={styles.button}>
-                                <BiSolidMessageRoundedDetail
-                                    className={styles.button}
-                                    size="24px"
-                                    title="Messages"
-                                />
-                            </div>
+                            <DropdownMenu.Root modal={false}>
+                                <DropdownMenu.Trigger asChild>
+                                    <div className={styles.button}>
+                                        <BiSolidMessageRoundedDetail
+                                            className={styles.button}
+                                            size="24px"
+                                            title="Messages"
+                                        />
+                                    </div>
+                                </DropdownMenu.Trigger>
+                                <DropdownMenu.Portal>
+                                    <DropdownMenu.Content className="w-[400px] h-fit bg-[#303030] rounded-b-md shadow-lg">
+                                        <ChatList />
+                                    </DropdownMenu.Content>
+                                </DropdownMenu.Portal>
+                            </DropdownMenu.Root>
 
                             <HoverCard.Root>
                                 <HoverCard.Trigger asChild>

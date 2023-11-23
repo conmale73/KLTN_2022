@@ -8,6 +8,7 @@ import { userService } from "../../../services";
 import Loading from "../../Loading";
 import Contact from "../../Contact";
 const OnlineFriendList = () => {
+    const user = useSelector((state) => state.user.data);
     const [contacts, setContacts] = useState([]);
 
     async function fetchContacts() {
@@ -19,7 +20,7 @@ const OnlineFriendList = () => {
     const { isLoading, error, data } = useQueries({
         queries: [
             {
-                queryKey: ["contacts"],
+                queryKey: ["contacts", user?._id],
                 queryFn: () => fetchContacts(),
             },
         ],

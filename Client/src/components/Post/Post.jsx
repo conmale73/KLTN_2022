@@ -50,8 +50,8 @@ const Post = ({ key, user_id, text, timeStamp, privacy, files }) => {
                         />
                     </div>
                     <div className={styles.info}>
-                        <div className={styles.name}>{data.username}</div>
-                        <div className={styles.timeStamp}>
+                        <p className={styles.name}>{data.username}</p>
+                        <p className={styles.timeStamp}>
                             {FormatDate(timeStamp)}
 
                             <span className={styles.privacy}>
@@ -68,7 +68,7 @@ const Post = ({ key, user_id, text, timeStamp, privacy, files }) => {
                                     <AiFillLock size="15px" Private />
                                 )}
                             </span>
-                        </div>
+                        </p>
                     </div>
                 </div>
 

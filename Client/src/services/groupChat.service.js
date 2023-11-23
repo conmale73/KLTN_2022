@@ -7,6 +7,9 @@ export const groupChatService = {
     getGroupChatsByUserID(id) {
         return axiosClient.get(`/api/groupChats/user/${id}`);
     },
+    getAllChatsByUserID(id) {
+        return axiosClient.get(`/api/groupChats/all/${id}`);
+    },
     getGroupChatOfTwoUsers(data) {
         return axiosClient.post(`/api/groupChats/two/`, data);
     },

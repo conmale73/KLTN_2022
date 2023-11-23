@@ -6,6 +6,7 @@
 
 .top {
     flex: 1;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -15,6 +16,19 @@
     right: 0;
     bottom: 0;
     overflow-y: auto; /* Enable scrolling within the middle content area */
+
+    .headerAndContent {
+        position: absolute;
+        left: 250px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        width: var(--globalContentWidth);
+        height: fit-content;
+        .header {
+            width: 60%;
+        }
+    }
 }
 
 .left {
@@ -26,27 +40,12 @@
     bottom: 0;
 }
 
-.headerAndContent {
-    position: absolute;
-    left: 250px;
-    margin: 0 320px var(--globalFooterHeight) 0;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    width: var(--globalContentWidth);
-    height: fit-content;
-}
-
-.header {
-    width: 100%;
-}
-
 .content {
     flex: 1;
     display: flex;
     flex-direction: column;
     z-index: 0;
-    margin: 0 20px var(--globalFooterHeight) 40px;
+    margin: 70px 20px var(--globalFooterHeight) 40px;
     height: fit-content;
 }
 

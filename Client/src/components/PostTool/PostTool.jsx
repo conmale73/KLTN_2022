@@ -36,7 +36,7 @@ const SelectItem = React.forwardRef(
         );
     }
 );
-const PostTool = () => {
+const PostTool = (props) => {
     const user = useSelector((state) => state.user.data);
     const [textContent, setTextContent] = useState("");
     const [placeholder, setPlaceholder] = useState("What's on your mind?");
@@ -80,6 +80,8 @@ const PostTool = () => {
             setTextContent("");
             setPlaceholder("What's on your mind?");
             setFiles([]);
+
+            props.setPosts((prevPosts) => [dataPost, ...prevPosts]);
         } catch (err) {
             console.log(err);
         }

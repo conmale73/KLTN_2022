@@ -19,11 +19,11 @@ const UserInfoPreview = (props) => {
             <HoverCard.Root>
                 {props.bgStyles ? (
                     <div
-                        className={`flex items-center gap-[5px] cursor-pointer hover:bg-[#676668] w-full p-[5px] rounded-[3px]`}
+                        className={`flex items-center gap-[5px] cursor-pointer hover:bg-[#545454] w-full p-[5px] rounded-[3px]`}
                     >
                         <HoverCard.Trigger asChild>
                             <div
-                                className="w-fit h-fit relative"
+                                className="relative border-[1px] border-[#545454] rounded-full"
                                 style={{
                                     minWidth: props.thumbnailWidth,
                                     minHeight: props.thumbnailHeight,
@@ -32,7 +32,7 @@ const UserInfoPreview = (props) => {
                                 }}
                             >
                                 <img
-                                    className={`w-full h-full object-cover rounded-full`}
+                                    className={`w-full h-full object-contain rounded-full`}
                                     src={data.avatar}
                                     alt={data.username}
                                 />
@@ -59,7 +59,7 @@ const UserInfoPreview = (props) => {
                     <div className={`flex items-center gap-[5px]`}>
                         <HoverCard.Trigger asChild>
                             <div
-                                className="w-fit h-fit relative"
+                                className="w-fit h-fit relative border-[1px] border-[#676668] rounded-full"
                                 style={{
                                     minWidth: props.thumbnailWidth,
                                     minHeight: props.thumbnailHeight,
@@ -82,16 +82,21 @@ const UserInfoPreview = (props) => {
                                 )}
                             </div>
                         </HoverCard.Trigger>
-                        {props.showName && (
-                            <Link to={"/profile/?id=" + data._id}>
+                        <div className="flex flex-col w-[90%]">
+                            {props.showName && (
                                 <div
-                                    className="text-[20px] hover:underline line-clamp-1"
+                                    className="text-[20px] line-clamp-1"
                                     title={data.username}
                                 >
                                     {data.username}
                                 </div>
-                            </Link>
-                        )}
+                            )}
+                            {props.chatPreview != "" && (
+                                <p className="text-[15px] text-ellipsis line-clamp-1 max-w-[100%] font-[400] text-[#adadad]">
+                                    {props.chatPreview}
+                                </p>
+                            )}
+                        </div>
                     </div>
                 )}
 
@@ -114,14 +119,17 @@ const UserInfoPreview = (props) => {
                             />
                             <div className="flex flex-col gap-[15px]">
                                 <div>
-                                    <div className="text-mauve12 m-0 text-[15px] font-medium leading-[1.5]">
-                                        {data.username}
-                                    </div>
-                                    <div className="text-mauve10 m-0 text-[15px] leading-[1.5]">
+                                    <Link to={`/profile/?id=${data._id}`}>
+                                        <div className="text-[20px] line-clamp-1 max-w-[100%] hover:underline m-0  font-medium leading-[1.5]">
+                                            {data.username}
+                                        </div>
+                                    </Link>
+
+                                    <div className=" m-0 text-[15px] leading-[1.5]">
                                         {data.email}
                                     </div>
                                 </div>
-                                <div className="text-mauve12 m-0 text-[15px] leading-[1.5]">
+                                <div className=" m-0 text-[15px] leading-[1.5]">
                                     Components, icons, colors, and templates for
                                     building high-quality, accessible UI. Free
                                     and open-source.
