@@ -1,4 +1,4 @@
-// ListPlaylists.jsx
+// ListSongs.jsx
 
 import React, { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -6,10 +6,10 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import { BsChevronRight, BsChevronLeft } from "react-icons/bs";
-import Playlist from "../../Playlist";
-const ListPlaylists = (props) => {
-    const isSlidePlaylist = props.isSlidePlaylist;
-    const playlists = props.playlists;
+import MediumSong from "../../Song/SongMedium";
+const YoutubeListSongs = (props) => {
+    const isSlideSong = props.isSlideSong;
+    const songs = props.songs;
     const prevButton = useRef(null);
     const nextButton = useRef(null);
 
@@ -76,14 +76,20 @@ const ListPlaylists = (props) => {
                     },
                 }}
             >
-                {playlists.map((playlist, index) => (
-                    <SwiperSlide key={index}>
-                        <Playlist {...playlist} />
-                    </SwiperSlide>
-                ))}
+                {songs ? (
+                    <>
+                        {songs?.map((song, index) => (
+                            <SwiperSlide key={index}>
+                                <MediumSong {...song} />
+                            </SwiperSlide>
+                        ))}
+                    </>
+                ) : (
+                    <></>
+                )}
             </Swiper>
         </div>
     );
 };
 
-export default ListPlaylists;
+export default YoutubeListSongs;

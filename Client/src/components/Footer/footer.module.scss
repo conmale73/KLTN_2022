@@ -44,6 +44,7 @@
                     font-weight: 500;
                     margin-bottom: 10px;
                     color: var(--general-text-color);
+                    text-align: start;
 
                     --max-lines: 1;
                     display: -webkit-box;
@@ -63,6 +64,7 @@
                     overflow: hidden;
 
                     .artist {
+                        text-align: start;
                         font-size: 1.2rem;
                         font-weight: 500;
                         margin-right: 5px;

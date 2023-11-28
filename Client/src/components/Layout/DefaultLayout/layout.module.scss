@@ -1,6 +1,7 @@
 .layout {
     display: flex;
     flex-direction: column;
+    position: relative;
     min-height: 100vh; /* Make sure the layout fills the entire viewport */
 }
 

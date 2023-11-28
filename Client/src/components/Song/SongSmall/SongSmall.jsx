@@ -131,7 +131,7 @@ const SmallSong = (props) => {
                             >
                                 {props.artists?.map((artist, index) => (
                                     <Link
-                                        to={`/music/users/${artist.id}`}
+                                        to={`/music/artists/${artist.id}`}
                                         key={index}
                                     >
                                         {artist.id !== null ? (
@@ -170,11 +170,11 @@ const SmallSong = (props) => {
                             Remove From Playlist
                         </ContextMenu.Item>
 
-                        <ContextMenu.Sub>
+                        {/* <ContextMenu.Sub>
                             <ContextMenu.SubTrigger className="ContextMenuSubTrigger">
                                 More Tools
                                 <div className="RightSlot">
-                                    {/* <ChevronRightIcon /> */}
+                                    
                                 </div>
                             </ContextMenu.SubTrigger>
                             <ContextMenu.Portal>
@@ -208,7 +208,7 @@ const SmallSong = (props) => {
                             onCheckedChange={setBookmarksChecked}
                         >
                             <ContextMenu.ItemIndicator className="ContextMenuItemIndicator">
-                                {/* <CheckIcon /> */}
+                                
                             </ContextMenu.ItemIndicator>
                             Show Bookmarks <div className="RightSlot">⌘+B</div>
                         </ContextMenu.CheckboxItem>
@@ -218,7 +218,7 @@ const SmallSong = (props) => {
                             onCheckedChange={setUrlsChecked}
                         >
                             <ContextMenu.ItemIndicator className="ContextMenuItemIndicator">
-                                {/* <CheckIcon /> */}
+                                
                             </ContextMenu.ItemIndicator>
                             Show Full URLs
                         </ContextMenu.CheckboxItem>
@@ -237,7 +237,7 @@ const SmallSong = (props) => {
                                 value="pedro"
                             >
                                 <ContextMenu.ItemIndicator className="ContextMenuItemIndicator">
-                                    {/* <DotFilledIcon /> */}
+                                    
                                 </ContextMenu.ItemIndicator>
                                 Pedro Duarte
                             </ContextMenu.RadioItem>
@@ -246,11 +246,11 @@ const SmallSong = (props) => {
                                 value="colm"
                             >
                                 <ContextMenu.ItemIndicator className="ContextMenuItemIndicator">
-                                    {/* <DotFilledIcon /> */}
+                                    
                                 </ContextMenu.ItemIndicator>
                                 Colm Tuite
                             </ContextMenu.RadioItem>
-                        </ContextMenu.RadioGroup>
+                        </ContextMenu.RadioGroup> */}
                         <ContextMenu.Item
                             className="ContextMenuItem"
                             onClick={(e) => handleClearPlaylist(e)}

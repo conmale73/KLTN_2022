@@ -8,8 +8,12 @@ const Leaderboard = lazy(() => import("../pages/Leaderboard"));
 const SearchResult = lazy(() => import("../pages/SearchResult"));
 const AuthenticationPage = lazy(() => import("../pages/AuthenticationPage"));
 const SongDetail = lazy(() => import("../pages/SongDetail"));
+const YoutubePlaylistDetail = lazy(() =>
+    import("../pages/YoutubePlaylistDetail")
+);
 const PlaylistDetail = lazy(() => import("../pages/PlaylistDetail"));
 const ArtistDetail = lazy(() => import("../pages/ArtistDetail"));
+const YoutubeAlbumDetail = lazy(() => import("../pages/YoutubeAlbumDetail"));
 const Profile = lazy(() => import("../pages/Profile"));
 const Playground = lazy(() => import("../pages/Playground"));
 const Room = lazy(() => import("../pages/Room"));
@@ -130,7 +134,23 @@ export const publishRoutes = [
         ),
     },
     {
-        path: "/music/playlists/:id",
+        path: "/music/playlist/youtube/:id",
+        element: (
+            <Suspense fallback={<Loading isFullScreen={true} />}>
+                <YoutubePlaylistDetail />
+            </Suspense>
+        ),
+    },
+    {
+        path: "/music/album/youtube/:id",
+        element: (
+            <Suspense fallback={<Loading isFullScreen={true} />}>
+                <YoutubeAlbumDetail />
+            </Suspense>
+        ),
+    },
+    {
+        path: "/music/playlist/:id",
         element: (
             <Suspense fallback={<Loading isFullScreen={true} />}>
                 <PlaylistDetail />
@@ -138,7 +158,7 @@ export const publishRoutes = [
         ),
     },
     {
-        path: "/music/users/:id",
+        path: "/music/artists/:id",
         element: (
             <Suspense fallback={<Loading isFullScreen={true} />}>
                 <ArtistDetail />

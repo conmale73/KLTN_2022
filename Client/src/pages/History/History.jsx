@@ -25,13 +25,13 @@ const History = (props) => {
                     <div
                         onClick={() => setTab(0)}
                         className={clsx(
-                            "inline-block items-center cursor-pointer w-1/2"
+                            "inline-block items-center cursor-pointer w-fit"
                         )}
                     >
                         <p
                             className={clsx(
                                 styles.tab,
-                                "text-3xl font-medium underline-offset-4",
+                                "text-3xl font-medium underline-offset-4 w-fit",
                                 0 === tab && activeTabStyle
                             )}
                         >
@@ -41,7 +41,7 @@ const History = (props) => {
                     <div
                         onClick={() => setTab(1)}
                         className={clsx(
-                            "inline-block items-center cursor-pointer w-1/2"
+                            "inline-block items-center cursor-pointer"
                         )}
                     >
                         <p

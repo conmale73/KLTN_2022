@@ -1,5 +1,5 @@
 import styles from "./PlaylistsSearchResult.module.scss";
-import ListPlaylists from "../../../components/ListComponent/ListPlaylists";
+import YoutubeListPlaylists from "../../../components/ListComponent/YoutubeListPlaylists";
 import { searchService } from "../../../services";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -8,19 +8,29 @@ import Loading from "../../../components/Loading";
 const PlaylistsSearchResult = (props) => {
     const { query } = props;
 
+    const [playlists, setPlaylists] = useState([]);
+
+    const fetchData = async () => {
+        const res = await searchService.search(query, "playlists", "VN", "en");
+        setPlaylists(res.data);
+        return res.data;
+    };
     const { isLoading, error, data, isFetching } = useQuery({
         queryKey: ["searchPlaylists", query],
-        queryFn: () =>
-            searchService
-                .search(query, "playlists", "VN", "en")
-                .then((res) => res.data),
+        queryFn: () => fetchData(),
     });
+
     if (isLoading) return <Loading isFullScreen={true} />;
 
     if (error) return <p>{error.message}</p>;
+
     return (
         <div className={styles.playlistsSearchResult}>
-            <ListPlaylists playlists={data} isSlidePlaylist={true} />
+            <YoutubeListPlaylists
+                playlists={playlists}
+                isSlidePlaylist={false}
+                search={true}
+            />
         </div>
     );
 };

@@ -16,6 +16,7 @@ const roomsRoutes = require("./routes/rooms");
 const groupChatsRoutes = require("./routes/groupChats");
 const messagesRoutes = require("./routes/messages");
 const voiceChannelsRoutes = require("./routes/voiceChannels");
+const playlistsRoutes = require("./routes/playlists");
 const fixDataRoutes = require("./routes/fixData");
 
 const morgan = require("morgan");
@@ -45,6 +46,7 @@ app.use("/api/rooms", roomsRoutes);
 app.use("/api/groupChats", groupChatsRoutes);
 app.use("/api/messages", messagesRoutes);
 app.use("/api/voiceChannels", voiceChannelsRoutes);
+app.use("/api/playlists", playlistsRoutes);
 app.use("/api/fixData", fixDataRoutes);
 
 // Error Handler Middleware

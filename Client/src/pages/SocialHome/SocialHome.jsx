@@ -8,6 +8,7 @@ import { postService } from "../../services";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 const SocialHome = () => {
+    document.title = "Social Home";
     const user = useSelector((state) => state.user.data);
     const navigate = useNavigate();
 

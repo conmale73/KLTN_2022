@@ -10,12 +10,15 @@ import { Outlet } from "react-router-dom";
 import styles from "./layout.module.scss";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
+import { AiOutlineClose } from "react-icons/ai";
+
 import { setShowFooter } from "../../../redux/showFooter/showFooterSlice";
+import { hideToast } from "../../../redux/toast/toastSlice";
 
 function DefaultLayout({ children }) {
     const showFooter = useSelector((state) => state.showFooter.show);
     const dispatch = useDispatch();
-
+    const toast = useSelector((state) => state.toast);
     return (
         <div className={styles.layout}>
             <div className={styles.top}>
@@ -48,6 +51,14 @@ function DefaultLayout({ children }) {
                     {showFooter ? <FaChevronDown /> : <FaChevronUp />}
                 </button>
                 <Footer />
+            </div>
+            <div
+                className="flex items-center p-[20px] w-fit h-[60px] bg-[#303030] absolute bottom-[50px] left-[30px] z-[2147483647] rounded-[10px]"
+                style={{ opacity: toast.show ? "1" : "0" }}
+            >
+                <div className="text-[#e4e6eb] text-[18px] font-bold">
+                    {toast.message}
+                </div>
             </div>
         </div>
     );
