@@ -1,15 +1,27 @@
 const { ObjectId } = require("mongodb");
 const mongoose = require("mongoose");
 
-const postSchema = new mongoose.Schema({
-    user_id: {
+const commentSchema = new mongoose.Schema({
+    post_id: {
         type: ObjectId,
         required: true,
     },
+    creator: {
+        user_id: {
+            type: ObjectId,
+            required: true,
+        },
+        username: {
+            type: String,
+            required: true,
+        },
+        avatar: {
+            type: String,
+            required: true,
+        },
+    },
     content: {
-        type: Object,
         required: true,
-
         text: {
             type: String,
         },
@@ -24,21 +36,6 @@ const postSchema = new mongoose.Schema({
             },
         ],
     },
-    likes: [
-        {
-            user_id: {
-                type: ObjectId,
-            },
-            timeStamp: {
-                type: Date,
-                default: Date.now,
-            },
-        },
-    ],
-    privacy: {
-        type: String,
-        required: true,
-    },
     createAt: {
         type: Date,
         default: Date.now,
@@ -49,6 +46,6 @@ const postSchema = new mongoose.Schema({
     },
 });
 
-const Post = mongoose.model("Post", postSchema);
+const Comment = mongoose.model("Comment", commentSchema);
 
-module.exports = Post;
+module.exports = Comment;

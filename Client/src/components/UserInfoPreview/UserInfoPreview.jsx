@@ -20,7 +20,7 @@ const UserInfoPreview = (props) => {
             <HoverCard.Root>
                 {props.bgStyles ? (
                     <div
-                        className={`flex items-center gap-[5px] cursor-pointer hover:bg-[#545454] w-full p-[5px] rounded-[3px]`}
+                        className={`flex items-center gap-[5px] hover:bg-[#545454] w-full p-[5px] rounded-[3px]`}
                     >
                         <HoverCard.Trigger asChild>
                             <div
@@ -48,12 +48,25 @@ const UserInfoPreview = (props) => {
                             </div>
                         </HoverCard.Trigger>
                         {props.showName && (
-                            <div
-                                className="text-[20px] line-clamp-1"
-                                title={data.username}
-                            >
-                                {data.username}
-                            </div>
+                            <>
+                                {props.link ? (
+                                    <Link to={`/profile/?id=${data._id}`}>
+                                        <div
+                                            className="text-[20px] line-clamp-1 hover:underline"
+                                            title={data.username}
+                                        >
+                                            {data.username}
+                                        </div>
+                                    </Link>
+                                ) : (
+                                    <div
+                                        className="text-[20px] line-clamp-1"
+                                        title={data.username}
+                                    >
+                                        {data.username}
+                                    </div>
+                                )}
+                            </>
                         )}
                     </div>
                 ) : (

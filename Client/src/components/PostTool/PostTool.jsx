@@ -43,19 +43,23 @@ const PostTool = (props) => {
     const [open, setOpen] = useState(false);
     const [privacy, setPrivacy] = useState("PUBLIC");
     const [files, setFiles] = useState([]);
-    const dispatch = useDispatch();
+    const [temp, setTemp] = useState([...props.posts]);
 
-    const characterLimit = 100;
-    const fontSize = textContent.length >= characterLimit ? "16px" : "28px";
+    const dispatch = useDispatch();
 
     const handleSubmitForm = (e) => {
         e.preventDefault();
     };
-
+    useEffect(() => {
+        console.log("temp: ", temp);
+        // props.setPosts(temp);
+    }, [temp]);
     async function post(dataPost) {
         try {
             const res = await postService.createNewPost(dataPost);
-            console.log(res);
+
+            setTemp((posts) => [res.data, ...posts]);
+            return res.data;
         } catch (err) {
             console.log(err);
         }
@@ -70,7 +74,7 @@ const PostTool = (props) => {
             },
             privacy: privacy,
         };
-        console.log(dataPost);
+        console.log("datapost: ", dataPost);
 
         try {
             post(dataPost);
@@ -80,8 +84,6 @@ const PostTool = (props) => {
             setTextContent("");
             setPlaceholder("What's on your mind?");
             setFiles([]);
-
-            props.setPosts((prevPosts) => [dataPost, ...prevPosts]);
         } catch (err) {
             console.log(err);
         }

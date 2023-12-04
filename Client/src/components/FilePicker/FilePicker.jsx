@@ -43,6 +43,7 @@ const img = {
     display: "block",
     width: "auto",
     height: "100%",
+    objectFit: "scale-down",
 };
 //#endregion
 
@@ -102,7 +103,6 @@ const FilePicker = ({ files, setFiles }) => {
                     return [...prevFiles, ...newFiles];
                 });
             });
-            console.log(files);
         },
     });
 
@@ -146,6 +146,13 @@ const FilePicker = ({ files, setFiles }) => {
         dispatch(setIndex(index));
     };
 
+    const handleRemove = (index) => {
+        setFiles((prevFiles) => {
+            const newFiles = [...prevFiles];
+            newFiles.splice(index, 1);
+            return newFiles;
+        });
+    };
     const handleStateModal = (e) => {
         setOpen(!open);
     };
@@ -208,6 +215,12 @@ const FilePicker = ({ files, setFiles }) => {
                                 </Dialog.Content>
                             </Dialog.Portal>
                         </Dialog.Root>
+                        <div
+                            className={styles.removeButton}
+                            onClick={() => handleRemove(index)}
+                        >
+                            <AiOutlineClose size="20px" />
+                        </div>
                     </div>
                 </div>
             )}

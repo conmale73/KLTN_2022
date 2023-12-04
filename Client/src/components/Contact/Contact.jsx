@@ -26,7 +26,7 @@ const Contact = (props) => {
     return (
         <div
             key={props.index}
-            className="w-full h-fit"
+            className="w-full h-fit cursor-pointer"
             onClick={handleClickContact}
         >
             <UserInfoPreview

@@ -1,7 +1,7 @@
 const User = require("../models/userModel");
 const Message = require("../models/messageModel");
 const GroupChat = require("../models/groupChatModel");
-
+const Post = require("../models/postModel");
 exports.fixSenderName = async (req, res, next) => {
     try {
         const messages = await Message.find();
@@ -15,6 +15,24 @@ exports.fixSenderName = async (req, res, next) => {
             );
             message.sender_name = user.username;
             await message.save();
+        }
+        res.status(200).json({
+            success: true,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.fixPostTimeStamps = async (req, res, next) => {
+    try {
+        const posts = await Post.find();
+
+        for (let i = 0; i < posts.length; i++) {
+            const post = posts[i];
+            post.createAt = post.timeStamp;
+            post.updateAt = post.timeStamp;
+            await post.save();
         }
         res.status(200).json({
             success: true,
