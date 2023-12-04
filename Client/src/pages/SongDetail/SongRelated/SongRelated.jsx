@@ -39,7 +39,6 @@ const SongRelated = (props) => {
                             <Suspense fallback={<Loading />}>
                                 <LongSong
                                     key={index}
-                                    index={index}
                                     videoId={item?.videoId}
                                     title={item?.title}
                                     artists={item?.artists}

@@ -26,7 +26,6 @@ const SongsSearchResult = (props) => {
                 {data?.map((song, index) => {
                     return (
                         <LongSong
-                            song={song}
                             key={index}
                             videoId={song?.videoId}
                             title={song?.title}
@@ -36,8 +35,7 @@ const SongsSearchResult = (props) => {
                             duration={song?.duration}
                             category={song?.category}
                             liked={song?.liked}
-                            buttons={true}
-                            youtube={true}
+                            buttons={false}
                         />
                     );
                 })}

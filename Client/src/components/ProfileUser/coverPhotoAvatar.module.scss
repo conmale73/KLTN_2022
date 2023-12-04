@@ -1,0 +1,63 @@
+.Profile {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+
+    /* Đặt relative để tạo khung tham chiếu cho các phần tử con */
+    .ProfileFooterButton {
+        border-radius: 10px;
+        position: absolute;
+        bottom: 15px;
+        right: 50px;
+        background-color: #1877f2;
+        padding: 10px;
+        color: white;
+    }
+
+    .CoverPhoto {
+        height: 300px;
+        background-size: cover;
+        background-position: center;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        position: relative;
+        /* Đặt relative để tạo khung tham chiếu cho các phần tử con */
+    }
+
+    .CoverButtons {
+        position: absolute;
+        bottom: 10px;
+        /* Cách đáy 10px */
+        right: 10px;
+        /* Cách phải 10px */
+        
+    }
+
+    .CoverButton {
+        background-color: #1877f2;
+        color: white;
+        padding: 5px 10px;
+        margin-left: 5px;
+        cursor: pointer;
+        border-radius: 10px;
+    }
+
+    .ProfilePhoto {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        border: 5px solid white;
+        margin: -75px auto 0;
+        margin-left: 60px;
+        display: block;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        /* Đặt relative để có thể sử dụng z-index */
+        z-index: 2;
+        /* Đặt z-index cao hơn để đảm bảo ảnh hồ sơ trồi lên trên nút */
+    }
+}

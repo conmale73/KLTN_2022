@@ -1,0 +1,47 @@
+.Tspost {
+    flex: 1;
+    max-width: 600px;
+    background-color: black;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    margin-bottom: 20px;
+    &__content1 {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        border-radius: 8px;
+        //border-bottom: 1px solid #CED0D4;
+        padding-bottom: 0;
+        padding-top: 0;
+        
+    }
+
+    &__content1__avatar1 {
+        margin-right: 12px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    &__content1__avatar1 img {
+        width: 30px;
+        height: 30px;
+        object-fit: cover; // Giữ tỉ lệ khung hình
+        border: 2px solid black;
+    }
+
+    &__content1__text1 {
+        text-align: left;
+        flex: 1;
+        overflow: hidden; // Đảm bảo văn bản không bị tràn ra khỏi khung
+        height: 60px;
+        color: #6F7175;
+        //background-color: white;
+        padding-top: 10px;
+        padding-left: 15px;
+    }
+
+    
+}

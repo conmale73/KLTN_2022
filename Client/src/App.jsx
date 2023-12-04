@@ -8,7 +8,6 @@ import io from "socket.io-client";
 import { useSelector, useDispatch } from "react-redux";
 import { setOnlineUsers } from "./redux/onlineUsers/onlineUsersSlice";
 import { voiceChannelService } from "./services";
-import * as Toast from "@radix-ui/react-toast";
 function App() {
     useShowScrollbar();
     const dispatch = useDispatch();
@@ -54,15 +53,13 @@ function App() {
     }, [user]);
     return (
         <Router>
-            <Toast.Provider swipeDirection="right" duration={4000}>
-                <SongProvider>
-                    <div className="background-image">
-                        <div className="App">
-                            <Routes />
-                        </div>
+            <SongProvider>
+                <div className="background-image">
+                    <div className="App">
+                        <Routes />
                     </div>
-                </SongProvider>
-            </Toast.Provider>
+                </div>
+            </SongProvider>
         </Router>
     );
 }

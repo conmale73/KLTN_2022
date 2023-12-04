@@ -7,17 +7,18 @@ import styles from "./Playlist.module.scss";
 const Playlist = (props) => {
     const handleClickPlay = (e) => {
         e.preventDefault();
-        console.log("play: ", props?._id);
+        console.log("play: ", props?.playlistId);
     };
     return (
         <div className={styles.playlist}>
             <div className={styles.playlistImage}>
                 <img
                     src={
-                        props.playlist?.songs[0]?.thumbnails[2]?.url ||
-                        props.playlist?.songs[0]?.thumbnails[1]?.url ||
-                        props.playlist?.songs[0]?.thumbnails[0]?.url ||
-                        "https://i.ytimg.com/vi/5qap5aO4i9A/mqdefault.jpg"
+                        props.thumbnails[0]?.url ||
+                        props.thumbnails[1]?.url ||
+                        props.thumbnails[2]?.url ||
+                        props.thumbnails[3]?.url ||
+                        props.thumbnails[4]?.url
                     }
                     alt=""
                 />
@@ -27,29 +28,25 @@ const Playlist = (props) => {
                 <BsPlayCircle
                     size="40px"
                     className={styles.playButton}
-                    key={props.playlist._id}
+                    key={props.playlistId}
                     onClick={(e) => handleClickPlay(e)}
                 />
             </div>
 
             <div className={styles.info}>
                 <Link
-                    to={`/music/playlist/${props.playlist._id}`}
-                    key={props.playlist._id}
+                    to={`/music/playlists/${props.browseId}`}
+                    key={props.playlistId}
                 >
-                    <div
-                        className={styles.playlistName}
-                        title={props.playlist.title}
-                    >
-                        {props.playlist.title}
+                    <div className={styles.playlistName} title={props.title}>
+                        {props.title}
                     </div>
                 </Link>
 
-                <div className={styles.creator}>
-                    {props.playlist.description}
-                </div>
+                <div className={styles.creator}>{props.description}</div>
             </div>
         </div>
     );
 };
+
 export default Playlist;

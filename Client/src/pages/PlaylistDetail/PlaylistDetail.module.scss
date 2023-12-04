@@ -120,54 +120,6 @@
                     color: var(--general-text-color);
                 }
             }
-            .editButton {
-                width: 150px;
-                height: 40px;
-                border-radius: 5px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                cursor: pointer;
-                border: 1px solid var(--general-button-color);
-
-                &:hover {
-                    background-color: var(--general-button-color);
-                }
-                .editIcon {
-                    width: 20px;
-                    height: 20px;
-                    margin: 0 10px 0 0;
-                }
-                .editText {
-                    font-size: 15px;
-                    font-weight: 500;
-                    color: var(--general-text-color);
-                }
-            }
-            .removeButton {
-                width: 200px;
-                height: 40px;
-                border-radius: 5px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                cursor: pointer;
-                border: 1px solid var(--general-button-color);
-
-                &:hover {
-                    background-color: var(--general-button-color);
-                }
-                .removeIcon {
-                    width: 20px;
-                    height: 20px;
-                    margin: 0 10px 0 0;
-                }
-                .removeText {
-                    font-size: 15px;
-                    font-weight: 500;
-                    color: var(--general-text-color);
-                }
-            }
         }
     }
     .listSong {
@@ -238,7 +190,7 @@
             border-radius: 5px;
 
             &::-webkit-scrollbar {
-                width: 7px;
+                width: 5px;
             }
             &::-webkit-scrollbar-track {
                 background: #424242;
@@ -247,7 +199,7 @@
                 background: #696969;
             }
             &::-webkit-scrollbar-thumb:hover {
-                background: #c5c5c5;
+                background: #04aefe;
             }
         }
     }

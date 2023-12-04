@@ -5,8 +5,8 @@ import { browseService } from "../../services";
 import Loading from "../../components/Loading";
 import LongSong from "../../components/Song/SongLong";
 import { Link } from "react-router-dom";
-import YoutubeListPlaylists from "../../components/ListComponent/YoutubeListPlaylists";
-import ListSongs from "../../components/ListComponent/YoutubeListSongs";
+import ListPlaylists from "../../components/ListComponent/ListPlaylists";
+import ListSongs from "../../components/ListComponent/ListSongs";
 import Artist from "../../components/Artist";
 import { useQuery, useMutation } from "@tanstack/react-query";
 
@@ -25,6 +25,7 @@ const ArtistDetail = (props) => {
         e.preventDefault();
         setMore(!more);
     };
+    console.log(data);
     return (
         <div className={styles.artistDetail}>
             <div className={styles.bigThumbnail}>
@@ -35,9 +36,9 @@ const ArtistDetail = (props) => {
                 <img src={data?.thumbnails[2].url} alt={data?.name} />
                 <div className={styles.description}>
                     <div className={styles.artistName}>{data?.name}</div>
-                    <p className={more ? styles.more : styles.less}>
+                    <div className={more ? styles.more : styles.less}>
                         {data?.description}
-                    </p>
+                    </div>
                     <div
                         className={styles.readMore}
                         onClick={(e) => handleClickShowMore(e)}
@@ -68,9 +69,7 @@ const ArtistDetail = (props) => {
                 </>
                 {data?.songs?.browseId && (
                     <div className={styles.showAllButton}>
-                        <Link
-                            to={`/music/playlist/youtube/${data?.songs?.browseId}`}
-                        >
+                        <Link to={`/music/playlists/${data?.songs?.browseId}`}>
                             Show all
                         </Link>
                     </div>
@@ -79,9 +78,9 @@ const ArtistDetail = (props) => {
             <div className={styles.listAlbums}>
                 <div className={styles.title}>Albums</div>
                 <>
-                    <YoutubeListPlaylists
+                    <ListPlaylists
                         isSlidePlaylist={true}
-                        playlists={data?.albums?.results}
+                        playlists={data?.albums.results}
                         uniqueId={`playlist-swiper-0`}
                     />
                 </>

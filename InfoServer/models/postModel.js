@@ -32,6 +32,13 @@ const postSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    likeUserList: [
+        {
+            email: {
+                type: String,
+            },
+        },
+    ],
 });
 
 const Post = mongoose.model("Post", postSchema);

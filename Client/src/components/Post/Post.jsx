@@ -51,7 +51,7 @@ const Post = ({ key, user_id, text, timeStamp, privacy, files }) => {
                         />
                     </div>
                     <div className={styles.info}>
-                        <Link to={`/profile/?id=${user_id}`} className="w-fit">
+                        <Link to={`/profile/?id=${user_id}`}>
                             <p className={styles.name}>{data.username}</p>
                         </Link>
 

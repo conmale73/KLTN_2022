@@ -4,28 +4,26 @@ import listSongsSlice from "./listSong/listSongSlice";
 import searchSlice from "./search/searchSlice";
 import userSlice from "./user/userSlice";
 import modeSlice from "./mode/modeSlice";
-import playlistSlice from "./playlist/playlistSlice";
+import imageStoreSlice from "./imageStore/imageStoreSlice";
 import editingImage from "./editingImage/editingImageSlice";
 import onlineUsersSlice from "./onlineUsers/onlineUsersSlice";
 import currentVoiceChannelSlice from "./currentVoiceChannel/currentVoiceChannelSlice";
 import voiceChannelsSlice from "./voiceChannels/voiceChannelsSlice";
 import showFooterSlice from "./showFooter/showFooterSlice";
 import currentChatListSlice from "./currentChatList/currentChatListSlice";
-import toastSlice from "./toast/toastSlice";
 //initializing store
 export const store = configureStore({
     reducer: {
-        toast: toastSlice,
+        // songs: songsSlice,
         currentChatList: currentChatListSlice,
         listSongs: listSongsSlice,
         search: searchSlice,
         user: userSlice,
-        playlists: playlistSlice,
+        mode: modeSlice,
         onlineUsers: onlineUsersSlice,
+        editingImage: editingImage,
         voiceChannels: voiceChannelsSlice,
         currentVoiceChannel: currentVoiceChannelSlice,
         showFooter: showFooterSlice,
-        editingImage: editingImage,
-        mode: modeSlice,
     },
 });

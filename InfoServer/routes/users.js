@@ -26,4 +26,10 @@ router.post("/login", usersController.login);
 // POST /api/logout
 router.post("/logout", usersController.logout);
 
+// POST /api/users/updateAvatar
+router.post("/updateAvatar", usersController.updateAvatarByEmail);
+
+// POST /api/users/updateAvatar
+router.post("/cover-image", usersController.updateCoverImageByEmail);
+
 module.exports = router;

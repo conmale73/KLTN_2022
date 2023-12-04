@@ -3,9 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
+import { AiOutlineClose, AiOutlineCheck, AiFillLock } from "react-icons/ai";
 import TextareaAutosize from "react-textarea-autosize";
 import * as Select from "@radix-ui/react-select";
-import { AiOutlineClose, AiOutlineCheck, AiFillLock } from "react-icons/ai";
 import {
     BsChevronDown,
     BsChevronUp,
@@ -21,7 +21,7 @@ const SelectItem = React.forwardRef(
     ({ children, className, ...props }, forwardedRef) => {
         return (
             <Select.Item
-                className="text-[13px] leading-none hover:bg-[#555555]
+                className="text-[13px] leading-none text-violet11 
                 rounded-[3px] flex items-center h-[25px] pr-[35px] pl-[25px] relative 
                 select-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none 
                 data-[highlighted]:outline-none data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1"

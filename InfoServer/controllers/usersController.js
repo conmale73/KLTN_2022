@@ -140,3 +140,99 @@ exports.logout = async (req, res, next) => {
         next(error);
     }
 };
+const cloudinary = require('cloudinary').v2;
+//upload image cloud binary
+const uploadToCloudinary = async (fileBuffer) => {
+    return new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream({ resource_type: 'image' },
+            (error, result) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(result.secure_url);
+                }
+            }).end(fileBuffer);
+    });
+};
+
+const updateAvatar = async (email, linkAvatar) => {
+    try {
+        const result = await User.updateOne({ email: email }, { $set: { avatar: linkAvatar } });
+        console.log(`update success ${result.acknowledged}`);
+        return result;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const updateCoverImage = async (email, linkCoverImage) => {
+    try {
+        const result = await User.updateOne({ email: email }, { $set: { cover_image: linkCoverImage } });
+        console.log(`update success ${result.acknowledged}`);
+        return result;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+
+exports.updateAvatarByEmail = async (req, res) => {
+    // Kiểm tra xem có file được gửi lên không
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
+    // Lấy file từ request
+    const file = req.files.uploadedFile;
+    console.log(file);
+
+    const emailUpdate = req.body.email;
+    console.log('update by email:' + emailUpdate);
+
+    // Đọc nội dung của file và tạo buffer
+    const fileBuffer = file.data;// lay file nhi phan cua image de gui di
+    try {
+        // Sử dụng Cloudinary để upload file từ buffer
+        const linkImage = await uploadToCloudinary(fileBuffer);
+        const updateResult = await updateAvatar(emailUpdate, linkImage);
+        let responseObject = {
+            urlImage: linkImage,
+            updateResult: updateResult.acknowledged
+        };
+        // Trả về URL của file đã upload và kết quả cập nhật
+        res.send(JSON.stringify(responseObject));
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+};
+
+//update CoverImage
+exports.updateCoverImageByEmail = async (req, res) => {
+    // Kiểm tra xem có file được gửi lên không
+    if (!req.files || Object.keys(req.files).length === 0) {
+        return res.status(400).send('No files were uploaded.');
+    }
+    // Lấy file từ request
+    const file = req.files.uploadedFile;
+    console.log(file);
+
+    const emailUpdate = req.body.email;
+    console.log('update by email:' + emailUpdate);
+
+    // Đọc nội dung của file và tạo buffer
+    const fileBuffer = file.data;// lay file nhi phan cua image de gui di
+    try {
+        // Sử dụng Cloudinary để upload file từ buffer
+        const linkImage = await uploadToCloudinary(fileBuffer);
+        const updateResult = await updateCoverImage(emailUpdate, linkImage);
+        let responseObject = {
+            urlImage: linkImage,
+            updateResult: updateResult.acknowledged
+        };
+        // Trả về URL của file đã upload và kết quả cập nhật
+        res.send(JSON.stringify(responseObject));
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+};
+
+

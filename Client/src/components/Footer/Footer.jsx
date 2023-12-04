@@ -61,11 +61,8 @@ function Footer() {
                         <img
                             className="object-cover"
                             src={
-                                currentSongRedux?.thumbnails[4]?.url ||
-                                currentSongRedux?.thumbnails[3]?.url ||
-                                currentSongRedux?.thumbnails[2]?.url ||
-                                currentSongRedux?.thumbnails[1]?.url ||
                                 currentSongRedux?.thumbnails[0]?.url ||
+                                currentSongRedux?.thumbnails[1]?.url ||
                                 "null"
                             }
                         />
@@ -83,7 +80,7 @@ function Footer() {
                         <div className={styles.artistList}>
                             {currentSongRedux?.artists.map((artist, index) => (
                                 <Link
-                                    to={`/music/artists/${artist.id}`}
+                                    to={`/music/users/${artist.id}`}
                                     key={index}
                                 >
                                     {artist.id !== null ? (

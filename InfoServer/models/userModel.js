@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema({
         default:
             "https://static.vecteezy.com/system/resources/thumbnails/001/840/618/small/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg",
     },
+    cover_image: {
+        type: String,
+        default:
+            "https://res.cloudinary.com/dyatpgcxn/image/upload/v1700873555/cover_image_default_rdxfnf.png",
+    },
     registration_date: {
         type: Date,
         default: Date.now,

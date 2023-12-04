@@ -1,6 +1,6 @@
 import "./ListComponent.scss";
 import MediumSong from "../Song/SongMedium";
-import Playlist from "../YoutubePlaylist";
+import Playlist from "../Playlist";
 import SingerComponent from "../Singer";
 import { useState } from "react";
 const ListComponent = (props) => {

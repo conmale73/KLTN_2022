@@ -1,0 +1,73 @@
+.Tspost {
+    flex: 1;
+    max-width: 600px;
+    background-color: black;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    margin-bottom: 20px;
+
+    &__content {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        border-radius: 8px;
+        padding-top: 25px;
+    }
+
+    &__content__avatar {
+        margin-right: 10px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    &__content__avatar img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover; 
+        border: 2px solid black;
+    }
+
+    &__content__text {
+        text-align: left;
+        flex: 1;
+        border-radius: 25px;
+        overflow: hidden; // Đảm bảo văn bản không bị tràn ra khỏi khung
+        border: 1px solid black;
+        height: 50px;
+        color: #6F7175;
+        background-color: #F0F2F5;
+        padding-top: 10px;
+        padding-left: 15px;
+    }
+
+    .TspostP {
+        background-color: white;
+        height: 100px;
+        background-size: cover;
+        background-position: center;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        border-bottom-left-radius: 8px;
+        position: relative;
+        margin-bottom: 5px;
+    }
+
+    .TspostP2 {
+        //height: 350px;
+        background-size: cover;
+        background-position: center;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+        border-bottom-left-radius: 8px;
+        position: relative;
+        background: white;
+        margin-bottom: 5px;
+        color: black;
+        padding: 10px;             
+    }    
+}

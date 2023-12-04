@@ -20,8 +20,18 @@ const userSlice = createSlice({
         logout(state) {
             state.data = null;
         },
+        updateAvatarRedux(state, action) {
+            // Sửa trường "name" trong "data"
+            state.data.avatar = action.payload;
+            // Cập nhật dữ liệu mới vào Local Storage
+            localStorage.setItem("user", JSON.stringify(state.data));
+        },
+        updateCoverRedux(state, action) {
+            state.data.cover_image = action.payload;
+            localStorage.setItem("user", JSON.stringify(state.data));
+        },
     },
 });
-export const { getUser, setUser, logout } = userSlice.actions;
+export const { getUser, setUser, logout,updateAvatarRedux,updateCoverRedux} = userSlice.actions;
 
 export default userSlice.reducer;

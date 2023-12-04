@@ -6,6 +6,7 @@ import { Outlet } from "react-router-dom";
 import Home from "../pages/Home/Home";
 import SocialHome from "../pages/SocialHome";
 import SearchResult from "../pages/SearchResult";
+import ProfileUser from "../pages/ProfileUser/ProfileUser";
 
 export default function Routes() {
     const routes = [
@@ -18,6 +19,10 @@ export default function Routes() {
                 { path: "/music/", element: <Home title="Music" /> },
                 { path: "*", element: <NotFound title="Not found" /> },
             ],
+        },
+        {
+            path: "/profile-new/:userIdLink",
+            element: <ProfileUser/>,
         },
     ];
     return useRoutes(routes);

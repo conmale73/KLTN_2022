@@ -14,7 +14,8 @@ const UserInfoPreview = (props) => {
     });
     if (isLoading) return <Loading />;
     if (error) return <p>{error.message}</p>;
-
+    console.log("du lieu llay dc")
+    console.log(data)
     return (
         <>
             <HoverCard.Root>

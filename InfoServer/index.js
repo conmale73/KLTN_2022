@@ -16,15 +16,18 @@ const roomsRoutes = require("./routes/rooms");
 const groupChatsRoutes = require("./routes/groupChats");
 const messagesRoutes = require("./routes/messages");
 const voiceChannelsRoutes = require("./routes/voiceChannels");
-const playlistsRoutes = require("./routes/playlists");
 const fixDataRoutes = require("./routes/fixData");
-
+const hobbyRoutes = require("./routes/hobby");
+const commentRoutes = require("./routes/comment")
 const morgan = require("morgan");
 const http = require("http");
 
 // Initialize Express app
 const app = express();
 const port = 3000;
+
+const fileUpload = require('express-fileupload');
+const cloudinary = require('cloudinary').v2;
 
 // Connect to MongoDB
 database.connect();
@@ -34,6 +37,12 @@ app.use(morgan("dev"));
 app.use(cors((origin = "http://localhost:5173"), (credentials = true)));
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+app.use(fileUpload());
+cloudinary.config({
+    cloud_name: 'dkdyl2pcy',
+    api_key: '148985212582375',
+    api_secret: 'm0Dm3gu0T75h63UZG-IJszpNvz0',
+});
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -46,9 +55,9 @@ app.use("/api/rooms", roomsRoutes);
 app.use("/api/groupChats", groupChatsRoutes);
 app.use("/api/messages", messagesRoutes);
 app.use("/api/voiceChannels", voiceChannelsRoutes);
-app.use("/api/playlists", playlistsRoutes);
 app.use("/api/fixData", fixDataRoutes);
-
+app.use("/api/hobby", hobbyRoutes);
+app.use("/api/comment", commentRoutes);
 // Error Handler Middleware
 app.use(errorHandler);
 

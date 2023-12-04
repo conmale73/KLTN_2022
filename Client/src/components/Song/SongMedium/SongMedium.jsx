@@ -78,10 +78,7 @@ function MediumSong(props) {
                         </Link>
                         <div className={styles.artistList}>
                             {props?.artists?.map((artist, index) => (
-                                <Link
-                                    to={`/music/artists/${artist.id}`}
-                                    key={index}
-                                >
+                                <Link to={`/music/users/${artist.id}`}>
                                     {artist.id !== null ? (
                                         <p
                                             key={index}

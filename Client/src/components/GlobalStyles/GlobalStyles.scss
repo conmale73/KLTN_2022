@@ -25,7 +25,7 @@
         --guide-width: 370px;
         --globalContentWidth: min(
             calc(
-                100vw - 250px - var(--guide-width) - var(--globalScrollbarWidth)
+                100vw - 200px - var(--guide-width) - var(--globalScrollbarWidth)
             ),
             1478px
         );
@@ -47,9 +47,9 @@
         --divider-height: 30px;
 
         --detail-header-renderer-collapsed-description-height: calc(
-            2 * 24px * var(--body-line-height)
+            2 * 14px * var(--body-line-height)
         );
-        --body-line-height: 1.6;
+        --body-line-height: 1.4;
     }
 }
 * {

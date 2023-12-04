@@ -1,6 +1,7 @@
 const Post = require("../models/postModel");
 const express = require("express");
 const ErrorResponse = require("../utils/errorResponse");
+const Comment = require("../models/commentModel");
 
 // @desc    Add a new post
 // @route   POST /api/posts
@@ -47,19 +48,21 @@ exports.getPostsByUserID = async (req, res, next) => {
         const page = parseInt(req.query.page) || 1; // Current page
         const limit = parseInt(req.query.limit) || 10; // Number of posts per page
 
+        // Lấy toàn bộ dữ liệu
+        const posts = await Post.find({ user_id });
+
+        // Đảo ngược mảng
+        const reversedPosts = posts.reverse();
+
         const startIndex = (page - 1) * limit;
-        const endIndex = page * limit;
+        const slicedPosts = reversedPosts.slice(startIndex, startIndex + limit);
 
-        const totalPosts = await Post.find({ user_id }).countDocuments();
+        const totalPosts = reversedPosts.length;
         const totalPages = Math.ceil(totalPosts / limit);
-
-        const posts = await Post.find({ user_id })
-            .skip(startIndex)
-            .limit(limit);
 
         res.status(200).json({
             success: true,
-            data: posts,
+            data: slicedPosts,
             page,
             totalPages,
         });
@@ -96,5 +99,85 @@ exports.getPublicPostsByUserID = async (req, res, next) => {
         });
     } catch (error) {
         next(error);
+    }
+};
+
+exports.likePostByUser = async (req, res) => {
+
+    const { post_id, email_like } = req.body;
+    try {
+        const post = await Post.findOne({ _id: post_id });
+
+        // Kiểm tra xem userEmail đã tồn tại trong mảng hay không
+        const isUserLiked = post.likeUserList.some(user => user.email === email_like);
+
+        if (isUserLiked) {
+            // Nếu userEmail đã tồn tại, xóa nó
+            await Post.updateOne({ _id: post_id }, { $pull: { likeUserList: { email: email_like } } });
+        } else {
+            // Nếu userEmail chưa tồn tại, thêm mới
+            await Post.updateOne({ _id: post_id }, { $addToSet: { likeUserList: { email: email_like } } });
+        }
+
+        // Lấy lại bản ghi sau khi cập nhật
+        const updatedPost = await Post.findOne({ _id: post_id });
+        const countEmail = updatedPost.likeUserList.length;
+        console.log('Post after toggle like:', updatedPost);
+        res.status(200).json({
+            result: true,
+            countEmail: countEmail
+        });
+    } catch (error) {
+        console.error('Error fetching components:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+//count like
+exports.getDetailPostById = async (req, res) => {
+    const { post_id } = req.params;
+    try {
+        const post = await Post.findOne({ _id: post_id });
+        res.status(200).json(post);
+    } catch (error) {
+        console.error('Error fetching components:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+exports.putPostById = async (req, res) => {
+    const { post_id, content, privacy } = req.body;
+    try {
+        const updatedPost = await Post.findOneAndUpdate(
+            { _id: post_id },
+            { $set: { content, privacy } }, // Cập nhật các trường mong muốn
+            { new: true } // Trả về bản ghi sau khi cập nhật
+        );
+        if (!updatedPost) {
+            // Nếu không tìm thấy bài viết
+            return res.status(404).json({ message: 'Post not found' });
+        }
+
+        res.status(200).json(updatedPost);
+    } catch (error) {
+        console.error('Error updating post:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+exports.deletePostById = async (req, res) => {
+    const { post_id } = req.body;
+    try {
+        //Xóa tất cả các comment của bài viết
+        await Comment.deleteMany({ post_id: post_id });
+        //Xóa bài viết
+        const deletedPost = await Post.findOneAndDelete({ _id: post_id });
+        if (!deletedPost) {//không thấy bài viết
+            return res.status(404).json({ message: 'Post not found' });
+        }
+        res.status(200).json({ message: 'Post and associated comments deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting post:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 };

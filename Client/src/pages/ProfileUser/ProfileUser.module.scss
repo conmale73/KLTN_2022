@@ -1,0 +1,21 @@
+.myProfile {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    //background-color: #f0f2f5;#18191A
+    background-color:#18191A;
+    .Profile-header {
+        background-color: #4267B2;
+        color: white;
+        padding: 10px;
+        text-align: center;
+    }
+    // tieu su + post
+    .TspostContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px;
+        justify-content: center; // Canh giữa các div
+        margin-top: 20px; // Khoảng cách giữa div A và div B
+      }    
+}

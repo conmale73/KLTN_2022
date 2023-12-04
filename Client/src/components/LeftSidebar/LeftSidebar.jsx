@@ -11,7 +11,6 @@ import { useQuery } from "@tanstack/react-query";
 import Loading from "../Loading";
 function LeftSidebar() {
     const user = useSelector((state) => state.user.data);
-    const mode = useSelector((state) => state.mode.mode);
     const [sidebarVisible, setSidebarVisible] = useState(true);
     const toggleSidebar = () => {
         setSidebarVisible(!sidebarVisible);
@@ -19,20 +18,11 @@ function LeftSidebar() {
 
     return (
         <div className={`leftSidebar ${sidebarVisible ? "" : "hide"}`}>
-            {mode === "music" ? (
-                <Link to="/music">
-                    <div className="logo">
-                        <img src="/photos/MySPACE-Logo.png"></img>
-                    </div>
-                </Link>
-            ) : (
-                <Link to="/social">
-                    <div className="logo">
-                        <img src="/photos/MySPACE-Logo.png"></img>
-                    </div>
-                </Link>
-            )}
-
+            <Link to="/">
+                <div className="logo">
+                    <img src="/photos/MySPACE-Logo.png"></img>
+                </div>
+            </Link>
             {user ? (
                 <div className="info">
                     <div className="avatar">

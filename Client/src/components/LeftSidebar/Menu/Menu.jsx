@@ -2,9 +2,7 @@ import "./Menu.scss";
 import { BiLibrary, BiHistory } from "react-icons/bi";
 import { CiLogin } from "react-icons/ci";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
-import { playlistService } from "../../../services";
+import { useSelector } from "react-redux";
 import { FaUserFriends } from "react-icons/fa";
 import { BsCalendarEventFill, BsBox } from "react-icons/bs";
 import { MdOutlineGroups2, MdOutlinePlaylistPlay } from "react-icons/md";
@@ -16,29 +14,9 @@ import {
     AiOutlineLineChart,
     AiFillStar,
 } from "react-icons/ai";
-
-import {
-    setPlaylists,
-    getPlaylists,
-} from "../../../redux/playlist/playlistSlice";
 const Menu = () => {
     const user = useSelector((state) => state.user.data);
     const mode = useSelector((state) => state.mode.mode);
-    const playlists = useSelector((state) => state.playlists.data);
-
-    const dispatch = useDispatch();
-    const fetchData = async () => {
-        if (!user) return;
-        const res = await playlistService.getAllPlaylistsByUserID(user._id);
-
-        dispatch(setPlaylists(res.data.data));
-        return res.data.data;
-    };
-    const { isLoading, error, data, isFetching } = useQuery({
-        queryKey: ["menuPlaylist", user?._id],
-        queryFn: () => fetchData(),
-    });
-    if (isLoading) return <></>;
     return (
         <>
             {user ? (
@@ -81,7 +59,7 @@ const Menu = () => {
                                             <div className="text">History</div>
                                         </div>
                                     </Link>
-                                    {/* <Link to="/music/library#likes">
+                                    <Link to="/music/library#likes">
                                         <div className="button">
                                             <div className="icon">
                                                 <AiFillHeart
@@ -93,7 +71,7 @@ const Menu = () => {
                                                 Liked Songs
                                             </div>
                                         </div>
-                                    </Link> */}
+                                    </Link>
                                 </div>
                             </div>
                             {/* Playlists*/}
@@ -112,24 +90,31 @@ const Menu = () => {
                                             </div>
                                         </div>
                                     </Link>
-                                    {playlists?.map((playlist, index) => (
-                                        <Link
-                                            to={`/music/playlist/${playlist._id}`}
-                                            key={index}
-                                        >
-                                            <div className="button">
-                                                <div className="icon">
-                                                    <PiPlaylistFill
-                                                        className="icon"
-                                                        size="25px"
-                                                    />
-                                                </div>
-                                                <div className="text">
-                                                    {playlist.title}
-                                                </div>
+
+                                    <Link to="/music/library/playlists/Vietnamese">
+                                        <div className="button">
+                                            <div className="icon">
+                                                <PiPlaylistFill
+                                                    className="icon"
+                                                    size="25px"
+                                                />
                                             </div>
-                                        </Link>
-                                    ))}
+                                            <div className="text">
+                                                Vietnamesesssssssssssssssssssssssssss
+                                            </div>
+                                        </div>
+                                    </Link>
+                                    <Link to="/music/library/playlists/US-UK">
+                                        <div className="button">
+                                            <div className="icon">
+                                                <PiPlaylistFill
+                                                    className="icon"
+                                                    size="25px"
+                                                />
+                                            </div>
+                                            <div className="text">US-UK</div>
+                                        </div>
+                                    </Link>
                                 </div>
                             </div>
                             {/* <div className="menu">
@@ -201,10 +186,6 @@ const Menu = () => {
                                             <div className="text">Friends</div>
                                         </div>
                                     </Link>
-                                </div>
-                            </div>
-                            <div className="menu">
-                                <div className="menu_wrapper">
                                     <Link to="/playground">
                                         <div className="button">
                                             <div className="icon">
