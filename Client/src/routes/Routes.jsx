@@ -21,7 +21,7 @@ export default function Routes() {
             ],
         },
         {
-            path: "/profile-new/:userIdLink",
+            path: "/profile/:userIdLink",
             element: <ProfileUser/>,
         },
     ];
