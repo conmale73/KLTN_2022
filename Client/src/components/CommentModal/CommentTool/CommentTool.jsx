@@ -1,47 +1,122 @@
-import TextareaAutosize from "react-textarea-autosize";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
+import { FaFaceSmileBeam } from "react-icons/fa6";
 import { FaCamera } from "react-icons/fa";
 import { PiPaperPlaneRightFill } from "react-icons/pi";
 
 import { useSelector } from "react-redux";
+import TextareaAutosize from "react-textarea-autosize";
+import EmojiPicker, { Emoji } from "emoji-picker-react";
+
 import UserInfoPreview from "../../UserInfoPreview";
+import { commentService } from "../../../services";
 
 const CommentTool = (props) => {
     const user = useSelector((state) => state.user.data);
 
-    const [text, setText] = useState("");
+    const [files, setFiles] = useState([]);
     const [typing, setTyping] = useState(false);
-    const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
-            if (e.shiftKey) {
-                // Add a newline character at the cursor position
-                setText((prevText) => prevText + "\n");
-            } else {
-                e.preventDefault();
-            }
-        }
-    };
+
+    const [isEmojiPickerVisible, setIsEmojiPickerVisible] = useState(false);
+    const emojiPickerRef = useRef(null);
+    const inputRef = useRef(null);
+
     useEffect(() => {
-        if (text.length > 0) {
+        if (props.text.length > 0) {
             setTyping(true);
         } else {
             setTyping(false);
         }
-    }, [text]);
+    }, [props.text]);
+    const handleSelectImage = () => {};
     const handleInput = (event) => {
-        const value = event.target.textContent; // Get the content of the div
-        setText(value);
+        props.setText(event.target.value);
     };
-    const handleClickSend = (e) => {
-        e.preventDefault();
-        if (text.length > 0) {
-            console.log(text);
+
+    const handleSelectEmoji = (emojiObject, e) => {
+        if (emojiObject && emojiObject.emoji) {
+            props.setText((prevText) => prevText + emojiObject.emoji);
+        }
+
+        // Close the emoji picker
+        setIsEmojiPickerVisible(false);
+    };
+    const handleClickOutside = (event) => {
+        if (
+            emojiPickerRef.current &&
+            !emojiPickerRef.current.contains(event.target)
+        ) {
+            setIsEmojiPickerVisible(false);
+        }
+    };
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+    const handleClickSend = async (e) => {
+        const commentToPost = {
+            post_id: props.post_id,
+            creator: {
+                user_id: user._id,
+                username: user.username,
+                avatar: user.avatar,
+            },
+            content: {
+                text: props.text,
+                files: files,
+            },
+        };
+        if (props.text.length > 0 || files.length > 0) {
+            try {
+                console.log(commentToPost);
+                const res = await commentService.createNewcomment(
+                    commentToPost
+                );
+                console.log(res);
+                props.setText("");
+                props.setCommentCount((prevCount) => prevCount + 1);
+                props.setComments((prevComments) => [
+                    res.data,
+                    ...prevComments,
+                ]);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    };
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            if (e.shiftKey) {
+                // Add a newline character at the cursor position
+                props.setText((prevText) => prevText + "\n");
+            } else {
+                e.preventDefault();
+                handleClickSend();
+            }
         }
     };
     return (
         <>
-            <div className="x1n2onr6 x1ja2u2z x9f619 x78zum5 xdt5ytf x2lah0s x193iq5w x1xmf6yo x1e56ztr">
+            <div className="relative x1n2onr6 x1ja2u2z x9f619 x78zum5 xdt5ytf x2lah0s x193iq5w x1xmf6yo x1e56ztr">
+                {isEmojiPickerVisible && (
+                    <div
+                        ref={emojiPickerRef}
+                        style={{
+                            position: "absolute",
+                            top: -450 + "px",
+                        }}
+                    >
+                        <EmojiPicker
+                            skinTonesDisabled={true}
+                            onEmojiClick={(emojiObject, e) =>
+                                handleSelectEmoji(emojiObject, e)
+                            }
+                            theme="dark"
+                        />
+                    </div>
+                )}
                 <div className="x9f619 x1n2onr6 x1ja2u2z x78zum5 xdt5ytf x1iyjqo2 x2lwn1j">
                     <div className="x9f619 x1n2onr6 x1ja2u2z x78zum5 xdt5ytf x2lah0s x193iq5w x1swvt13 x1pi30zi">
                         <div className="">
@@ -67,31 +142,33 @@ const CommentTool = (props) => {
                                                     data-visualcompletion="ignore"
                                                 >
                                                     <div className="x1n2onr6">
-                                                        <div
-                                                            aria-label="Write a comment…"
-                                                            className="xzsf02u x1a2a7pz x1n2onr6 x14wi4xw notranslate"
-                                                            contentEditable="true"
-                                                            spellCheck="true"
-                                                            tabIndex="0"
+                                                        <TextareaAutosize
+                                                            value={props.text}
+                                                            ref={inputRef}
+                                                            className=""
                                                             style={{
                                                                 fontSize:
                                                                     18 + "px",
-                                                                userSelect:
-                                                                    "text",
-                                                                whiteSpace:
-                                                                    "pre-wrap",
-                                                                wordBreak:
-                                                                    "break-word",
+
+                                                                backgroundColor:
+                                                                    "transparent",
+                                                                outline: "none",
+                                                                width: "100%",
+                                                                resize: "none",
+                                                                color: "#e4e6eb",
                                                             }}
-                                                            data-lexical-editor="true"
                                                             role="textbox"
-                                                            onInput={(e) =>
+                                                            onChange={(e) =>
                                                                 handleInput(e)
                                                             }
-                                                        ></div>
+                                                            onKeyDown={(e) =>
+                                                                handleKeyDown(e)
+                                                            }
+                                                        ></TextareaAutosize>
+
                                                         {!typing ? (
                                                             <div
-                                                                className="xi81zsa x6ikm8r x10wlt62 x47corl x10l6tqk x17qophe xlyipyv x13vifvy x87ps6o xuxw1ft xh8yej3"
+                                                                className="ml-[2px] mt-[3px] xi81zsa x6ikm8r x10wlt62 x47corl x10l6tqk x17qophe xlyipyv x13vifvy x87ps6o xuxw1ft xh8yej3"
                                                                 style={{
                                                                     fontSize:
                                                                         18 +
@@ -255,6 +332,7 @@ const CommentTool = (props) => {
                                                     </ul>
                                                 </div> */}
                                             </div>
+
                                             <div className="x10b6aqq x4b6v7d x1ojsi0c x1u6ievf x67ttcy">
                                                 <div className="x9f619 x1n2onr6 x1ja2u2z x78zum5 x2lah0s x1qughib x6s0dn4 x1a02dak x1q0g3np x1pi30zi x1swvt13 xykv574 xbmpl8g x4cne27 xifccgj">
                                                     <div className="x9f619 x1n2onr6 x1ja2u2z x78zum5 xdt5ytf x2lah0s x193iq5w xeuugli xsyo7zv x16hj40l x10b6aqq x1yrsyyn">
@@ -263,13 +341,31 @@ const CommentTool = (props) => {
                                                                 className="x6s0dn4 xpvyfi4 x78zum5 xc9qbxq xw3qccf xp7jhwk"
                                                                 data-id="unfocused-state-actions-list"
                                                             >
-                                                                <li className="x1rg5ohu x1mnrxsn x1w0mnb"></li>
+                                                                {/* <li
+                                                                    className=" hover:bg-[#676668] rounded-full cursor-pointer p-[8px] x1rg5ohu x1mnrxsn x1w0mnb"
+                                                                    onClick={() =>
+                                                                        handleSelectImage()
+                                                                    }
+                                                                >
+                                                                    <FaCamera size="20px" />
+                                                                </li> */}
+                                                                <li
+                                                                    className="relative hover:bg-[#676668] rounded-full cursor-pointer p-[8px] x1rg5ohu x1mnrxsn x1w0mnb"
+                                                                    onClick={() =>
+                                                                        setIsEmojiPickerVisible(
+                                                                            !isEmojiPickerVisible
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <FaFaceSmileBeam size="20px" />
+                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </div>
-                                                    {text.length > 0 ? (
+                                                    {props.text?.length > 0 ? (
                                                         <div
-                                                            className="x9f619 x1n2onr6 x1ja2u2z x78zum5 xdt5ytf x2lah0s x193iq5w xeuugli xsyo7zv x16hj40l x10b6aqq x1yrsyyn rounded-full hover:bg-[#676668] cursor-pointer"
+                                                            className="x9f619 x1n2onr6 x1ja2u2z x78zum5 xdt5ytf x2lah0s x193iq5w xeuugli xsyo7zv x16hj40l x10b6aqq x1yrsyyn 
+                                                            rounded-full hover:bg-[#676668] cursor-pointer"
                                                             onClick={(e) =>
                                                                 handleClickSend(
                                                                     e

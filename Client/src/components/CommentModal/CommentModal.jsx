@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Post from "../Post";
 import CommentTool from "./CommentTool";
+import CommentList from "./CommentList/CommentList";
 const CommentModal = (props) => {
     const [comments, setComments] = useState([]);
 
@@ -23,12 +24,12 @@ const CommentModal = (props) => {
             onOpenChange={(e) => handleStateModal(e)}
         >
             <Dialog.Trigger asChild>
-                {comments.length > 0 ? (
+                {props.commentCount > 0 ? (
                     <div
                         className={`flex items-center gap-2 cursor-pointer hover:border-b-[1px] border-solid border-[#676668] absolute right-2`}
                     >
                         <FaRegCommentAlt className="" />
-                        <span>{comments.length + " comments"}</span>
+                        <span>{props.commentCount + " comments"}</span>
                     </div>
                 ) : (
                     <div className="flex items-center gap-2 cursor-pointer hover:border-b-[1px] border-solid border-[#676668] absolute right-2">
@@ -43,7 +44,7 @@ const CommentModal = (props) => {
 
                 <Dialog.Content
                     className={`${styles.commentModal} flex data-[state=open]:animate-contentShow fixed top-[50%] 
-            left-[50%] h-fit translate-x-[-50%] translate-y-[-50%] 
+            left-[50%] h-fit translate-x-[-50%] translate-y-[-50%] overflow-x-hidden
             rounded-[6px] bg-neutral-800 p-[25px] 
             shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none`}
                 >
@@ -79,13 +80,26 @@ const CommentModal = (props) => {
                                 files={props.files}
                                 likes={props.likes}
                                 inCommentModal={true}
-                                comments={comments}
+                                commentCount={props.commentCount}
                             />
                         </div>
 
-                        <div className="flex flex-col h-fit min-h-[500px]"></div>
-                        <div className="fixed bottom-0 w-full max-w-[1010px]">
-                            <CommentTool text={text} setText={setText} />
+                        <div className="flex flex-col h-fit min-h-[500px] mt-[20px]">
+                            <CommentList
+                                post_id={props.id}
+                                comments={comments}
+                                setComments={setComments}
+                                setCommentCount={props.setCommentCount}
+                            />
+                        </div>
+                        <div className="fixed bottom-0 w-full max-w-[1010px] bg-neutral-800">
+                            <CommentTool
+                                text={text}
+                                setText={setText}
+                                post_id={props.id}
+                                setComments={setComments}
+                                setCommentCount={props.setCommentCount}
+                            />
                         </div>
                     </div>
                 </Dialog.Content>

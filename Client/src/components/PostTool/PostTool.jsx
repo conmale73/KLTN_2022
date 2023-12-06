@@ -43,22 +43,18 @@ const PostTool = (props) => {
     const [open, setOpen] = useState(false);
     const [privacy, setPrivacy] = useState("PUBLIC");
     const [files, setFiles] = useState([]);
-    const [temp, setTemp] = useState([...props.posts]);
 
     const dispatch = useDispatch();
 
     const handleSubmitForm = (e) => {
         e.preventDefault();
     };
-    useEffect(() => {
-        console.log("temp: ", temp);
-        // props.setPosts(temp);
-    }, [temp]);
+
     async function post(dataPost) {
         try {
             const res = await postService.createNewPost(dataPost);
 
-            setTemp((posts) => [res.data, ...posts]);
+            props.setPosts((posts) => [res.data, ...posts]);
             return res.data;
         } catch (err) {
             console.log(err);

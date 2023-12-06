@@ -1,4 +1,5 @@
 const Post = require("../models/postModel");
+const Comment = require("../models/commentModel");
 const express = require("express");
 const ErrorResponse = require("../utils/errorResponse");
 
@@ -36,8 +37,8 @@ exports.post = async (req, res, next) => {
 
         const newPost = new Post({ user_id, content, privacy });
 
-        // const savedPost = await newPost.save();
-        res.status(201).json(newPost);
+        const savedPost = await newPost.save();
+        res.status(201).json(savedPost);
     } catch (error) {
         next(error);
     }
@@ -81,6 +82,7 @@ exports.getPostsByUserID = async (req, res, next) => {
         const totalPages = Math.ceil(totalPosts / limit);
 
         const posts = await Post.find({ user_id })
+            .sort({ createAt: -1 }) // Sort by createAt in ascending order
             .skip(startIndex)
             .limit(limit);
 
@@ -111,10 +113,16 @@ exports.getPublicPostsByUserID = async (req, res, next) => {
         const totalPages = Math.ceil(totalPosts / limit);
 
         const posts = await Post.find({ user_id, privacy: "PUBLIC" }) // Filter by user_id and privacy
-            .sort({ createAt: -1 }) // Sort by timeStamp in ascending order
+            .sort({ createAt: -1 }) // Sort by createAt in ascending order
             .skip(startIndex)
             .limit(limit);
 
+        posts.forEach((post) => {
+            const commentCount = Comment.find({
+                post_id: post._id,
+            }).countDocuments();
+            post.commentCount = commentCount;
+        });
         res.status(200).json({
             success: true,
             data: posts,

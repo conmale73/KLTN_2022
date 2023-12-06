@@ -21,7 +21,6 @@ const commentSchema = new mongoose.Schema({
         },
     },
     content: {
-        required: true,
         text: {
             type: String,
         },
@@ -36,6 +35,17 @@ const commentSchema = new mongoose.Schema({
             },
         ],
     },
+    likes: [
+        {
+            user_id: {
+                type: ObjectId,
+            },
+            timeStamp: {
+                type: Date,
+                default: Date.now,
+            },
+        },
+    ],
     createAt: {
         type: Date,
         default: Date.now,

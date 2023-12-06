@@ -7,6 +7,7 @@ export { browseService } from "./browse.service";
 export { userService } from "./user.service";
 export { authService } from "./auth.service";
 export { postService } from "./post.service";
+export { commentService } from "./comment.service";
 export { roomService } from "./room.service";
 export { messageService } from "./message.service";
 export { voiceChannelService } from "./voiceChannel.service";

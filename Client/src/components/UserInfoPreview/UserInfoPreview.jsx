@@ -11,6 +11,13 @@ const UserInfoPreview = (props) => {
         queryKey: ["userInfoPreview", props.user_id],
         queryFn: () =>
             userService.getUserById(props.user_id).then((res) => res.data.data),
+        placeholderData: () => {
+            return {
+                _id: "123",
+                username: "Loading...",
+                avatar: "https://i.ibb.co/5Kj7Jtj/placeholder.png",
+            };
+        },
     });
     if (isLoading) return <Loading />;
     if (error) return <p>{error.message}</p>;

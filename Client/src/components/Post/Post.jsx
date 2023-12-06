@@ -3,10 +3,16 @@ import { useState, useEffect } from "react";
 import { userService, postService } from "../../services";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+
+import MiniAudioPlayer from "../MiniAudioPlayer";
+import UserInfoPreview from "../UserInfoPreview";
+import ImageContainer from "../ImageContainer/ImageContainer";
 import Loading from "../Loading";
 import ImageViewer from "../ImageViewer";
 import LikesViewer from "../LikesViewer";
 import CommentModal from "../CommentModal";
+
 import { BsGlobeAsiaAustralia } from "react-icons/bs";
 import {
     FaUserFriends,
@@ -19,16 +25,6 @@ import { FaRegShareFromSquare } from "react-icons/fa6";
 import { AiFillLock } from "react-icons/ai";
 import { FormatDate } from "../../utils";
 
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/navigation";
-import "swiper/css/thumbs";
-import { FreeMode, Navigation, Thumbs, Controller } from "swiper/modules";
-
-import MiniAudioPlayer from "../MiniAudioPlayer";
-import UserInfoPreview from "../UserInfoPreview";
-import { Link } from "react-router-dom";
 const Post = (props) => {
     const images =
         props?.files?.filter((file) => {
@@ -38,14 +34,14 @@ const Post = (props) => {
         props?.files?.filter((file) => {
             return file.fileInfo.type.startsWith("audio/");
         }) || [];
-    const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
     const user = useSelector((state) => state.user.data);
     const [more, setMore] = useState(false);
     const [liked, setLiked] = useState(false);
     const [likes, setLikes] = useState(props.likes);
+    const [commentCount, setCommentCount] = useState(props.commentCount);
     const [openCommentModal, setOpenCommentModal] = useState(false);
-    const [comments, setComments] = useState([]);
+    const [openImageViewer, setOpenImageViewer] = useState(false);
     const [userInfo, setUserInfo] = useState();
 
     const fetchUserInfo = async () => {
@@ -201,86 +197,36 @@ const Post = (props) => {
                         </div>
 
                         {images?.length > 0 && (
-                            <div className="flex max-w-[80%] max-h-[80%] justify-center items-center flex-col">
-                                <Swiper
-                                    key={`slideMain_${props.id}`}
-                                    spaceBetween={10}
-                                    navigation={true}
-                                    thumbs={{
-                                        swiper:
-                                            thumbsSwiper &&
-                                            !thumbsSwiper.destroyed
-                                                ? thumbsSwiper
-                                                : null,
-                                    }}
-                                    modules={[
-                                        FreeMode,
-                                        Controller,
-                                        Navigation,
-                                        Thumbs,
-                                    ]}
-                                    className="mySwiper2"
-                                >
-                                    {images.map((image, index) => {
-                                        return (
-                                            <SwiperSlide key={index}>
-                                                <div>
-                                                    <ImageViewer
-                                                        image={image}
-                                                    />
-                                                </div>
-                                            </SwiperSlide>
-                                        );
-                                    })}
-                                </Swiper>
-                                {images?.length > 1 && (
-                                    <Swiper
-                                        key={`slideThumb_${props.id}`}
-                                        // onSwiper={setThumbsSwiper}
-                                        onSwiper={(swiper) =>
-                                            setThumbsSwiper(swiper)
-                                        }
-                                        spaceBetween={10}
-                                        slidesPerView={4}
-                                        slideToClickedSlide={true}
-                                        centeredSlides={true}
-                                        modules={[
-                                            FreeMode,
-                                            Controller,
-                                            Navigation,
-                                            Thumbs,
-                                        ]}
-                                        className="mySwiper"
-                                    >
-                                        {images?.map((image, index) => {
-                                            return (
-                                                <SwiperSlide
-                                                    key={`slide_${index}`}
-                                                >
-                                                    <div key={index}>
-                                                        <img
-                                                            src={`data:${image.fileInfo.type};base64,${image.dataURL}`}
-                                                            alt=""
-                                                        />
-                                                    </div>
-                                                </SwiperSlide>
-                                            );
-                                        })}
-                                    </Swiper>
-                                )}
-                            </div>
+                            <>
+                                <ImageContainer images={images} />
+                            </>
                         )}
                     </div>
                 </div>
                 <div className={styles.reactions}>
-                    {likes.length > 0 && <LikesViewer likes={likes} />}
+                    {likes.length > 0 && (
+                        <div
+                            className="flex items-center gap-2 cursor-pointer hover:border-b-[1px] border-solid border-[#676668] absolute left-2"
+                            onClick={() => {
+                                setOpenImageViewer(true);
+                            }}
+                        >
+                            <FaHeart />
+                            <span>{props.likes.length + " likes"}</span>
+                            <LikesViewer
+                                likes={likes}
+                                open={openImageViewer}
+                                setOpen={setOpenImageViewer}
+                            />
+                        </div>
+                    )}
 
                     {props.inCommentModal ? (
                         <div
                             className={`flex items-center gap-2 cursor-pointer hover:border-b-[1px] border-solid border-[#676668] absolute right-2`}
                         >
                             <FaRegCommentAlt className="" />
-                            <span>{comments.length + " comments"}</span>
+                            <span>{props.commentCount + " comments"}</span>
                         </div>
                     ) : (
                         <CommentModal
@@ -293,6 +239,8 @@ const Post = (props) => {
                             privacy={props.privacy}
                             files={props.files}
                             likes={props.likes}
+                            commentCount={commentCount}
+                            setCommentCount={setCommentCount}
                             openCommentModal={openCommentModal}
                             setOpenCommentModal={setOpenCommentModal}
                         />
@@ -331,10 +279,10 @@ const Post = (props) => {
                         </div>
                     )}
 
-                    <div className={styles.share}>
+                    {/* <div className={styles.share}>
                         <FaRegShareFromSquare className={styles.icon} />
                         <span>Share</span>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </>

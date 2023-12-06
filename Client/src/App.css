@@ -3,8 +3,9 @@
 @tailwind utilities;
 /* prettier-ignore */
 .App {
-    position: relative; /* Make sure the background image can be positioned relative to this container */
-    height: 100vh; /* Adjust the height of the app container as needed */
+    position: relative; 
+    height: 100vh; 
+    scrollbar-width: none;
 }
 
 .background-image {
@@ -58031,7 +58032,6 @@ textarea,
 .inputpassword {
     appearance: none;
     -webkit-appearance: none;
-    border: 1px solid #ccd0d5;
     border-radius: 0;
     margin: 0;
     padding: 3px;
@@ -58121,10 +58121,6 @@ textarea {
     font-size: 12px;
 }
 
-
-
-
-
 a:hover {
     text-decoration: underline;
 }
@@ -58137,7 +58133,6 @@ td,
 td.label {
     text-align: left;
 }
-
 
 ul {
     list-style-type: none;

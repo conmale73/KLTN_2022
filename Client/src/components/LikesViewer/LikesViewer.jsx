@@ -1,16 +1,13 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import UserInfoPreview from "../UserInfoPreview";
 import { FaHeart } from "react-icons/fa";
+import { useState } from "react";
 const LikesViewer = (props) => {
+    const handleStateModal = () => {
+        props.setOpen(!props.open);
+    };
     return (
-        <Dialog.Root>
-            <Dialog.Trigger asChild>
-                <div className="flex items-center gap-2 cursor-pointer hover:border-b-[1px] border-solid border-[#676668] absolute left-2">
-                    <FaHeart />
-                    <span>{props.likes.length + " likes"}</span>
-                </div>
-            </Dialog.Trigger>
-
+        <Dialog.Root open={props.open} onOpenChange={handleStateModal}>
             <Dialog.Portal>
                 <Dialog.Overlay className="bg-black/30 data-[state=open]:animate-overlayShow fixed inset-0" />
 
@@ -28,7 +25,7 @@ const LikesViewer = (props) => {
                                     thumbnailHeight="40px"
                                     thumbnailWidth="40px"
                                     showName={true}
-                                    user_id={like.user_id}
+                                    user_id={like.user_id || like}
                                     bgStyles={true}
                                     link={true}
                                 />

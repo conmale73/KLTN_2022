@@ -1,6 +1,5 @@
 import styles from "./PostList.module.scss";
 import Post from "../Post";
-import PostButtons from "../Post/PostButtons";
 import { useQuery } from "@tanstack/react-query";
 import { postService } from "../../services";
 import Loading from "../Loading";
@@ -12,9 +11,9 @@ const PostList = (props) => {
             <div className={styles.postList}>
                 {props.data?.map((post, index) => {
                     return (
-                        <>
+                        <div key={index} className="w-full">
                             <Post
-                                key={index}
+                                key={post._id}
                                 id={post._id}
                                 user_id={post.user_id}
                                 text={post.content.text}
@@ -23,8 +22,9 @@ const PostList = (props) => {
                                 privacy={post.privacy}
                                 files={post.content.files}
                                 likes={post.likes}
+                                commentCount={post.commentCount}
                             />
-                        </>
+                        </div>
                     );
                 })}
             </div>

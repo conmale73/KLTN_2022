@@ -1,13 +1,14 @@
 import * as Dialog from "@radix-ui/react-dialog";
 
-const ImageViewer = ({ image }) => {
+const ImageViewer = ({ image, index }) => {
     return (
-        <Dialog.Root>
+        <Dialog.Root key={index}>
             <Dialog.Trigger asChild>
                 <div>
                     <img
                         src={`data:${image.fileInfo.type};base64,${image.dataURL}`}
                         alt=""
+                        className="w-full h-full object-cover rounded-[6px]"
                     />
                 </div>
             </Dialog.Trigger>

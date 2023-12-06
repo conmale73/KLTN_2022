@@ -28,6 +28,7 @@
     "axios": "^1.4.0",
     "bootstrap": "^5.3.2",
     "clsx": "^2.0.0",
+    "emoji-picker-react": "^4.5.16",
     "flowbite": "^2.1.1",
     "flowbite-react": "^0.6.4",
     "gapi-script": "^1.2.0",

@@ -24,6 +24,10 @@ const postSchema = new mongoose.Schema({
             },
         ],
     },
+    commentCount: {
+        type: Number,
+        default: 0,
+    },
     likes: [
         {
             user_id: {

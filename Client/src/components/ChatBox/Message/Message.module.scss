@@ -22,11 +22,18 @@
         }
     }
     .messageContent {
-        white-space: pre-line;
-        word-wrap: break-word;
         font-size: 15px;
         margin-left: 45px;
-        text-align: start;
+        -ms-word-break: break-all;
+        word-break: break-all;
+
+        /* Non standard for webkit */
+        word-break: break-word;
+
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        -ms-hyphens: auto;
+        hyphens: auto;
     }
 }
 
@@ -67,10 +74,17 @@
         }
 
         .myContent {
-            white-space: pre-line;
-            text-align: start;
-            word-wrap: break-word;
             font-size: 12px;
+            -ms-word-break: break-all;
+            word-break: break-all;
+
+            /* Non standard for webkit */
+            word-break: break-word;
+
+            -webkit-hyphens: auto;
+            -moz-hyphens: auto;
+            -ms-hyphens: auto;
+            hyphens: auto;
         }
     }
 
@@ -94,10 +108,17 @@
         }
 
         .peerContent {
-            word-wrap: break-word;
             font-size: 12px;
-            white-space: pre-line;
-            text-align: start;
+            -ms-word-break: break-all;
+            word-break: break-all;
+
+            /* Non standard for webkit */
+            word-break: break-word;
+
+            -webkit-hyphens: auto;
+            -moz-hyphens: auto;
+            -ms-hyphens: auto;
+            hyphens: auto;
         }
     }
     .peerTime {
