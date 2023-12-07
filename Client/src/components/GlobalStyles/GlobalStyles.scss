@@ -5,13 +5,17 @@
     //Dark mode
     --general-background: #18191a;
     --general-button-color: #555555;
+    --general-disabled-button-color: #424242;
     --general-button-danger-color: #4a1c1c;
     --general-button-hover: #676668;
+    --general-disabled-button-hover: #4e4e4e;
     --general-button-danger-hover: #6d3e3e;
     --general-icon-color: #bbbbbb;
+    --general-disabled-icon-color: #555555;
     --general-text-color: #e4e6eb;
     --small-text-color: #adadad;
     --icon-hover: #ffffff;
+    --icon-hover-disabled: #adadad;
     --icon-danger: #ff1313;
     --text-hover: #ffffff;
     --text-danger: #ff1414;
@@ -630,8 +634,7 @@ input[type="number"] {
 .mySwiper2 {
     width: fit-content;
     height: fit-content;
-    max-width: 500px;
-    max-height: 500px;
+    max-width: 100%;
     object-fit: cover;
 }
 

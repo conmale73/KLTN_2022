@@ -4,6 +4,7 @@ import { userService } from "../../services";
 import * as HoverCard from "@radix-ui/react-hover-card";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import ImageViewer from "../ImageViewer";
 const UserInfoPreview = (props) => {
     const onlineUsers = useSelector((state) => state.onlineUsers.data);
     const user = useSelector((state) => state.user.data);
@@ -11,13 +12,6 @@ const UserInfoPreview = (props) => {
         queryKey: ["userInfoPreview", props.user_id],
         queryFn: () =>
             userService.getUserById(props.user_id).then((res) => res.data.data),
-        placeholderData: () => {
-            return {
-                _id: "123",
-                username: "Loading...",
-                avatar: "https://i.ibb.co/5Kj7Jtj/placeholder.png",
-            };
-        },
     });
     if (isLoading) return <Loading />;
     if (error) return <p>{error.message}</p>;
@@ -40,8 +34,9 @@ const UserInfoPreview = (props) => {
                                 }}
                             >
                                 <img
+                                    loading="lazy"
                                     className={`w-full h-full object-contain rounded-full`}
-                                    src={data.avatar}
+                                    src={`data:${data?.avatar?.files[0]?.fileInfo?.type};base64,${data?.avatar?.files[0]?.dataURL}`}
                                     alt={data.username}
                                 />
                                 {onlineUsers?.some(
@@ -89,8 +84,9 @@ const UserInfoPreview = (props) => {
                                 }}
                             >
                                 <img
-                                    className={`w-full h-full object-cover rounded-full`}
-                                    src={data.avatar}
+                                    loading="lazy"
+                                    className={`w-full h-full object-contain rounded-full`}
+                                    src={`data:${data?.avatar?.files[0]?.fileInfo?.type};base64,${data?.avatar?.files[0]?.dataURL}`}
                                     alt={data.username}
                                 />
                                 {onlineUsers?.some(
@@ -105,12 +101,25 @@ const UserInfoPreview = (props) => {
                         </HoverCard.Trigger>
                         <div className="flex flex-col w-[90%]">
                             {props.showName && (
-                                <div
-                                    className="text-[20px] line-clamp-1"
-                                    title={data.username}
-                                >
-                                    {data.username}
-                                </div>
+                                <>
+                                    {props.link ? (
+                                        <Link to={`/profile/?id=${data._id}`}>
+                                            <div
+                                                className="text-[20px] line-clamp-1 hover:underline"
+                                                title={data.username}
+                                            >
+                                                {data.username}
+                                            </div>
+                                        </Link>
+                                    ) : (
+                                        <div
+                                            className="text-[20px] line-clamp-1"
+                                            title={data.username}
+                                        >
+                                            {data.username}
+                                        </div>
+                                    )}
+                                </>
                             )}
                             {props.lastMessage && (
                                 <p className="text-[15px] text-ellipsis line-clamp-1 max-w-[100%] font-[400] text-[#adadad]">
@@ -138,11 +147,9 @@ const UserInfoPreview = (props) => {
                         sideOffset={5}
                     >
                         <div className="flex flex-col gap-[7px]">
-                            <img
-                                className="block h-[70px] w-[70px] rounded-full"
-                                src={data.avatar}
-                                alt={data.username}
-                            />
+                            {data?.avatar?.files[0] && (
+                                <ImageViewer image={data?.avatar?.files[0]} />
+                            )}
                             <div className="flex flex-col gap-[15px]">
                                 <div>
                                     <Link to={`/profile/?id=${data._id}`}>

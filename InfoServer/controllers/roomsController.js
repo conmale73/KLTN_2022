@@ -2,6 +2,8 @@ const { ObjectId } = require("mongodb");
 const Room = require("../models/roomModel");
 const User = require("../models/userModel");
 const GroupChat = require("../models/groupChatModel");
+const fs = require("fs");
+const path = require("path");
 
 // @desc    Create a new room
 // @route   POST /api/rooms
@@ -10,15 +12,66 @@ exports.createRoom = async (req, res, next) => {
     try {
         const { name, creator_id, privacy, description } = req.body;
 
+        // Path to the default thumbnail image in the "assets" folder
+        const defaultRoomThumbnailPath = path.join(
+            __dirname,
+            "..",
+            "assets",
+            "defaultRoomThumbnail.jpg"
+        );
+        const defaultGroupChatThumbnailPath = path.join(
+            __dirname,
+            "..",
+            "assets",
+            "defaultGroupChatThumbnail.png"
+        );
+
+        // Read the default thumbnail image as a buffer
+        const roomThumbnailBuffer = fs.readFileSync(defaultRoomThumbnailPath);
+        const base64RoomThumbnail = roomThumbnailBuffer.toString("base64");
+
+        const groupChatThumbnailBuffer = fs.readFileSync(
+            defaultGroupChatThumbnailPath
+        );
+        const base64GroupChatThumbnail =
+            groupChatThumbnailBuffer.toString("base64");
+
         const newRoom = new Room({
             name,
             creator_id,
             privacy,
             description,
+            thumbnail: {
+                files: [
+                    {
+                        dataURL: base64RoomThumbnail,
+                        fileInfo: {
+                            type: "image/jpg",
+                            name: "defaultRoomThumbnail.jpg",
+                            size: roomThumbnailBuffer.length,
+                            lastModified: new Date().getTime(),
+                        },
+                    },
+                ],
+            },
             participants: [creator_id],
         });
         const newGroupChat = new GroupChat({
             group_id: newRoom._id,
+            group_name: "Group Chat for" + name,
+            group_thumbnail: {
+                files: [
+                    {
+                        dataURL: base64GroupChatThumbnail,
+                        fileInfo: {
+                            type: "image/png",
+                            name: "defaultGroupChatThumbnail.jpg",
+                            size: groupChatThumbnailBuffer.length,
+                            lastModified: new Date().getTime(),
+                        },
+                    },
+                ],
+            },
             members: [creator_id],
         });
         const savedRoom = await newRoom.save();

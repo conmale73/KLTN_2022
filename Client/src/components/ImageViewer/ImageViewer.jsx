@@ -6,6 +6,7 @@ const ImageViewer = ({ image, index }) => {
             <Dialog.Trigger asChild>
                 <div>
                     <img
+                        loading="lazy"
                         src={`data:${image.fileInfo.type};base64,${image.dataURL}`}
                         alt=""
                         className="w-full h-full object-cover rounded-[6px]"

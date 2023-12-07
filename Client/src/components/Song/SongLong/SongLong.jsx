@@ -139,7 +139,10 @@ const LongSong = (props) => {
                             </div>
                             <div className={styles.artistList}>
                                 {props?.artists?.map((artist, index) => (
-                                    <Link to={`/music/artists/${artist.id}`}>
+                                    <Link
+                                        to={`/music/artists/${artist.id}`}
+                                        key={index}
+                                    >
                                         {artist.id !== null ? (
                                             <p
                                                 key={index}

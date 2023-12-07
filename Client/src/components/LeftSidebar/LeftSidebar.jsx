@@ -37,7 +37,11 @@ function LeftSidebar() {
                 <div className="info">
                     <div className="avatar">
                         <Link to={`/profile/?id=${user._id}`}>
-                            <img src={user.avatar}></img>
+                            <img
+                                loading="lazy"
+                                className={`w-full h-full object-contain rounded-full`}
+                                src={`data:${user.avatar.files[0].fileInfo.type};base64,${user.avatar.files[0].dataURL}`}
+                            />
                         </Link>
                     </div>
                     <div className="name">

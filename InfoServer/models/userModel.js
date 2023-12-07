@@ -18,11 +18,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 6,
     },
-    avatar: {
-        type: String,
-        default:
-            "https://static.vecteezy.com/system/resources/thumbnails/001/840/618/small/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg",
-    },
+    avatar: {},
     registration_date: {
         type: Date,
         default: Date.now,

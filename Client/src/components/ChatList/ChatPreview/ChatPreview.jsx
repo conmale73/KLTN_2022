@@ -47,7 +47,7 @@ const ChatPreview = (props) => {
                     <div className="flex gap-[5px]">
                         <img
                             className="w-[50px] h-[50px] rounded-full object-contain border-[1px] border-[#505050]"
-                            src={`data:${props.chat?.group_thumbnail.fileInfo.type};base64,${props.chat?.group_thumbnail.dataURL}`}
+                            src={`data:${props.chat?.group_thumbnail?.fileInfo?.type};base64,${props.chat?.group_thumbnail?.dataURL}`}
                             alt=""
                         />
                         <div className="flex flex-col flex-1">

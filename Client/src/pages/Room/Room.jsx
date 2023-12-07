@@ -19,6 +19,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import { PiShareFatFill } from "react-icons/pi";
 import { useSelector, useDispatch } from "react-redux";
 import VoiceChatChannel from "../../components/VoiceChatChannel";
+import ImageViewer from "../../components/ImageViewer";
 
 import {
     setVoiceChannels,
@@ -166,7 +167,11 @@ const Room = () => {
             <div className={styles.room}>
                 <div className={styles.roomInfo}>
                     <div className={styles.roomThumbnail}>
-                        <img src={roomData?.thumbnail} alt="thumbnail" />
+                        {roomData?.thumbnail?.files[0] && (
+                            <ImageViewer
+                                image={roomData?.thumbnail?.files[0]}
+                            />
+                        )}
                     </div>
                     <div className={styles.infoContainer}>
                         <div className={styles.roomName}>{roomData?.name}</div>

@@ -10,4 +10,9 @@ export const userService = {
     getUserByEmail(email) {
         return axiosClient.get(`/api/users/email/${email}`);
     },
+    searchUserByUsername(username, page, limit) {
+        return axiosClient.get(
+            `/api/users/search/${username}?page=${page}&limit=${limit}`
+        );
+    },
 };

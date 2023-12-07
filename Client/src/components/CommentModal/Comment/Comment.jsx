@@ -43,6 +43,19 @@ const Comment = (props) => {
             console.log(error);
         }
     };
+
+    const handleClickDelete = async (e) => {
+        try {
+            await commentService.deleteComment(props.comment_id);
+            props.setComments(
+                props.comments?.filter(
+                    (comment) => comment._id != props.comment_id
+                )
+            );
+        } catch (error) {
+            console.log(error);
+        }
+    };
     return (
         <div className="flex flex-col" key={props.comment_id}>
             <div className={`${styles.commentContainer} flex w-full h-fit `}>
@@ -89,26 +102,28 @@ const Comment = (props) => {
                         </div>
                     )}
                 </div>
-                <DropdownMenu.Root>
-                    <DropdownMenu.Trigger asChild>
-                        <div
-                            className={`${styles.optionButtonContainer} flex-0 my-auto p-[5px] hover:bg-[#676668] cursor-pointer rounded-full ml-[20px]`}
-                        >
-                            <SlOptions size="20px" color="#9d9d9d" />
-                        </div>
-                    </DropdownMenu.Trigger>
-                    <DropdownMenu.Content
-                        className="w-[200px] h-fit bg-[#2a2c2e] p-[10px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade  rounded-[5px]
+                {props.creator?.user_id == user._id && (
+                    <DropdownMenu.Root>
+                        <DropdownMenu.Trigger asChild>
+                            <div
+                                className={`${styles.optionButtonContainer} flex-0 my-auto p-[5px] hover:bg-[#676668] cursor-pointer rounded-full ml-[20px]`}
+                            >
+                                <SlOptions size="20px" color="#9d9d9d" />
+                            </div>
+                        </DropdownMenu.Trigger>
+                        <DropdownMenu.Content
+                            className="w-[200px] h-fit bg-[#2a2c2e] p-[10px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade  rounded-[5px]
                         data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
-                    >
-                        <DropdownMenu.Item className="text-[#9d9d9d] hover:bg-[#676668] hover:text-[#ffffff] cursor-pointer px-[5px] rounded-[5px]">
-                            Edit
-                        </DropdownMenu.Item>
-                        <DropdownMenu.Item className="text-[#9d9d9d] hover:bg-[#676668] hover:text-[#ffffff] cursor-pointer px-[5px] rounded-[5px]">
-                            Delete
-                        </DropdownMenu.Item>
-                    </DropdownMenu.Content>
-                </DropdownMenu.Root>
+                        >
+                            <div
+                                className="text-[#9d9d9d] hover:bg-[#676668] hover:text-[#ffffff] cursor-pointer px-[5px] rounded-[5px]"
+                                onClick={(e) => handleClickDelete(e)}
+                            >
+                                Delete
+                            </div>
+                        </DropdownMenu.Content>
+                    </DropdownMenu.Root>
+                )}
             </div>
             <div className="w-full h-[50px]">
                 <div className="flex justify-start items-center ml-[45px]  gap-[20px]">

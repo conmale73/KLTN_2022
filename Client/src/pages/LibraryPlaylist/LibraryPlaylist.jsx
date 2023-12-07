@@ -248,7 +248,7 @@ const LibraryPlaylist = (props) => {
                                         <input
                                             id="title"
                                             type="text"
-                                            className={`w-full p-[10px] focus:outline-none text-[20px] rounded-[4px] bg-transparent`}
+                                            className={`w-full p-[10px] focus:outline-none text-[20px] rounded-[4px] bg-transparent border-[1px] border-solid border-[#4d4d4d]`}
                                             value={title}
                                             autoFocus
                                             onChange={(e) => {
@@ -259,7 +259,7 @@ const LibraryPlaylist = (props) => {
                                             placeholder="Title"
                                         ></input>
                                         <TextareaAutosize
-                                            className={`w-full p-[10px] focus:outline-none text-[20px] rounded-[4px] resize-none bg-transparent`}
+                                            className={`w-full p-[10px] focus:outline-none text-[20px] rounded-[4px] resize-none bg-transparent border-[1px] border-solid border-[#4d4d4d]`}
                                             value={description}
                                             minRows="3"
                                             maxRows="8"

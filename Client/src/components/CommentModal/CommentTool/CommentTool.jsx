@@ -61,7 +61,6 @@ const CommentTool = (props) => {
             creator: {
                 user_id: user._id,
                 username: user.username,
-                avatar: user.avatar,
             },
             content: {
                 text: props.text,

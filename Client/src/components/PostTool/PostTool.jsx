@@ -106,7 +106,11 @@ const PostTool = (props) => {
             <div className={styles.top}>
                 <Link to={`/profile/?id=${user._id}`}>
                     <div className={styles.avatar}>
-                        <img src={user.avatar} alt="" />
+                        <img
+                            loading="lazy"
+                            className={`w-full h-full object-contain rounded-full`}
+                            src={`data:${user.avatar.files[0].fileInfo.type};base64,${user.avatar.files[0].dataURL}`}
+                        />
                     </div>
                 </Link>
 
@@ -153,8 +157,9 @@ const PostTool = (props) => {
                                     <Link to={`/profile/?id=${user._id}`}>
                                         <div className="w-[50px] h-[50px] rounded-full ">
                                             <img
-                                                className="object-cover w-full h-full rounded-full"
-                                                src={user.avatar}
+                                                loading="lazy"
+                                                className={`w-full h-full object-contain rounded-full`}
+                                                src={`data:${user.avatar.files[0].fileInfo.type};base64,${user.avatar.files[0].dataURL}`}
                                             />
                                         </div>
                                     </Link>

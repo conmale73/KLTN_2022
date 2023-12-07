@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import Loading from "../Loading";
 import { userService } from "../../services";
 import { Link, useNavigate } from "react-router-dom";
+import UserInfoPreview from "../UserInfoPreview";
+import ImageViewer from "../ImageViewer";
 
 const RoomThumbnail = (props) => {
     const user = useSelector((state) => state.user.data);
@@ -26,11 +28,7 @@ const RoomThumbnail = (props) => {
         <>
             <div className={`${styles.roomThumbnail} flex`}>
                 <div className={` ${styles.thumbnail}`}>
-                    <img
-                        className="object-cover rounded-[5px] w-full h-full"
-                        src={props.data.thumbnail}
-                        alt=""
-                    />
+                    <ImageViewer image={props.data.thumbnail?.files[0]} />
                 </div>
                 <div className={`${styles.roomInfo}`}>
                     <div className={`${styles.roomName} text-[15px]`}>
@@ -38,14 +36,14 @@ const RoomThumbnail = (props) => {
                     </div>
                     <div className={styles.roomCreator}>
                         Creator:
-                        <img
-                            className={`${styles.avatar} w-[20px] h-[20px] object-cover rounded-full`}
-                            src={data.avatar}
-                            alt=""
+                        <UserInfoPreview
+                            thumbnailHeight="40px"
+                            thumbnailWidth="40px"
+                            showName={true}
+                            user_id={props.data.creator_id}
+                            bgStyles={false}
+                            link={true}
                         />
-                        <Link to={"/profile/?id=" + user._id}>
-                            {data.username}
-                        </Link>
                     </div>
                     <div className={styles.roomDescription}>
                         {`Description: ${props.data.description}`}

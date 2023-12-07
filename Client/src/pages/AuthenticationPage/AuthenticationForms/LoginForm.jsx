@@ -19,8 +19,6 @@ const LoginForm = () => {
 
     const [openLogin, setOpenLogin] = useState(false);
 
-    const [socket, setSocket] = useState(null);
-
     const navigator = useNavigate();
     const dispatch = useDispatch();
 

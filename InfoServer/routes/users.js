@@ -26,4 +26,7 @@ router.post("/login", usersController.login);
 // POST /api/logout
 router.post("/logout", usersController.logout);
 
+// GET /api/users/search/:username
+router.get("/search/:username", usersController.searchUsersByUsername);
+
 module.exports = router;

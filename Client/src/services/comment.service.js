@@ -25,7 +25,7 @@ export const commentService = {
     updateComment(data) {
         return axiosClient.put(`/api/comments/`, data);
     },
-    deleteComment(id) {
-        return axiosClient.delete(`/api/comments/${id}`);
+    deleteComment(comment_id) {
+        return axiosClient.delete(`/api/comments/${comment_id}`);
     },
 };

@@ -148,6 +148,8 @@ const CommentList = (props) => {
                     content={comment.content}
                     likes={comment.likes}
                     createAt={comment.createAt}
+                    comments={props.comments}
+                    setComments={props.setComments}
                 />
             ))}
             {page < totalPages ? (

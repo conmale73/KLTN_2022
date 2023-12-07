@@ -2,26 +2,46 @@ import "./SearchBox.scss";
 import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { AiOutlineSearch } from "react-icons/ai";
-import { searchService } from "../../../services";
+import { searchService, userService } from "../../../services";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setInput } from "../../../redux/search/searchSlice";
+import { IoLogoYoutube } from "react-icons/io";
+import { FaUserFriends } from "react-icons/fa";
+import UserInfoPreview from "../../UserInfoPreview/UserInfoPreview";
 const SearchBox = () => {
+    const user = useSelector((state) => state.user.data);
+
     const [searchInput, setSearchInput] = useState("");
-    const [searchResults, setSearchResults] = useState([]);
+    const [youtubeSearchResults, setYoutubeSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(6);
+    const [users, setUsers] = useState([]);
     const dispatch = useDispatch();
     const navigator = useNavigate();
 
+    const fetchYoutubeQueries = async () => {
+        const res = await searchService.query(searchInput);
+        setYoutubeSearchResults(res.data);
+
+        return res.data;
+    };
+    const fetchUsers = async () => {
+        const res = await userService.searchUserByUsername(
+            searchInput,
+            page,
+            limit
+        );
+        setUsers(res.data.data);
+        return res.data.data;
+    };
     const handleSearchInput = (e) => {
         setSearchInput(e.target.value);
         setIsSearching(true);
         try {
-            async function fetchData() {
-                const response = await searchService.query(e.target.value);
-                setSearchResults(response.data);
-            }
-            fetchData();
+            fetchYoutubeQueries();
+            fetchUsers();
         } catch (error) {}
     };
 
@@ -56,15 +76,46 @@ const SearchBox = () => {
                         value={searchInput}
                         onChange={(e) => handleSearchInput(e)}
                     />
-                    <div className="searchButton" onClick={handleSubmitSearch}>
-                        <FaSearch className="icon" size="24px" />
-                    </div>
+                    {searchInput != "" ? (
+                        <div
+                            className="searchButton"
+                            onClick={handleSubmitSearch}
+                        >
+                            <FaSearch className="icon" size="24px" />
+                        </div>
+                    ) : (
+                        <div className="disableSearchButton">
+                            <FaSearch className="icon" size="24px" />
+                        </div>
+                    )}
                 </form>
             </div>
 
             {isSearching && searchInput != "" && (
                 <div className="results">
-                    {searchResults.map((result) => (
+                    <div className="flex gap-[10px] ml-[20px]">
+                        <FaUserFriends size="24px" />
+                        Friends
+                    </div>
+                    <div className="flex flex-wrap w-full justify-start my-[10px] mx-[10px]">
+                        {users.map((user, index) => (
+                            <div className="w-[30%]" key={index}>
+                                <UserInfoPreview
+                                    thumbnailWidth="30px"
+                                    thumbnailHeight="30px"
+                                    showName={true}
+                                    bgStyles={true}
+                                    link={true}
+                                    user_id={user}
+                                />
+                            </div>
+                        ))}
+                    </div>
+                    <div className="flex gap-[10px] ml-[20px]">
+                        <IoLogoYoutube size="24px" />
+                        YouTube Results
+                    </div>
+                    {youtubeSearchResults.map((result) => (
                         <div
                             className="result"
                             onClick={(e) => handleClickResult(e)}
