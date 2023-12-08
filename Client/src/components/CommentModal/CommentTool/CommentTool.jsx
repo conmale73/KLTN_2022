@@ -6,7 +6,7 @@ import { PiPaperPlaneRightFill } from "react-icons/pi";
 
 import { useSelector } from "react-redux";
 import TextareaAutosize from "react-textarea-autosize";
-import EmojiPicker, { Emoji } from "emoji-picker-react";
+import EmojiPicker from "emoji-picker-react";
 
 import UserInfoPreview from "../../UserInfoPreview";
 import { commentService } from "../../../services";

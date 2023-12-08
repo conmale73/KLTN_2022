@@ -2,6 +2,7 @@ const Post = require("../models/postModel");
 const Comment = require("../models/commentModel");
 const express = require("express");
 const ErrorResponse = require("../utils/errorResponse");
+const User = require("../models/userModel");
 
 // @desc    Add a new post
 // @route   POST /api/posts
@@ -67,7 +68,7 @@ exports.getPostById = async (req, res, next) => {
     }
 };
 // @desc    Get all posts of a user
-// @route   POST /api/posts/:user_id
+// @route   POST /api/posts/user/:user_id
 exports.getPostsByUserID = async (req, res, next) => {
     try {
         const { user_id } = req.params;
@@ -81,6 +82,7 @@ exports.getPostsByUserID = async (req, res, next) => {
         const totalPosts = await Post.find({ user_id }).countDocuments();
         const totalPages = Math.ceil(totalPosts / limit);
 
+        console.log(totalPosts);
         const posts = await Post.find({ user_id })
             .sort({ createAt: -1 }) // Sort by createAt in ascending order
             .skip(startIndex)
@@ -205,6 +207,45 @@ exports.unlikePost = async (req, res, next) => {
                 data: post,
             });
         }
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Get newsfeed
+// @route   GET /api/posts/newsfeed/:user_id
+// @access  Public
+exports.getNewsfeed = async (req, res, next) => {
+    try {
+        const { user_id } = req.params;
+
+        const page = parseInt(req.query.page) || 1; // Current page
+        const limit = parseInt(req.query.limit) || 10; // Number of posts per page
+
+        const startIndex = (page - 1) * limit;
+
+        const friendList = await User.find(); // Change with real friendlist later
+        const friendIDs = friendList.map((friend) => friend._id.toString());
+
+        const totalPosts = await Post.find({
+            user_id: { $in: friendIDs },
+        }).countDocuments();
+
+        const totalPages = Math.ceil(totalPosts / limit);
+
+        const posts = await Post.find({
+            user_id: { $in: friendIDs },
+        })
+            .sort({ createAt: -1 })
+            .skip(startIndex)
+            .limit(limit);
+
+        res.status(200).json({
+            success: true,
+            data: posts,
+            page,
+            totalPages: totalPages,
+        });
     } catch (error) {
         next(error);
     }

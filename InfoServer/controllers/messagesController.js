@@ -1,4 +1,5 @@
 const Message = require("../models/messageModel");
+const GroupChat = require("../models/groupChatModel");
 
 // @desc    Create a new message
 // @route   POST /api/messages
@@ -15,6 +16,15 @@ exports.createMessage = async (req, res, next) => {
         });
 
         const savedMessage = await newMessage.save();
+
+        const groupChat = await GroupChat.findOneAndUpdate(
+            { _id: chat_id },
+            {
+                last_message: savedMessage,
+                last_message_timeStamp: savedMessage.timeStamp,
+            },
+            { new: true }
+        );
         res.status(201).json(savedMessage);
     } catch (error) {
         next(error);

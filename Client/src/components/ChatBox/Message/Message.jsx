@@ -2,6 +2,7 @@ import styles from "./Message.module.scss";
 import UserInfoPreview from "../../UserInfoPreview";
 import FormatDate from "../../../utils/FormatDate";
 import { useSelector } from "react-redux";
+import * as Tooltip from "@radix-ui/react-tooltip";
 const Message = (props) => {
     const singleChat = props.singleChat;
     const user = useSelector((state) => state.user.data);
@@ -13,14 +14,33 @@ const Message = (props) => {
                     {props.sender_id === user._id ? (
                         <>
                             <div className={styles.singleChatMessage}>
-                                <span className={styles.myTime}>
-                                    {FormatDate(props.timeStamp)}
-                                </span>
-                                <div className={styles.myContainer}>
-                                    <p className={styles.myContent}>
-                                        {props.content}
-                                    </p>
-                                </div>
+                                <Tooltip.Provider>
+                                    <Tooltip.Root>
+                                        <Tooltip.Trigger asChild>
+                                            <div className={styles.myContainer}>
+                                                <p className={styles.myContent}>
+                                                    {props.content}
+                                                </p>
+                                            </div>
+                                        </Tooltip.Trigger>
+                                        <Tooltip.Portal>
+                                            <Tooltip.Content
+                                                className="data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade
+                                                data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade 
+                                                data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade 
+                                                data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade 
+                                                text-[#adadad] select-none rounded-[4px] bg-[#3b3b3b] 
+                                                px-[15px] py-[10px] text-[15px] leading-none 
+                                                shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] 
+                                                will-change-[transform,opacity]"
+                                                sideOffset={5}
+                                            >
+                                                {FormatDate(props.timeStamp)}
+                                                <Tooltip.Arrow className="fill-[#3b3b3b]" />
+                                            </Tooltip.Content>
+                                        </Tooltip.Portal>
+                                    </Tooltip.Root>
+                                </Tooltip.Provider>
                             </div>
                         </>
                     ) : (
@@ -32,14 +52,47 @@ const Message = (props) => {
                                 user_id={props.sender_id}
                                 bgStyles={false}
                             />
-                            <div className={styles.peerContainer}>
-                                <p className={styles.peerContent}>
-                                    {props.content}
-                                </p>
+                            <div className={styles.otherUser}>
+                                <div className={styles.otherUserName}>
+                                    {props.sender_name}
+                                </div>
+                                <Tooltip.Provider>
+                                    <Tooltip.Root>
+                                        <Tooltip.Trigger asChild>
+                                            <div
+                                                className={
+                                                    styles.otherUserContainer
+                                                }
+                                            >
+                                                <p
+                                                    className={
+                                                        styles.otherUserContent
+                                                    }
+                                                >
+                                                    {props.content}
+                                                </p>
+                                            </div>
+                                        </Tooltip.Trigger>
+                                        <Tooltip.Portal>
+                                            <Tooltip.Content
+                                                className="data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade
+                                                data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade 
+                                                data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade 
+                                                data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade 
+                                                text-[#adadad] select-none rounded-[4px] bg-[#3b3b3b] 
+                                                px-[15px] py-[10px] text-[15px] leading-none 
+                                                shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] 
+                                                will-change-[transform,opacity]"
+                                                sideOffset={5}
+                                            >
+                                                {FormatDate(props.timeStamp)}
+
+                                                <Tooltip.Arrow className="fill-[#3b3b3b]" />
+                                            </Tooltip.Content>
+                                        </Tooltip.Portal>
+                                    </Tooltip.Root>
+                                </Tooltip.Provider>
                             </div>
-                            <span className={styles.peerTime}>
-                                {FormatDate(props.timeStamp)}
-                            </span>
                         </div>
                     )}
                 </>

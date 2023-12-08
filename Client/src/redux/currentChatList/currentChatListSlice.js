@@ -31,6 +31,8 @@ const currentChatListSlice = createSlice({
                     _id: newChat._id,
                     group_id: newChat.group_id,
                     members: newChat.members,
+                    group_name: newChat.group_name,
+                    group_thumbnail: newChat.group_thumbnail,
                     createAt: newChat.createAt,
                     updateAt: newChat.updateAt,
                 },
@@ -41,10 +43,14 @@ const currentChatListSlice = createSlice({
             const chatID = action.payload;
             state.list = state.list.filter((chat) => chat._id !== chatID);
         },
+        emptyChatList(state) {
+            state.list = [];
+            state.currentChat = null;
+        },
     },
 });
 
-export const { addChat, removeChat, openChat, closeChat } =
+export const { addChat, removeChat, openChat, closeChat, emptyChatList } =
     currentChatListSlice.actions;
 
 export default currentChatListSlice.reducer;

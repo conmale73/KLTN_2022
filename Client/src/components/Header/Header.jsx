@@ -9,6 +9,7 @@ import { BiSolidMessageRoundedDetail } from "react-icons/bi";
 import SearchBox from "./SearchBox";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/user/userSlice";
+import { emptyChatList } from "../../redux/currentChatList/currentChatListSlice";
 import * as HoverCard from "@radix-ui/react-hover-card";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { setMode } from "../../redux/mode/modeSlice";
@@ -20,6 +21,7 @@ function Header() {
     const navigator = useNavigate();
     const handleLogOut = () => {
         dispatch(logout());
+        dispatch(emptyChatList());
         localStorage.removeItem("user");
         localStorage.removeItem("token");
         navigator("/authentication/login");

@@ -106,9 +106,11 @@ const Room = () => {
     if (isLoading) return <Loading />;
     if (error) return <p>{error.message}</p>;
 
-    const handleClickJoin = (e) => {
+    const handleClickJoin = async (e) => {
         try {
-            const res = roomService.joinRoom(roomData._id, user._id);
+            const res = await roomService.joinRoom(roomData._id, user._id);
+            setRoomData(res.data);
+
             fetchVoiceChannelData();
         } catch (err) {
             console.log(err);
@@ -120,9 +122,10 @@ const Room = () => {
         voiceChannelService.leaveAllVoiceChannel(user._id);
     };
 
-    const handleClickQuit = () => {
+    const handleClickQuit = async () => {
         try {
-            const res = roomService.quitRoom(roomData._id, user._id);
+            const res = await roomService.quitRoom(roomData._id, user._id);
+            setRoomData(res.data);
         } catch (err) {
             console.log(err);
         }
@@ -181,6 +184,7 @@ const Room = () => {
                                 thumbnailHeight="40px"
                                 thumbnailWidth="40px"
                                 showName={true}
+                                link={true}
                                 user_id={roomData?.creator_id}
                             />
                         </div>
@@ -238,12 +242,17 @@ const Room = () => {
                                     {/* Body */}
                                     <div className="w-full h-[calc(100%-60px)] justify-center items-start inline-flex">
                                         {/* Left */}
-                                        <div className="w-[300px] h-full relative flex-col justify-start items-start flex">
+                                        <div className="flex w-[300px] h-full relative flex-col justify-start items-start gap-[20px]">
                                             <div className="w-[300px] h-[200px] relative">
-                                                <img
-                                                    className="w-[300px] h-[200px] left-0 top-0 absolute"
-                                                    src="https://scontent.fsgn2-11.fna.fbcdn.net/v/t1.6435-9/46496119_519018838597512_1156244267400691712_n.jpg?stp=dst-jpg_p180x540&_nc_cat=105&ccb=1-7&_nc_sid=300f58&_nc_ohc=C5v064vHSgUAX_UcJOm&_nc_ht=scontent.fsgn2-11.fna&oh=00_AfDnsJcw-Bc70xd4bi8Rhb4h7BrWzgb1DY1VaVJIjljGUA&oe=656EFDD3"
-                                                />
+                                                <div className="opacity-50 w-full h-full object-contain">
+                                                    <ImageViewer
+                                                        image={
+                                                            roomData?.thumbnail
+                                                                ?.files[0]
+                                                        }
+                                                    />
+                                                </div>
+
                                                 <div className="left-[32px] top-[10px] absolute text-white text-[25px] font-semibold font-['Inter'] line-clamp-1">
                                                     {roomData?.name}
                                                 </div>

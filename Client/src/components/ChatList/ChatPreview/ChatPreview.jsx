@@ -11,29 +11,29 @@ import Loading from "../../Loading";
 const ChatPreview = (props) => {
     const user = useSelector((state) => state.user.data);
     const dispatch = useDispatch();
-    const [lastMessage, setLastMessage] = useState({});
+    const [lastMessage, setLastMessage] = useState(props.lastMessage);
     const handleOnClick = () => {
         dispatch(addChat(props.chat));
         dispatch(openChat(props.chat));
     };
-    const fetchData = async () => {
-        try {
-            const res = await messageService.getLastMessage(props.chat?._id);
-            setLastMessage(res.data.data);
-            return res.data.data;
-        } catch (err) {
-            console.log(err);
-        }
-    };
-    const { isLoading, error, data } = useQuery({
-        queryKey: ["chatPreview", props.chat?._id],
-        queryFn: () => fetchData(),
-    });
-    if (isLoading) return <Loading />;
-    if (error) {
-        console.log(error);
-        return <p>{error.message}</p>;
-    }
+    // const fetchData = async () => {
+    //     try {
+    //         const res = await messageService.getLastMessage(props.chat?._id);
+    //         setLastMessage(res.data.data);
+    //         return res.data.data;
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // };
+    // const { isLoading, error, data } = useQuery({
+    //     queryKey: ["chatPreview", props.chat?._id],
+    //     queryFn: () => fetchData(),
+    // });
+    // if (isLoading) return <Loading />;
+    // if (error) {
+    //     console.log(error);
+    //     return <p>{error.message}</p>;
+    // }
     return (
         <div
             className="chatPreviewContainer w-full h-[80px] p-[5px] rounded-[5px]"

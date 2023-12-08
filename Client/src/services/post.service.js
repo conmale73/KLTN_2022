@@ -12,6 +12,11 @@ export const postService = {
             `/api/posts/public/${id}?page=${page}&limit=${limit}`
         );
     },
+    getNewsFeed(id, page, limit) {
+        return axiosClient.get(
+            `/api/posts/newsfeed/${id}?page=${page}&limit=${limit}`
+        );
+    },
     createNewPost(data) {
         return axiosClient.post(`/api/posts/`, data);
     },

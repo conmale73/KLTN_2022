@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { userService } from "../../services";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../Loading";
+import HackedTextEffect from "../HackedTextEffect";
 function LeftSidebar() {
     const user = useSelector((state) => state.user.data);
     const mode = useSelector((state) => state.mode.mode);
@@ -45,7 +46,7 @@ function LeftSidebar() {
                         </Link>
                     </div>
                     <div className="name">
-                        <AnimatedText text={"Welcome, " + user.username} />
+                        <HackedTextEffect text={"Welcome, " + user.username} />
                     </div>
                 </div>
             ) : (
@@ -55,7 +56,7 @@ function LeftSidebar() {
                             <img src="/photos/avatar.jpg"></img>
                         </div>
                         <div className="name">
-                            <AnimatedText text={"Welcome"} />
+                            <HackedTextEffect text={"Welcome"} />
                         </div>
                     </div>
                 </>

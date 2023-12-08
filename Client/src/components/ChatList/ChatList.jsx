@@ -35,7 +35,14 @@ const ChatList = () => {
                 </div>
             )}
             {chats?.map((chat, index) => {
-                return <ChatPreview index={index} chat={chat} key={index} />;
+                return (
+                    <ChatPreview
+                        index={index}
+                        chat={chat}
+                        key={index}
+                        lastMessage={chat.last_message}
+                    />
+                );
             })}
         </div>
     );

@@ -9,7 +9,7 @@ router.post("/", postsController.post);
 router.get("/:post_id", postsController.getPostById);
 
 // GET /api/posts/:user_id
-router.get("/:user_id", postsController.getPostsByUserID);
+router.get("/user/:user_id", postsController.getPostsByUserID);
 
 // GET /api/posts/:user_id
 router.get("/public/:user_id", postsController.getPublicPostsByUserID);
@@ -19,4 +19,7 @@ router.post("/like/:post_id", postsController.likePost);
 
 // PATCH /api/posts/unlike/:post_id
 router.patch("/unlike/:post_id", postsController.unlikePost);
+
+// GET /api/posts/newsfeed/:user_id
+router.get("/newsfeed/:user_id", postsController.getNewsfeed);
 module.exports = router;

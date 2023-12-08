@@ -136,7 +136,7 @@ exports.getAllChatsHaveMessagesByUserID = async (req, res, next) => {
 
         const chats = await GroupChat.find({
             _id: chatsWithMessages,
-        });
+        }).sort({ last_message_timeStamp: -1 });
 
         res.status(200).json({
             success: true,
