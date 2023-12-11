@@ -30,7 +30,7 @@ function Header() {
         navigator("/authentication/login");
     };
     const handleProfile = () => {
-        navigator("/profile/?id=" + user._id);
+        navigator("/profile-new/?id=" + user._id);
     };
     const notificationlist = useSelector((state) => state.notificationSlice);
     const listNotifi = notificationlist.list;
