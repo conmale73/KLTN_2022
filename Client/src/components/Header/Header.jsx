@@ -13,6 +13,9 @@ import * as HoverCard from "@radix-ui/react-hover-card";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { setMode } from "../../redux/mode/modeSlice";
 import ChatList from "../ChatList";
+import { setNotificationList, setTotal } from "../../redux/notificationStore/notificationUserSlice";
+import { notificationService } from "../../services/notification.service";
+import { error } from "jquery";
 function Header() {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.data);
@@ -27,14 +30,29 @@ function Header() {
     const handleProfile = () => {
         navigator("/profile/?id=" + user._id);
     };
+    const notificationlist = useSelector((state) => state.notificationSlice);
+    const listNotifi = notificationlist.list;
+
+    useEffect(() => {
+        console.log("lay du lieu notify");
+        notificationService.getListNotificationByUserId(user._id, 1, 5).then((dataResponse) => {
+            console.log(dataResponse.data.data);
+            let listNofity = dataResponse.data.data;
+            dispatch(setNotificationList(listNofity));
+            //dispatch(setTotal(listNofity.length));
+        }).catch((error) => {
+            console.error(error)
+        })
+
+    }, [])
+
     return (
         <div className={styles.header}>
             <nav className={styles.navbar}>
                 <div className={styles.navList}>
                     <div
-                        className={`${styles.navItem} ${
-                            mode === "social" ? styles.selected : ""
-                        }`}
+                        className={`${styles.navItem} ${mode === "social" ? styles.selected : ""
+                            }`}
                         onClick={() => {
                             dispatch(setMode("social"));
                         }}
@@ -42,9 +60,8 @@ function Header() {
                         <p title="Most listened songs">Explore</p>
                     </div>
                     <div
-                        className={`${styles.navItem} ${
-                            mode === "music" ? styles.selected : ""
-                        }`}
+                        className={`${styles.navItem} ${mode === "music" ? styles.selected : ""
+                            }`}
                         onClick={() => {
                             dispatch(setMode("music"));
                         }}
@@ -58,13 +75,32 @@ function Header() {
                 <div className={styles.buttons}>
                     {user != null ? (
                         <>
-                            <div className={styles.button}>
-                                <MdNotifications
-                                    className={styles.button}
-                                    size="24px"
-                                    title="Notifications"
-                                />
-                            </div>
+                            <DropdownMenu.Root modal={false}>
+                                <DropdownMenu.Trigger asChild>
+                                    <div className={styles.button}>
+                                        <MdNotifications
+                                            className={styles.button}
+                                            size="24px"
+                                            title="Notifications"
+                                            onClick={() => {
+                                                console.log("ok thong bao")
+                                                dispatch(setTotal(0));
+                                            }}
+                                        /><p style={{ color: "white" }}>{notificationlist.total}</p>
+                                    </div>
+
+                                </DropdownMenu.Trigger>
+                                <DropdownMenu.Portal>
+                                    <DropdownMenu.Content className="w-[400px] h-fit bg-[#303030] rounded-b-md shadow-lg">
+                                        {
+                                            listNotifi.map((item) => (
+                                                <div key={item._id}><Link to={`/profile-new/${item.senderUser_id}`}>{item.content}</Link></div>
+                                            ))
+                                        }
+                                    </DropdownMenu.Content>
+                                </DropdownMenu.Portal>
+                            </DropdownMenu.Root>
+
                             <DropdownMenu.Root modal={false}>
                                 <DropdownMenu.Trigger asChild>
                                     <div className={styles.button}>

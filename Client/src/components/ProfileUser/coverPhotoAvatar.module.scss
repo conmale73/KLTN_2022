@@ -27,6 +27,19 @@
         /* Đặt relative để tạo khung tham chiếu cho các phần tử con */
     }
 
+    .CoverButton2 {
+        background-size: cover;
+        background-position: center;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        position: relative;
+        /* Đặt relative để tạo khung tham chiếu cho các phần tử con */
+        display: flex;
+        height: 30px;
+        margin-right: 80px;
+        margin-top: 10px;
+    }
+    
     .CoverButtons {
         position: absolute;
         bottom: 10px;

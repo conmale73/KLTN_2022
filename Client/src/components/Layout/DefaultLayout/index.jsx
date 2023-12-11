@@ -12,7 +12,7 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { setShowFooter } from "../../../redux/showFooter/showFooterSlice";
 
-function DefaultLayout({ children }) {
+function DefaultLayout({children }) {
     const showFooter = useSelector((state) => state.showFooter.show);
     const dispatch = useDispatch();
 
@@ -23,7 +23,7 @@ function DefaultLayout({ children }) {
 
                 <div className={styles.headerAndContent}>
                     <div className={styles.header}>
-                        <Header />
+                        <Header/>
                     </div>
 
                     <div className={styles.content}>

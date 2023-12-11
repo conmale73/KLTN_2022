@@ -11,6 +11,7 @@ import currentVoiceChannelSlice from "./currentVoiceChannel/currentVoiceChannelS
 import voiceChannelsSlice from "./voiceChannels/voiceChannelsSlice";
 import showFooterSlice from "./showFooter/showFooterSlice";
 import currentChatListSlice from "./currentChatList/currentChatListSlice";
+import currentNotificationListSlice from "./notificationStore/notificationUserSlice"
 //initializing store
 export const store = configureStore({
     reducer: {
@@ -25,5 +26,6 @@ export const store = configureStore({
         voiceChannels: voiceChannelsSlice,
         currentVoiceChannel: currentVoiceChannelSlice,
         showFooter: showFooterSlice,
+        notificationSlice: currentNotificationListSlice
     },
 });

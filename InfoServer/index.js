@@ -19,14 +19,17 @@ const voiceChannelsRoutes = require("./routes/voiceChannels");
 const fixDataRoutes = require("./routes/fixData");
 const hobbyRoutes = require("./routes/hobby");
 const commentRoutes = require("./routes/comment")
+const friendStatusRoutes = require("./routes/friendStatus")
 const morgan = require("morgan");
 const http = require("http");
-
+const notificatonRoutes = require("./routes/notifications");
 // Initialize Express app
 const app = express();
 const port = 3000;
 
 const fileUpload = require('express-fileupload');
+const { addNotification } = require("./controllers/notificationsController");
+const { addfriendStatus, acceptfriendStatus } = require("./controllers/friendStatusController");
 const cloudinary = require('cloudinary').v2;
 
 // Connect to MongoDB
@@ -39,9 +42,9 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 app.use(fileUpload());
 cloudinary.config({
-    cloud_name: 'dkdyl2pcy',
-    api_key: '148985212582375',
-    api_secret: 'm0Dm3gu0T75h63UZG-IJszpNvz0',
+    cloud_name: '*****',
+    api_key: '*****',
+    api_secret: '*****',
 });
 
 // Routes
@@ -58,6 +61,8 @@ app.use("/api/voiceChannels", voiceChannelsRoutes);
 app.use("/api/fixData", fixDataRoutes);
 app.use("/api/hobby", hobbyRoutes);
 app.use("/api/comment", commentRoutes);
+app.use("/api/notifications", notificatonRoutes);
+app.use("/api/friendStatus", friendStatusRoutes);
 // Error Handler Middleware
 app.use(errorHandler);
 
@@ -72,6 +77,11 @@ const io = require("socket.io")(server, {
 });
 
 let onlineUsers = [];
+
+function findSocketIdByUserId(userId) {
+    const user = onlineUsers.find((user) => user.user_id === userId);
+    return user ? user.socket_id : null;
+}
 // Define Socket.IO logic here
 io.on("connection", (socket) => {
     console.log(`connection ${socket.id} connected`);
@@ -152,6 +162,52 @@ io.on("connection", (socket) => {
             }
         });
         console.log(`Current rooms for socket ${socket.id}:`, socket.rooms);
+    });
+
+    //add friend
+
+    socket.on('sendFriendRequest', async ({ senderUserId, receivedUser_id, username }) => {
+        console.log(senderUserId)
+        console.log("da gui")
+        console.log(receivedUser_id);
+        let content = `${username} muốn kết bạn với bạn`;
+        let result1 = await addNotification(senderUserId, receivedUser_id, content);
+        if (result1) {
+            let result2 = await addfriendStatus(receivedUser_id, senderUserId)
+            if (result2) {
+                // Gửi thông báo tới người nhận
+                const receiverSocketId = findSocketIdByUserId(receivedUser_id);
+                if (receiverSocketId) {
+                    console.log("da gui chay vo day")
+                    io.to(receiverSocketId).emit('receiveFriendRequest', {
+                        senderUserId,
+                        content: content,
+                    });
+                }
+            }
+        }
+    });
+    socket.on('acceptFriendRequest', async ({ senderUserId, receivedUser_id, username }) => {
+        console.log(senderUserId)
+        console.log("da gui hay nha")
+        console.log(receivedUser_id);
+        let content = `${username} đã đồng ý kết bạn với bạn`;
+        let result1 = await addNotification(senderUserId, receivedUser_id, content);
+        if (result1) {
+            let result2 = await acceptfriendStatus(receivedUser_id, senderUserId);
+            if (result2) {
+                // Gửi thông báo tới người nhận
+                const receiverSocketId = findSocketIdByUserId(receivedUser_id);
+                if (receiverSocketId) {
+                    console.log("da gui chay vo day de phan hoi")
+                    io.to(receiverSocketId).emit('receiveAcceptFriendRequest', {
+                        senderUserId,
+                        content: content,
+                    });
+                }
+            }
+
+        }
     });
 
     socket.on("deleteOnlineUser", (user_id) => {

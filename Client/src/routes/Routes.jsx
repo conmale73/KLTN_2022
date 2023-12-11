@@ -12,7 +12,7 @@ export default function Routes() {
     const routes = [
         {
             path: "/",
-            element: <DefaultLayout />,
+            element: <DefaultLayout/>,
             children: [
                 ...publishRoutes,
                 { path: "/social/", element: <SocialHome title="Social" /> },
@@ -21,7 +21,7 @@ export default function Routes() {
             ],
         },
         {
-            path: "/profile/:userIdLink",
+            path: "/profile-new/:userIdLink",
             element: <ProfileUser/>,
         },
     ];
