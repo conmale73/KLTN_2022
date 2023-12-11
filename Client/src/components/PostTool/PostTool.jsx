@@ -43,10 +43,8 @@ const PostTool = (props) => {
     const [open, setOpen] = useState(false);
     const [privacy, setPrivacy] = useState("PUBLIC");
     const [files, setFiles] = useState([]);
-    const dispatch = useDispatch();
 
-    const characterLimit = 100;
-    const fontSize = textContent.length >= characterLimit ? "16px" : "28px";
+    const dispatch = useDispatch();
 
     const handleSubmitForm = (e) => {
         e.preventDefault();
@@ -55,7 +53,9 @@ const PostTool = (props) => {
     async function post(dataPost) {
         try {
             const res = await postService.createNewPost(dataPost);
-            console.log(res);
+
+            props.setPosts((posts) => [res.data, ...posts]);
+            return res.data;
         } catch (err) {
             console.log(err);
         }
@@ -70,7 +70,7 @@ const PostTool = (props) => {
             },
             privacy: privacy,
         };
-        console.log(dataPost);
+        console.log("datapost: ", dataPost);
 
         try {
             post(dataPost);
@@ -80,8 +80,6 @@ const PostTool = (props) => {
             setTextContent("");
             setPlaceholder("What's on your mind?");
             setFiles([]);
-
-            props.setPosts((prevPosts) => [dataPost, ...prevPosts]);
         } catch (err) {
             console.log(err);
         }
@@ -108,7 +106,11 @@ const PostTool = (props) => {
             <div className={styles.top}>
                 <Link to={`/profile/?id=${user._id}`}>
                     <div className={styles.avatar}>
-                        <img src={user.avatar} alt="" />
+                        <img
+                            loading="lazy"
+                            className={`w-full h-full object-contain rounded-full`}
+                            src={`data:${user.avatar.files[0].fileInfo.type};base64,${user.avatar.files[0].dataURL}`}
+                        />
                     </div>
                 </Link>
 
@@ -155,8 +157,9 @@ const PostTool = (props) => {
                                     <Link to={`/profile/?id=${user._id}`}>
                                         <div className="w-[50px] h-[50px] rounded-full ">
                                             <img
-                                                className="object-cover w-full h-full rounded-full"
-                                                src={user.avatar}
+                                                loading="lazy"
+                                                className={`w-full h-full object-contain rounded-full`}
+                                                src={`data:${user.avatar.files[0].fileInfo.type};base64,${user.avatar.files[0].dataURL}`}
                                             />
                                         </div>
                                     </Link>

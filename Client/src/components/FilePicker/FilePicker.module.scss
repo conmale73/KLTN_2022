@@ -2,9 +2,16 @@
     .thumb {
         display: flex;
         position: relative;
-
+        &:hover {
+            .editButton {
+                display: flex;
+            }
+            .removeButton {
+                display: flex;
+            }
+        }
         .editButton {
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: space-around;
             position: absolute;
@@ -22,8 +29,25 @@
                 background-color: var(--general-button-hover);
             }
         }
-        &:hover {
-            background-color: var(--level-1);
+
+        .removeButton {
+            display: none;
+            align-items: center;
+            justify-content: space-around;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: var(--general-button-color);
+            border: none;
+            border-radius: 50%;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            color: var(--general-text-color);
+            gap: 10px;
+            &:hover {
+                background-color: var(--general-button-hover);
+            }
         }
     }
 }

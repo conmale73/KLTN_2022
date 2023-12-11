@@ -21,10 +21,26 @@ const commentSchema = new mongoose.Schema({
         },
     },
     content: {
-        type: String,
+        text: {
+            type: String,
         required: true,
     },
-    timeStamp: {
+    likes: [
+        {
+            user_id: {
+                type: ObjectId,
+            },
+            timeStamp: {
+                type: Date,
+                default: Date.now,
+            },
+        },
+    ],
+    createAt: {
+        type: Date,
+        default: Date.now,
+    },
+    updateAt: {
         type: Date,
         default: Date.now,
     },
@@ -33,3 +49,4 @@ const commentSchema = new mongoose.Schema({
 const Comment = mongoose.model("Comment", commentSchema);
 module.exports = Comment;
 
+module.exports = Comment;

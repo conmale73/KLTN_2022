@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { userService } from "../../services";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../Loading";
+import HackedTextEffect from "../HackedTextEffect";
 function LeftSidebar() {
     const user = useSelector((state) => state.user.data);
     const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -27,11 +28,15 @@ function LeftSidebar() {
                 <div className="info">
                     <div className="avatar">
                         <Link to={`/profile/?id=${user._id}`}>
-                            <img src={user.avatar}></img>
+                            <img
+                                loading="lazy"
+                                className={`w-full h-full object-contain rounded-full`}
+                                src={`data:${user.avatar.files[0].fileInfo.type};base64,${user.avatar.files[0].dataURL}`}
+                            />
                         </Link>
                     </div>
                     <div className="name">
-                        <AnimatedText text={"Welcome, " + user.username} />
+                        <HackedTextEffect text={"Welcome, " + user.username} />
                     </div>
                 </div>
             ) : (
@@ -41,7 +46,7 @@ function LeftSidebar() {
                             <img src="/photos/avatar.jpg"></img>
                         </div>
                         <div className="name">
-                            <AnimatedText text={"Welcome"} />
+                            <HackedTextEffect text={"Welcome"} />
                         </div>
                     </div>
                 </>

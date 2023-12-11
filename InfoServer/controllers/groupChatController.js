@@ -1,5 +1,8 @@
 const GroupChat = require("../models/groupChatModel");
 const Message = require("../models/messageModel");
+const fs = require("fs");
+const path = require("path");
+
 // @desc    Create a new group chat
 // @route   POST /api/groupChats
 // @access  Public
@@ -7,7 +10,36 @@ exports.createGroupChat = async (req, res, next) => {
     try {
         const { group_id, members } = req.body;
 
-        const newGroupChat = new GroupChat({ group_id, members });
+        const defaultGroupChatThumbnailPath = path.join(
+            __dirname,
+            "..",
+            "assets",
+            "defaultGroupChatThumbnail.png"
+        );
+
+        const groupChatThumbnailBuffer = fs.readFileSync(
+            defaultGroupChatThumbnailPath
+        );
+        const base64GroupChatThumbnail =
+            groupChatThumbnailBuffer.toString("base64");
+
+        const newGroupChat = new GroupChat({
+            group_id,
+            members,
+            group_thumbnail: {
+                files: [
+                    {
+                        dataURL: base64GroupChatThumbnail,
+                        fileInfo: {
+                            type: "image/png",
+                            name: "defaultGroupChatThumbnail.png",
+                            size: groupChatThumbnailBuffer.length,
+                            lastModified: new Date().getTime(),
+                        },
+                    },
+                ],
+            },
+        });
 
         const savedGroupChat = await newGroupChat.save();
         res.status(201).json(savedGroupChat);
@@ -104,7 +136,7 @@ exports.getAllChatsHaveMessagesByUserID = async (req, res, next) => {
 
         const chats = await GroupChat.find({
             _id: chatsWithMessages,
-        });
+        }).sort({ last_message_timeStamp: -1 });
 
         res.status(200).json({
             success: true,
@@ -133,7 +165,34 @@ exports.getGroupChatOfTwoUsers = async (req, res, next) => {
             });
 
             if (!groupChats) {
-                const newGroupChat = new GroupChat({ members });
+                const defaultGroupChatThumbnailPath = path.join(
+                    __dirname,
+                    "..",
+                    "assets",
+                    "defaultGroupChatThumbnail.png"
+                );
+                const groupChatThumbnailBuffer = fs.readFileSync(
+                    defaultGroupChatThumbnailPath
+                );
+                const base64GroupChatThumbnail =
+                    groupChatThumbnailBuffer.toString("base64");
+
+                const newGroupChat = new GroupChat({
+                    members,
+                    group_thumbnail: {
+                        files: [
+                            {
+                                dataURL: base64GroupChatThumbnail,
+                                fileInfo: {
+                                    type: "image/png",
+                                    name: "defaultGroupChatThumbnail.png",
+                                    size: groupChatThumbnailBuffer.length,
+                                    lastModified: new Date().getTime(),
+                                },
+                            },
+                        ],
+                    },
+                });
                 const savedGroupChat = await newGroupChat.save();
                 res.status(201).json(savedGroupChat);
             } else {

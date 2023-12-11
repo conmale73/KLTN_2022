@@ -90,7 +90,7 @@ const YoutubeListAlbum = (props) => {
                 <div className="flex flex-wrap">
                     {albums.map((album, index) => (
                         <div key={index}>
-                            <Youtubealbum
+                            <YoutubeAlbum
                                 {...album}
                                 key={index}
                                 search={props.search}

@@ -1,4 +1,5 @@
 const Post = require("../models/postModel");
+const Comment = require("../models/commentModel");
 const express = require("express");
 const ErrorResponse = require("../utils/errorResponse");
 const Comment = require("../models/commentModel");
@@ -12,7 +13,7 @@ exports.post = async (req, res, next) => {
 
         // Create an array to hold the files with binary data
         const filesWithBinary = [];
-
+        const filesForResponse = [];
         for (const file of content.files) {
             // Convert the base64 data to a binary Buffer
             const base64Data = file.dataURL.split(",")[1];
@@ -23,12 +24,17 @@ exports.post = async (req, res, next) => {
                 dataURL: buffer,
                 fileInfo: file.fileInfo,
             };
+            const fileForResponse = {
+                dataURL: base64Data,
+                fileInfo: file.fileInfo,
+            };
 
             filesWithBinary.push(fileWithBinary);
+            filesForResponse.push(fileForResponse);
         }
 
         // Update the content with the files containing binary data
-        content.files = filesWithBinary;
+        content.files = filesForResponse;
 
         const newPost = new Post({ user_id, content, privacy });
 
@@ -39,8 +45,30 @@ exports.post = async (req, res, next) => {
     }
 };
 
+// @desc    Get post by id
+// @route   GET /api/posts/:post_id
+exports.getPostById = async (req, res, next) => {
+    try {
+        const { post_id } = req.params;
+
+        const post = await Post.findById(post_id);
+
+        if (!post) {
+            return next(
+                new ErrorResponse(`Post with id ${post_id} not found`, 404)
+            );
+        }
+
+        res.status(200).json({
+            success: true,
+            data: post,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
 // @desc    Get all posts of a user
-// @route   POST /api/posts/:user_id
+// @route   POST /api/posts/user/:user_id
 exports.getPostsByUserID = async (req, res, next) => {
     try {
         const { user_id } = req.params;
@@ -87,10 +115,16 @@ exports.getPublicPostsByUserID = async (req, res, next) => {
         const totalPages = Math.ceil(totalPosts / limit);
 
         const posts = await Post.find({ user_id, privacy: "PUBLIC" }) // Filter by user_id and privacy
-            .sort({ timeStamp: -1 }) // Sort by timeStamp in ascending order
+            .sort({ createAt: -1 }) // Sort by createAt in ascending order
             .skip(startIndex)
             .limit(limit);
 
+        posts.forEach((post) => {
+            const commentCount = Comment.find({
+                post_id: post._id,
+            }).countDocuments();
+            post.commentCount = commentCount;
+        });
         res.status(200).json({
             success: true,
             data: posts,

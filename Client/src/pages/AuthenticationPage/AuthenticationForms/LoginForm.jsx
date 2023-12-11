@@ -19,8 +19,6 @@ const LoginForm = () => {
 
     const [openLogin, setOpenLogin] = useState(false);
 
-    const [socket, setSocket] = useState(null);
-
     const navigator = useNavigate();
     const dispatch = useDispatch();
 
@@ -90,7 +88,7 @@ const LoginForm = () => {
             io.on("go-online", (data) => {
                 console.log(data);
             });
-            navigator("/profile");
+            navigator("/social");
         } catch (err) {
             console.error("Message:", err.response.data.message);
             setErrorLogin(err.response.data.message);

@@ -22,11 +22,18 @@
         }
     }
     .messageContent {
-        white-space: pre-line;
-        word-wrap: break-word;
         font-size: 15px;
         margin-left: 45px;
-        text-align: start;
+        -ms-word-break: break-all;
+        word-break: break-all;
+
+        /* Non standard for webkit */
+        word-break: break-word;
+
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        -ms-hyphens: auto;
+        hyphens: auto;
     }
 }
 
@@ -36,12 +43,15 @@
     display: flex;
     padding: 10px;
     margin-top: 10px;
+    margin-bottom: 20px;
+
     border-radius: 10px;
     align-items: center;
-    gap: 10px;
+    position: relative;
 
     .myTime {
-        font-size: 12px;
+        font-size: 9px;
+
         font-weight: 400;
         color: var(--small-text-color);
         margin-left: auto;
@@ -51,12 +61,15 @@
         flex-direction: column;
         justify-content: flex-end;
         width: fit-content;
-        max-width: 50%;
+        max-width: 80%;
         height: fit-content;
         gap: 10px;
         border: 1px solid var(--level-2);
         border-radius: 10px;
         padding: 10px;
+        position: absolute;
+        right: 0;
+        background-color: var(--level-1-05);
         &:hover {
             background-color: var(--level-2);
         }
@@ -67,42 +80,70 @@
         }
 
         .myContent {
-            white-space: pre-line;
-            text-align: start;
-            word-wrap: break-word;
             font-size: 12px;
+            -ms-word-break: break-all;
+            word-break: break-all;
+
+            /* Non standard for webkit */
+            word-break: break-word;
+
+            -webkit-hyphens: auto;
+            -moz-hyphens: auto;
+            -ms-hyphens: auto;
+            hyphens: auto;
         }
     }
-
-    .peerContainer {
+    .otherUser {
         display: flex;
         flex-direction: column;
-        justify-content: flex-end;
-        width: fit-content;
-        height: fit-content;
-        gap: 10px;
-        border: 1px solid var(--level-2);
-        border-radius: 10px;
-        padding: 10px;
-        &:hover {
-            background-color: var(--level-2);
-        }
-        .peerAvatar {
+        width: 100%;
+        .otherUserName {
             display: flex;
-            align-items: center;
-            justify-content: flex-end;
-        }
-
-        .peerContent {
-            word-wrap: break-word;
+            justify-content: flex-start;
             font-size: 12px;
-            white-space: pre-line;
-            text-align: start;
+            font-weight: 600;
+            color: var(--small-text-color);
+            margin-bottom: 5px;
         }
-    }
-    .peerTime {
-        font-size: 12px;
-        font-weight: 400;
-        color: var(--small-text-color);
+        .otherUserContainer {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            width: fit-content;
+            height: fit-content;
+            max-width: 80%;
+            gap: 10px;
+            border: 1px solid var(--level-2);
+            border-radius: 10px;
+            padding: 10px;
+            &:hover {
+                background-color: var(--level-2);
+            }
+            .otherUserAvatar {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+            }
+
+            .otherUserContent {
+                font-size: 12px;
+                -ms-word-break: break-all;
+                word-break: break-all;
+
+                /* Non standard for webkit */
+                word-break: break-word;
+
+                -webkit-hyphens: auto;
+                -moz-hyphens: auto;
+                -ms-hyphens: auto;
+                hyphens: auto;
+            }
+        }
+        .otherUserTime {
+            font-size: 9px;
+
+            font-weight: 400;
+            color: var(--small-text-color);
+        }
     }
 }

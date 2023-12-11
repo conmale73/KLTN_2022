@@ -15,6 +15,7 @@ const Playground = lazy(() => import("../pages/Playground"));
 const Room = lazy(() => import("../pages/Room"));
 const Feed = lazy(() => import("../pages/Feed"));
 const SocialHome = lazy(() => import("../pages/SocialHome"));
+const PostDetail = lazy(() => import("../pages/PostDetail"));
 
 export const publishRoutes = [
     {
@@ -62,6 +63,14 @@ export const publishRoutes = [
         element: (
             <Suspense fallback={<Loading isFullScreen={true} />}>
                 <SocialHome title="Home" />
+            </Suspense>
+        ),
+    },
+    {
+        path: "/social/post/:id",
+        element: (
+            <Suspense fallback={<Loading isFullScreen={true} />}>
+                <PostDetail />
             </Suspense>
         ),
     },

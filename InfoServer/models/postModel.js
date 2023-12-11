@@ -24,11 +24,30 @@ const postSchema = new mongoose.Schema({
             },
         ],
     },
+    commentCount: {
+        type: Number,
+        default: 0,
+    },
+    likes: [
+        {
+            user_id: {
+                type: ObjectId,
+            },
+            timeStamp: {
+                type: Date,
+                default: Date.now,
+            },
+        },
+    ],
     privacy: {
         type: String,
         required: true,
     },
-    timeStamp: {
+    createAt: {
+        type: Date,
+        default: Date.now,
+    },
+    updateAt: {
         type: Date,
         default: Date.now,
     },

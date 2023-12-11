@@ -14,10 +14,7 @@ const roomSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    thumbnail: {
-        type: String,
-        default: "https://via.placeholder.com/150",
-    },
+    thumbnail: {},
     description: {
         type: String,
     },

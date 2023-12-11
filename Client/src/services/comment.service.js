@@ -1,24 +1,31 @@
 import { axiosClient } from "~/api";
 
-export const commentService = {   
-    // comment
-    getListCommentByPostId(id,page,limit) {
-        return axiosClient.get(`/api/comment/post/${id}?page=${page}&limit=${limit}`);
+export const commentService = {
+    getCommentById(id) {
+        return axiosClient.get(`/api/comments/${id}`);
     },
-
-    createCommentByPostId(data) {
-        return axiosClient.post(`/api/comment`, data);
+    getCommentsByPostId(post_id, page, limit, sortBy) {
+        return axiosClient.get(
+            `/api/comments/post/${post_id}?page=${page}&limit=${limit}&sortBy=${sortBy}`
+        );
     },
-
-    getCountCommentByPostId(id) {
-        return axiosClient.get(`/api/comment/count-comment-post/${id}`);
+    createNewcomment(data) {
+        return axiosClient.post(`/api/comments/`, data);
     },
-
-    putCommentById(data) {
-        return axiosClient.put(`/api/comment`, data);
+    likeComment(comment_id, user_id) {
+        return axiosClient.post(`/api/comments/like/${comment_id}`, {
+            user_id,
+        });
     },
-
-    deleteCommentById(data) {
-        return axiosClient.delete(`/api/comment`, { data });
+    unlikeComment(comment_id, user_id) {
+        return axiosClient.patch(`/api/comments/unlike/${comment_id}`, {
+            user_id,
+        });
+    },
+    updateComment(data) {
+        return axiosClient.put(`/api/comments/`, data);
+    },
+    deleteComment(comment_id) {
+        return axiosClient.delete(`/api/comments/${comment_id}`);
     },
 };

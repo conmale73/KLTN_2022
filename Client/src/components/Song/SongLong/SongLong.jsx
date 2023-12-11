@@ -59,59 +59,75 @@ const LongSong = (props) => {
     return (
         <>
             {props != undefined || null ? (
-                <div className={styles.longSong}>
-                    <div className={styles.imageContainer} title={props?.title}>
-                        <img
-                            src={
-                                props?.thumbnails[2]?.url ||
-                                props?.thumbnails[1]?.url ||
-                                props?.thumbnails[0]?.url
-                            }
-                            alt={props?.title}
-                        />
-                        <div className={styles.playButtonContainer}>
-                            <BsPlayFill
-                                size="30px"
-                                className={styles.playButton}
-                                onClick={(e) => handleClickPlay(e)}
-                            />
-                        </div>
-                    </div>
-                    <div className={styles.infoContainer}>
-                        <Link to={`/music/songs/${props?.videoId}`}>
-                            <div className={styles.name}>{props?.title}</div>
-                        </Link>
-                    </div>
-                    <div className={styles.artistList}>
-                        {props?.artists.map((artist, index) => (
-                            <Link to={`/music/users/${artist.id}`}>
-                                {artist.id !== null ? (
-                                    <p
-                                        key={index}
-                                        className={styles.artist}
-                                        title={artist.name}
-                                    >
-                                        {artist.name}
-                                        {index < props?.artists.length - 1 ? (
-                                            <span> </span>
-                                        ) : (
-                                            ""
-                                        )}
-                                    </p>
-                                ) : (
-                                    <></>
-                                )}
-                            </Link>
-                        ))}
-                    </div>
-                    <div className={styles.albumContainer}>
-                        <Link to={`/music/albums/${props?.album?.id}`}>
-                            <p className={styles.album}>{props?.album?.name}</p>
-                        </Link>
-                    </div>
-                    {buttons && (
-                        <div className={styles.buttonsContainer}>
+                <>
+                    {!props.youtube ? (
+                        <div className={styles.longSong} key={props.index}>
                             <div
+                                className={styles.imageContainer}
+                                title={props?.title}
+                            >
+                                <img
+                                    src={
+                                        props?.thumbnails[2]?.url ||
+                                        props?.thumbnails[1]?.url ||
+                                        props?.thumbnails[0]?.url
+                                    }
+                                    alt={props?.title}
+                                />
+                                <div className={styles.playButtonContainer}>
+                                    <BsPlayFill
+                                        size="30px"
+                                        className={styles.playButton}
+                                        onClick={(e) => handleClickPlay(e)}
+                                    />
+                                </div>
+                            </div>
+                            <div className={styles.infoContainer}>
+                                <Link
+                                    to={`/music/songs/${props?.videoId}`}
+                                    className="w-fit h-fit"
+                                >
+                                    <div className={styles.name}>
+                                        {props?.title}
+                                    </div>
+                                </Link>
+                            </div>
+                            <div className={styles.artistList}>
+                                {props?.artists?.map((artist, index) => (
+                                    <Link
+                                        to={`/music/artists/${artist.id}`}
+                                        key={index}
+                                    >
+                                        {artist.id !== null ? (
+                                            <p
+                                                key={index}
+                                                className={styles.artist}
+                                                title={artist.name}
+                                            >
+                                                {artist.name}
+                                                {index <
+                                                props?.artists.length - 1 ? (
+                                                    <span> </span>
+                                                ) : (
+                                                    ""
+                                                )}
+                                            </p>
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </Link>
+                                ))}
+                            </div>
+                            <div className={styles.albumContainer}>
+                                <Link to={`/music/albums/${props?.album?.id}`}>
+                                    <p className={styles.album}>
+                                        {props?.album?.name}
+                                    </p>
+                                </Link>
+                            </div>
+                            {buttons && (
+                                <div className={styles.buttonsContainer}>
+                                    {/* <div
                                 className={styles.likeButton}
                                 onClick={(e) => handleClickLike(e)}
                             >

@@ -25,10 +25,16 @@ const RegisterForm = () => {
         const newUsername = e.target.value;
         setUsername(newUsername);
 
-        if (newUsername.length < 1) {
-            usernameError.push("Username is required");
-        } else {
-            const errorToDelete = "Username is required";
+        if (
+            (newUsername.length < 4 || newUsername.length > 24) &&
+            !usernameError.includes(
+                "Username must be between 4 and 24 characters"
+            )
+        ) {
+            usernameError.push("Username must be between 4 and 24 characters");
+        } else if (newUsername.length >= 4 && newUsername.length <= 24) {
+            const errorToDelete =
+                "Username must be between 4 and 24 characters";
             setUsernameError(
                 usernameError.filter((err) => err !== errorToDelete)
             );

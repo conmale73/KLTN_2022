@@ -3,6 +3,9 @@ const jwt = require("jsonwebtoken");
 const ErrorResponse = require("../utils/errorResponse");
 const express = require("express");
 const bcrypt = require("bcrypt");
+const fs = require("fs");
+const path = require("path");
+
 // Sign up
 exports.signup = async (req, res, next) => {
     try {
@@ -15,13 +18,41 @@ exports.signup = async (req, res, next) => {
             return res.status(400).json({ message: "Email is already in use" });
         }
 
+        // Path to the default avatar in the "assets" folder
+        const defaultAvatarPath = path.join(
+            __dirname,
+            "..",
+            "assets",
+            "defaultUserAvatar.png"
+        );
+        // Read the default thumbnail image as a buffer
+        const avatarBuffer = fs.readFileSync(defaultAvatarPath);
+        const base64Avatar = avatarBuffer.toString("base64");
+
         // Create a new user
-        const newUser = new User({ username, email, password });
+        const newUser = new User({
+            username,
+            email,
+            password,
+            avatar: {
+                files: [
+                    {
+                        dataURL: base64Avatar,
+                        fileInfo: {
+                            type: "image/png",
+                            name: "defaultUserAvatar.png",
+                            size: avatarBuffer.length,
+                            lastModified: new Date().getTime(),
+                        },
+                    },
+                ],
+            },
+        });
 
         // Save the user to the database
         await newUser.save();
 
-        res.status(201).json({ message: "User registered successfully" });
+        res.status(201).json({ message: "User created successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server error" });

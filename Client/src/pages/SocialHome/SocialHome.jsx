@@ -52,7 +52,7 @@ const SocialHome = () => {
         };
         return (
             <div className={styles.socialHome}>
-                <PostTool setPosts={setPosts} />
+                <PostTool setPosts={setPosts} posts={posts} />
                 <PostList data={posts} />
                 {page < totalPages ? (
                     <p

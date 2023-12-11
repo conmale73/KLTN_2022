@@ -16,6 +16,11 @@ const groupChatSchema = new mongoose.Schema({
             type: ObjectId,
         },
     ],
+    last_message: {},
+    last_message_timeStamp: {
+        type: Date,
+        default: Date.now,
+    },
     createAt: {
         type: Date,
         default: Date.now,

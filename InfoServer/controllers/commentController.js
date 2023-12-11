@@ -1,6 +1,15 @@
+const Comment = require("../models/commentModel");
+const Post = require("../models/postModel");
+const ErrorResponse = require("../utils/errorResponse");
 const { ObjectId } = require("mongodb");
 const Comment = require("../models/commentModel");
 
+// @desc    Add a new comment
+// @route   POST /api/comments
+// @access  Public
+exports.postComment = async (req, res, next) => {
+    try {
+        const { post_id, creator, content } = req.body;
 
 //get all comment
 exports.getAllComment = async (req, res) => {
@@ -15,7 +24,7 @@ exports.getAllComment = async (req, res) => {
 };
 
 exports.getAllCommentByPostId = async (req, res) => {
-    const { post_id } = req.params;
+        const { post_id } = req.params;
 
     try {
         const page = parseInt(req.query.page) || 1; // Current page
@@ -55,7 +64,7 @@ exports.addNewComment = async (req, res) => {
         user_id: new ObjectId(newComment.user_info.user_id),
         avatar: newComment.user_info.avatar,
         username: newComment.user_info.username
-    }
+        }
 
     let dataPost = {
         post_id: new ObjectId(newComment.post_id),
@@ -64,10 +73,11 @@ exports.addNewComment = async (req, res) => {
     }
     try {
         const newComment = await Comment.create(dataPost);
-        res.status(200).json({
+            res.status(200).json({
             result: true,
             newComment: newComment
-        });
+            });
+        }
     } catch (error) {
         res.status(500).json({ message: 'Internal Server Error' });
     }
@@ -79,9 +89,10 @@ exports.countCommentByPostId = async (req, res) => {
     try {
         const components = await Comment.find({ post_id });
         //console.log(components)
-        res.status(200).json({
+            res.status(200).json({
             totalComment: components.length
-        });
+            });
+        }
     } catch (error) {
         console.error('Error fetching components:', error);
         res.status(500).json({ message: 'Internal Server Error' });
@@ -98,6 +109,14 @@ exports.editComment = async (req, res) => {
     }
 };
 
+        if (!comment) {
+            return next(
+                new ErrorResponse(
+                    `Comment with id ${comment_id} not found`,
+                    404
+                )
+            );
+        }
 
 exports.deleteComment = async (req, res) => {
     const { comment_id } = req.body;
@@ -112,9 +131,62 @@ exports.deleteComment = async (req, res) => {
     }
 };
 
+// @desc    Update comment by id
+// @route   PUT /api/comments/:comment_id
+// @access  Private
+exports.updateCommentById = async (req, res, next) => {
+    try {
+        const { comment_id } = req.params;
+        const { content } = req.body;
 
+        const comment = await Comment.findByIdAndUpdate(
+            comment_id,
+            { content },
+            { updateAt: Date.now() },
+            { new: true }
+        );
 
+        if (!comment) {
+            return next(
+                new ErrorResponse(
+                    `Comment with id ${comment_id} not found`,
+                    404
+                )
+            );
+        }
 
+        res.status(200).json({
+            success: true,
+            data: comment,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
 
+// @desc    Delete comment by id
+// @route   DELETE /api/comments/:comment_id
+// @access  Private
+exports.deleteCommentById = async (req, res, next) => {
+    try {
+        const { comment_id } = req.params;
 
+        const comment = await Comment.findByIdAndDelete(comment_id);
 
+        if (!comment) {
+            return next(
+                new ErrorResponse(
+                    `Comment with id ${comment_id} not found`,
+                    404
+                )
+            );
+        }
+
+        res.status(200).json({
+            success: true,
+            data: {},
+        });
+    } catch (error) {
+        next(error);
+    }
+};

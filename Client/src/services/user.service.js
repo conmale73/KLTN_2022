@@ -24,4 +24,9 @@ export const userService = {
             },
         });
     },
+    searchUserByUsername(username, page, limit) {
+        return axiosClient.get(
+            `/api/users/search/${username}?page=${page}&limit=${limit}`
+        );
+    },
 };
