@@ -7,7 +7,7 @@ import PlaylistsSearchResult from "./Playlists";
 import { useSelector, useDispatch } from "react-redux";
 
 const SearchResult = () => {
-    const query = useSelector((state) => state.search.input);
+    const query = useSelector((state) => state.search.mainInput);
 
     document.title = "Search results for " + query;
     const [tab, setTab] = useState(0);

@@ -34,6 +34,7 @@ const ChatContainer = (props) => {
                                     <div className="w-[40px] h-[40px] rounded-full flex justify-center items-center">
                                         <ImageViewer
                                             image={currentChat.group_thumbnail}
+                                            objectFit="cover"
                                         />
                                     </div>
                                     <p
@@ -89,6 +90,7 @@ const ChatContainer = (props) => {
                                         user_id={currentChat.members.find(
                                             (member) => member !== user._id
                                         )}
+                                        displayOnlineStatus={true}
                                     />
                                 </div>
                                 <div className="flex w-[45%] gap-[10px] justify-end items-center">

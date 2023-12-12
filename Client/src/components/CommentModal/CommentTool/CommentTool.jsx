@@ -127,6 +127,7 @@ const CommentTool = (props) => {
                                         showName={false}
                                         user_id={user._id}
                                         bgStyles={false}
+                                        displayOnlineStatus={false}
                                     />
                                 </div>
                                 <div className="x1r8uery x1iyjqo2 x6ikm8r x10wlt62 x4uap5">

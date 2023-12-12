@@ -66,6 +66,7 @@ const Comment = (props) => {
                         showName={false}
                         user_id={props.creator?.user_id}
                         bgStyles={false}
+                        displayOnlineStatus={false}
                     />
                 </div>
                 <div

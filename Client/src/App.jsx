@@ -1,4 +1,5 @@
 import { BrowserRouter as Router } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Routes from "./routes";
 import "./App.css";
 import useShowScrollbar from "./hooks/useShowScrollbar";
@@ -9,13 +10,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { setOnlineUsers } from "./redux/onlineUsers/onlineUsersSlice";
 import { voiceChannelService } from "./services";
 import * as Toast from "@radix-ui/react-toast";
+import { setExtend } from "../src/redux/mode/modeSlice";
+
 function App() {
     useShowScrollbar();
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.data);
-    const currentVoiceChannel = useSelector(
-        (state) => state.currentVoiceChannel.data
-    );
     useEffect(() => {
         if (user) {
             const socket = io("http://localhost:3000");
@@ -52,6 +52,7 @@ function App() {
             };
         }
     }, [user]);
+
     return (
         <Router>
             <Toast.Provider swipeDirection="right" duration={4000}>

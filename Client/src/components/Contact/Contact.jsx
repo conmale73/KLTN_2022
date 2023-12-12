@@ -35,6 +35,7 @@ const Contact = (props) => {
                 showName={true}
                 bgStyles={true}
                 user_id={props.contact._id}
+                displayOnlineStatus={true}
             />
         </div>
     );

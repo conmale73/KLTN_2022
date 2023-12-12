@@ -5,7 +5,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { searchService, userService } from "../../../services";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setInput } from "../../../redux/search/searchSlice";
+import { setMainInput } from "../../../redux/search/searchSlice";
 import { IoLogoYoutube } from "react-icons/io";
 import { FaUserFriends } from "react-icons/fa";
 import UserInfoPreview from "../../UserInfoPreview/UserInfoPreview";
@@ -42,23 +42,25 @@ const SearchBox = () => {
         try {
             fetchYoutubeQueries();
             fetchUsers();
-        } catch (error) {}
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const handleSubmitSearch = (e) => {
         e.preventDefault();
         setIsSearching(false);
-        navigator(`/music/search-results?q=${encodeURIComponent(searchInput)}`);
-        dispatch(setInput(searchInput));
+        navigator(`/music/search/results?q=${encodeURIComponent(searchInput)}`);
+        dispatch(setMainInput(searchInput));
         localStorage.setItem("searchInput", JSON.stringify(searchInput));
     };
     const handleClickResult = (e) => {
         setSearchInput(e.target.innerText);
         setIsSearching(false);
         navigator(
-            `/music/search-results?q=${encodeURIComponent(e.target.innerText)}`
+            `/music/search/results?q=${encodeURIComponent(e.target.innerText)}`
         );
-        dispatch(setInput(e.target.innerText));
+        dispatch(setMainInput(e.target.innerText));
         localStorage.setItem("searchInput", JSON.stringify(e.target.innerText));
     };
 
@@ -107,6 +109,7 @@ const SearchBox = () => {
                                     bgStyles={true}
                                     link={true}
                                     user_id={user}
+                                    displayOnlineStatus={false}
                                 />
                             </div>
                         ))}

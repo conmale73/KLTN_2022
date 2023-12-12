@@ -124,6 +124,7 @@ const VoiceChatChannel = ({ index, _id, room_id, name, currentMembers }) => {
                                         user_id={member}
                                         bgStyles={true}
                                         showName={true}
+                                        displayOnlineStatus={true}
                                     />
                                 </div>
                             );

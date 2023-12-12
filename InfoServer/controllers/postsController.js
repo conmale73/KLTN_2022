@@ -3,13 +3,14 @@ const Comment = require("../models/commentModel");
 const express = require("express");
 const ErrorResponse = require("../utils/errorResponse");
 const User = require("../models/userModel");
+const Group = require("../models/groupModel");
 
 // @desc    Add a new post
 // @route   POST /api/posts
 // @access  Public
 exports.post = async (req, res, next) => {
     try {
-        const { user_id, content, privacy } = req.body;
+        const { user_id, content, privacy, group_id } = req.body;
 
         // Create an array to hold the files with binary data
         const filesWithBinary = [];
@@ -36,7 +37,7 @@ exports.post = async (req, res, next) => {
         // Update the content with the files containing binary data
         content.files = filesForResponse;
 
-        const newPost = new Post({ user_id, content, privacy });
+        const newPost = new Post({ user_id, content, privacy, group_id });
 
         const savedPost = await newPost.save();
         res.status(201).json(savedPost);
@@ -50,6 +51,7 @@ exports.post = async (req, res, next) => {
 exports.getPostById = async (req, res, next) => {
     try {
         const { post_id } = req.params;
+        const { user_id } = req.body;
 
         const post = await Post.findById(post_id);
 
@@ -58,11 +60,39 @@ exports.getPostById = async (req, res, next) => {
                 new ErrorResponse(`Post with id ${post_id} not found`, 404)
             );
         }
-
-        res.status(200).json({
-            success: true,
-            data: post,
-        });
+        if (post.privacy === "PUBLIC") {
+            res.status(200).json({
+                success: true,
+                data: post,
+            });
+        } else if (post.privacy === "PRIVATE") {
+            if (post.user_id != user_id) {
+                res.status(200).json({
+                    success: true,
+                    data: post,
+                });
+            } else {
+                res.status(200).json({
+                    success: false,
+                    data: null,
+                    message: "You don't have permission to view this post",
+                });
+            }
+        } else if (post.privacy === "GROUP") {
+            const group = await Group.findById(post.group_id);
+            if (group.members.includes(user_id)) {
+                res.status(200).json({
+                    success: true,
+                    data: post,
+                });
+            }
+        } else {
+            res.status(200).json({
+                success: false,
+                data: null,
+                message: "You don't have permission to view this post",
+            });
+        }
     } catch (error) {
         next(error);
     }

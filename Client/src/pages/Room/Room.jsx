@@ -173,6 +173,7 @@ const Room = () => {
                         {roomData?.thumbnail?.files[0] && (
                             <ImageViewer
                                 image={roomData?.thumbnail?.files[0]}
+                                objectFit="cover"
                             />
                         )}
                     </div>
@@ -186,6 +187,7 @@ const Room = () => {
                                 showName={true}
                                 link={true}
                                 user_id={roomData?.creator_id}
+                                displayOnlineStatus={true}
                             />
                         </div>
                         <div className={styles.roomDescription}>
@@ -250,6 +252,7 @@ const Room = () => {
                                                             roomData?.thumbnail
                                                                 ?.files[0]
                                                         }
+                                                        objectFit="cover"
                                                     />
                                                 </div>
 
@@ -332,6 +335,9 @@ const Room = () => {
                                                         thumbnailWidth="50px"
                                                         showName={true}
                                                         user_id={user._id}
+                                                        displayOnlineStatus={
+                                                            true
+                                                        }
                                                     />
                                                 </div>
                                             </div>
@@ -365,6 +371,9 @@ const Room = () => {
                                                             bgStyles={true}
                                                             user_id={
                                                                 participant
+                                                            }
+                                                            displayOnlineStatus={
+                                                                true
                                                             }
                                                         />
                                                     );
@@ -414,6 +423,7 @@ const Room = () => {
                                             thumbnailWidth="40px"
                                             showName={false}
                                             user_id={participant}
+                                            displayOnlineStatus={false}
                                         />
                                     );
                                 }

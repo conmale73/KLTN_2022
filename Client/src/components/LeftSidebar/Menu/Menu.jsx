@@ -24,6 +24,7 @@ import {
 const Menu = () => {
     const user = useSelector((state) => state.user.data);
     const mode = useSelector((state) => state.mode.mode);
+    const extendMode = useSelector((state) => state.mode.extend);
     const playlists = useSelector((state) => state.playlists.data);
 
     const dispatch = useDispatch();
@@ -43,9 +44,65 @@ const Menu = () => {
         <>
             {user ? (
                 <>
+                    {extendMode === "groups" ? (
+                        <>
+                            <div className="menu">
+                                <div className="menu_wrapper">
+                                    <Link to="/social/groups/joined/">
+                                        <div className="button">
+                                            <div className="icon">
+                                                <AiFillHome
+                                                    className="icon"
+                                                    size="25px"
+                                                />
+                                            </div>
+                                            <div className="text">
+                                                Your Groups
+                                            </div>
+                                        </div>
+                                    </Link>
+                                    <Link to="/music/library">
+                                        <div className="button">
+                                            <div className="icon">
+                                                <BiLibrary
+                                                    className="icon"
+                                                    size="25px"
+                                                />
+                                            </div>
+                                            <div className="text">Library</div>
+                                        </div>
+                                    </Link>
+                                    <Link to="/music/history">
+                                        <div className="button">
+                                            <div className="icon">
+                                                <BiHistory
+                                                    className="icon"
+                                                    size="25px"
+                                                />
+                                            </div>
+                                            <div className="text">History</div>
+                                        </div>
+                                    </Link>
+                                    {/* <Link to="/music/library#likes">
+                                        <div className="button">
+                                            <div className="icon">
+                                                <AiFillHeart
+                                                    className="icon"
+                                                    size="25px"
+                                                />
+                                            </div>
+                                            <div className="text">
+                                                Liked Songs
+                                            </div>
+                                        </div>
+                                    </Link> */}
+                                </div>
+                            </div>
+                        </>
+                    ) : null}
                     {mode === "music" ? (
                         <>
-                            {/* Basic routes */}
+                            {/* Music routes */}
                             <div className="menu">
                                 <div className="menu_wrapper">
                                     <Link to="/music/home">

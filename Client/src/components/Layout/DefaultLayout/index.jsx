@@ -19,6 +19,8 @@ function DefaultLayout({ children }) {
     const showFooter = useSelector((state) => state.showFooter.show);
     const dispatch = useDispatch();
     const toast = useSelector((state) => state.toast);
+    const extendMode = useSelector((state) => state.mode.extend);
+
     return (
         <div className={styles.layout}>
             <div className={styles.top}>

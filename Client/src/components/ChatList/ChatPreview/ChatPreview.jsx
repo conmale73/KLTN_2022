@@ -77,6 +77,7 @@ const ChatPreview = (props) => {
                                 (member) => member !== user._id
                             )}
                             lastMessage={lastMessage}
+                            displayOnlineStatus={true}
                         />
                     </>
                 )}

@@ -96,6 +96,7 @@ const ChatThumbnail = ({ index, chat }) => {
                             showName={false}
                             bgStyles={false}
                             user_id={otherUser}
+                            displayOnlineStatus={true}
                         />
                     </div>
 

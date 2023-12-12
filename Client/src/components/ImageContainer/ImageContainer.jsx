@@ -24,6 +24,7 @@ const ImageContainer = ({ images }) => {
                                 key={index}
                                 image={image}
                                 index={index}
+                                objectFit="cover"
                             />
                         ))}
                     </div>
@@ -37,6 +38,7 @@ const ImageContainer = ({ images }) => {
                                 key={index}
                                 image={image}
                                 index={index}
+                                objectFit="cover"
                             />
                         </div>
                     ))}
@@ -50,6 +52,7 @@ const ImageContainer = ({ images }) => {
                                 key={index}
                                 image={image}
                                 index={index}
+                                objectFit="cover"
                             />
                         </div>
                     ))}
@@ -63,6 +66,7 @@ const ImageContainer = ({ images }) => {
                                 key={index}
                                 image={image}
                                 index={index}
+                                objectFit="cover"
                             />
                         </div>
                     ))}
@@ -78,6 +82,7 @@ const ImageContainer = ({ images }) => {
                                     key={index}
                                     image={image}
                                     index={index}
+                                    objectFit="cover"
                                 />
                             </div>
                         ))}
@@ -89,6 +94,7 @@ const ImageContainer = ({ images }) => {
                                     key={index}
                                     image={image}
                                     index={index}
+                                    objectFit="cover"
                                 />
                             </div>
                         ))}
@@ -103,6 +109,7 @@ const ImageContainer = ({ images }) => {
                                 key={index}
                                 image={image}
                                 index={index}
+                                objectFit="cover"
                             />
                         </div>
                     ))}
@@ -114,7 +121,11 @@ const ImageContainer = ({ images }) => {
                         if (index < 5) {
                             return (
                                 <div className={styles.image} key={index}>
-                                    <ImageViewer image={image} index={index} />
+                                    <ImageViewer
+                                        image={image}
+                                        index={index}
+                                        objectFit="cover"
+                                    />
                                 </div>
                             );
                         }
@@ -139,6 +150,7 @@ const ImageContainer = ({ images }) => {
                                                 <ImageViewer
                                                     image={image}
                                                     index={index}
+                                                    objectFit="cover"
                                                 />
                                             </div>
                                         </Dialog.Trigger>
@@ -166,6 +178,7 @@ const ImageContainer = ({ images }) => {
                                                                         index={
                                                                             index
                                                                         }
+                                                                        objectFit="cover"
                                                                     />
                                                                 </div>
                                                             );

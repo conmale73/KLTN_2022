@@ -43,6 +43,7 @@ const SelectItem = React.forwardRef(
     }
 );
 const Playground = () => {
+    document.title = "Playground";
     const user = useSelector((state) => state.user.data);
 
     const [rooms, setRooms] = useState([]);

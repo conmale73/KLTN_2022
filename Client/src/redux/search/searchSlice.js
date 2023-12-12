@@ -1,19 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    input: JSON.parse(localStorage.getItem("searchInput")) || "",
+    mainInput: JSON.parse(localStorage.getItem("searchInput")) || "",
+    groupInput: "",
 };
 
 const searchSlice = createSlice({
     name: "search",
     initialState,
     reducers: {
-        setInput(state, action) {
+        setMainInput(state, action) {
             const input = action.payload;
-            state.input = input;
+            state.mainInput = input;
+        },
+        setGroupInput(state, action) {
+            const input = action.payload;
+            state.groupInput = input;
         },
     },
 });
-export const { setInput } = searchSlice.actions;
+export const { setMainInput, setGroupInput } = searchSlice.actions;
 
 export default searchSlice.reducer;

@@ -10,10 +10,10 @@ const SongsSearchResult = (props) => {
     const query = useSelector((state) => state.search.input);
 
     const { isLoading, error, data, isFetching } = useQuery({
-        queryKey: ["searchSongs", query],
+        queryKey: ["searchSongs", props.query],
         queryFn: () =>
             searchService
-                .search(query, "songs", "VN", "en")
+                .search(props.query, "songs", "VN", "en")
                 .then((res) => res.data),
     });
     if (isLoading) return <Loading isFullScreen={true} />;

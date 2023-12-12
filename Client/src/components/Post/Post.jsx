@@ -101,6 +101,7 @@ const Post = (props) => {
                             showName={false}
                             user_id={props.user_id}
                             bgStyles={false}
+                            displayOnlineStatus={true}
                         />
                     </div>
                     <div className={styles.info}>

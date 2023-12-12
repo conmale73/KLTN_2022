@@ -5,13 +5,23 @@ import * as HoverCard from "@radix-ui/react-hover-card";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ImageViewer from "../ImageViewer";
-const UserInfoPreview = (props) => {
+const UserInfoPreview = ({
+    thumbnailWidth,
+    thumbnailHeight,
+    bgStyles,
+    user_id,
+    link,
+    lastMessage,
+    showName,
+    nameOnly,
+    displayOnlineStatus,
+}) => {
     const onlineUsers = useSelector((state) => state.onlineUsers.data);
     const user = useSelector((state) => state.user.data);
     const { isLoading, error, data, isFetching } = useQuery({
-        queryKey: ["userInfoPreview", props.user_id],
+        queryKey: ["userInfoPreview", user_id],
         queryFn: () =>
-            userService.getUserById(props.user_id).then((res) => res.data.data),
+            userService.getUserById(user_id).then((res) => res.data.data),
     });
     if (isLoading) return <Loading />;
     if (error) return <p>{error.message}</p>;
@@ -19,120 +29,163 @@ const UserInfoPreview = (props) => {
     return (
         <>
             <HoverCard.Root>
-                {props.bgStyles ? (
-                    <div
-                        className={`flex items-center gap-[5px] hover:bg-[#545454] w-full p-[5px] rounded-[3px]`}
-                    >
-                        <HoverCard.Trigger asChild>
-                            <div
-                                className="relative border-[1px] border-[#545454] rounded-full"
-                                style={{
-                                    minWidth: props.thumbnailWidth,
-                                    minHeight: props.thumbnailHeight,
-                                    width: props.thumbnailWidth,
-                                    height: props.thumbnailHeight,
-                                }}
+                {nameOnly ? (
+                    <HoverCard.Trigger asChild>
+                        {link ? (
+                            <Link
+                                to={`/profile/?id=${data._id}`}
+                                className="flex w-fit"
                             >
-                                <img
-                                    loading="lazy"
-                                    className={`w-full h-full object-contain rounded-full`}
-                                    src={`data:${data?.avatar?.files[0]?.fileInfo?.type};base64,${data?.avatar?.files[0]?.dataURL}`}
-                                    alt={data.username}
-                                />
-                                {onlineUsers?.some(
-                                    (user) => user?.user_id === data._id
-                                ) && (
-                                    <div
-                                        className="w-[15px] h-[15px] absolute bottom-[-3px] 
-                            right-[-3px] rounded-full bg-[#23A55A] border-neutral-950 border-[2px]"
-                                    ></div>
-                                )}
+                                <div
+                                    className="text-[20px] line-clamp-1 hover:underline"
+                                    title={data.username}
+                                >
+                                    {data.username}
+                                </div>
+                            </Link>
+                        ) : (
+                            <div
+                                className="text-[20px] line-clamp-1"
+                                title={data.username}
+                            >
+                                {data.username}
                             </div>
-                        </HoverCard.Trigger>
-                        {props.showName && (
-                            <>
-                                {props.link ? (
-                                    <Link to={`/profile/?id=${data._id}`}>
-                                        <div
-                                            className="text-[20px] line-clamp-1 hover:underline"
-                                            title={data.username}
-                                        >
-                                            {data.username}
-                                        </div>
-                                    </Link>
-                                ) : (
-                                    <div
-                                        className="text-[20px] line-clamp-1"
-                                        title={data.username}
-                                    >
-                                        {data.username}
-                                    </div>
-                                )}
-                            </>
                         )}
-                    </div>
+                    </HoverCard.Trigger>
                 ) : (
-                    <div className={`flex items-center gap-[5px]`}>
-                        <HoverCard.Trigger asChild>
+                    <>
+                        {bgStyles ? (
                             <div
-                                className="w-fit h-fit relative border-[1px] border-[#676668] rounded-full"
-                                style={{
-                                    minWidth: props.thumbnailWidth,
-                                    minHeight: props.thumbnailHeight,
-                                    width: props.thumbnailWidth,
-                                    height: props.thumbnailHeight,
-                                }}
+                                className={`flex items-center gap-[5px] hover:bg-[#545454] w-full p-[5px] rounded-[3px]`}
                             >
-                                <img
-                                    loading="lazy"
-                                    className={`w-full h-full object-contain rounded-full`}
-                                    src={`data:${data?.avatar?.files[0]?.fileInfo?.type};base64,${data?.avatar?.files[0]?.dataURL}`}
-                                    alt={data.username}
-                                />
-                                {onlineUsers?.some(
-                                    (user) => user?.user_id === data._id
-                                ) && (
+                                <HoverCard.Trigger asChild>
                                     <div
-                                        className="w-[15px] h-[15px] absolute bottom-[-3px] 
+                                        className="relative border-[1px] border-[#545454] rounded-full"
+                                        style={{
+                                            minWidth: thumbnailWidth,
+                                            minHeight: thumbnailHeight,
+                                            width: thumbnailWidth,
+                                            height: thumbnailHeight,
+                                        }}
+                                    >
+                                        <img
+                                            loading="lazy"
+                                            className={`w-full h-full object-contain rounded-full`}
+                                            src={`data:${data?.avatar?.files[0]?.fileInfo?.type};base64,${data?.avatar?.files[0]?.dataURL}`}
+                                            alt={data.username}
+                                        />
+                                        {displayOnlineStatus && (
+                                            <>
+                                                {onlineUsers?.some(
+                                                    (user) =>
+                                                        user?.user_id ===
+                                                        data._id
+                                                ) && (
+                                                    <div
+                                                        className="w-[15px] h-[15px] absolute bottom-[-3px] 
                             right-[-3px] rounded-full bg-[#23A55A] border-neutral-950 border-[2px]"
-                                    ></div>
-                                )}
-                            </div>
-                        </HoverCard.Trigger>
-                        <div className="flex flex-col w-[90%]">
-                            {props.showName && (
-                                <>
-                                    {props.link ? (
-                                        <Link to={`/profile/?id=${data._id}`}>
+                                                    ></div>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
+                                </HoverCard.Trigger>
+                                {showName && (
+                                    <>
+                                        {link ? (
+                                            <Link
+                                                to={`/profile/?id=${data._id}`}
+                                            >
+                                                <div
+                                                    className="text-[20px] line-clamp-1 hover:underline"
+                                                    title={data.username}
+                                                >
+                                                    {data.username}
+                                                </div>
+                                            </Link>
+                                        ) : (
                                             <div
-                                                className="text-[20px] line-clamp-1 hover:underline"
+                                                className="text-[20px] line-clamp-1"
                                                 title={data.username}
                                             >
                                                 {data.username}
                                             </div>
-                                        </Link>
-                                    ) : (
-                                        <div
-                                            className="text-[20px] line-clamp-1"
-                                            title={data.username}
-                                        >
-                                            {data.username}
-                                        </div>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                        ) : (
+                            <div className={`flex items-center gap-[5px]`}>
+                                <HoverCard.Trigger asChild>
+                                    <div
+                                        className="w-fit h-fit relative border-[1px] border-[#676668] rounded-full"
+                                        style={{
+                                            minWidth: thumbnailWidth,
+                                            minHeight: thumbnailHeight,
+                                            width: thumbnailWidth,
+                                            height: thumbnailHeight,
+                                        }}
+                                    >
+                                        <img
+                                            loading="lazy"
+                                            className={`w-full h-full object-contain rounded-full`}
+                                            src={`data:${data?.avatar?.files[0]?.fileInfo?.type};base64,${data?.avatar?.files[0]?.dataURL}`}
+                                            alt={data.username}
+                                        />
+                                        {displayOnlineStatus && (
+                                            <>
+                                                {onlineUsers?.some(
+                                                    (user) =>
+                                                        user?.user_id ===
+                                                        data._id
+                                                ) && (
+                                                    <div
+                                                        className="w-[15px] h-[15px] absolute bottom-[-3px] 
+                            right-[-3px] rounded-full bg-[#23A55A] border-neutral-950 border-[2px]"
+                                                    ></div>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
+                                </HoverCard.Trigger>
+                                <div className="flex flex-col w-[90%]">
+                                    {showName && (
+                                        <>
+                                            {link ? (
+                                                <Link
+                                                    to={`/profile/?id=${data._id}`}
+                                                >
+                                                    <div
+                                                        className="text-[20px] line-clamp-1 hover:underline"
+                                                        title={data.username}
+                                                    >
+                                                        {data.username}
+                                                    </div>
+                                                </Link>
+                                            ) : (
+                                                <div
+                                                    className="text-[20px] line-clamp-1"
+                                                    title={data.username}
+                                                >
+                                                    {data.username}
+                                                </div>
+                                            )}
+                                        </>
                                     )}
-                                </>
-                            )}
-                            {props.lastMessage && (
-                                <p className="text-[15px] text-ellipsis line-clamp-1 max-w-[100%] font-[400] text-[#adadad]">
-                                    {`${
-                                        props.lastMessage?.sender_id ===
-                                        user._id
-                                            ? "You"
-                                            : props.lastMessage?.sender_name
-                                    }: ${props.lastMessage?.content}`}
-                                </p>
-                            )}
-                        </div>
-                    </div>
+                                    {lastMessage && (
+                                        <p className="text-[15px] text-ellipsis line-clamp-1 max-w-[100%] font-[400] text-[#adadad]">
+                                            {`${
+                                                lastMessage?.sender_id ===
+                                                user._id
+                                                    ? "You"
+                                                    : lastMessage?.sender_name
+                                            }: ${lastMessage?.content}`}
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </>
                 )}
 
                 <HoverCard.Portal>
@@ -148,7 +201,14 @@ const UserInfoPreview = (props) => {
                     >
                         <div className="flex flex-col gap-[7px]">
                             {data?.avatar?.files[0] && (
-                                <ImageViewer image={data?.avatar?.files[0]} />
+                                <div className="flex justify-center w-full">
+                                    <div className="w-[100px] h-[100px]">
+                                        <ImageViewer
+                                            image={data?.avatar?.files[0]}
+                                            objectFit="cover"
+                                        />
+                                    </div>
+                                </div>
                             )}
                             <div className="flex flex-col gap-[15px]">
                                 <div>

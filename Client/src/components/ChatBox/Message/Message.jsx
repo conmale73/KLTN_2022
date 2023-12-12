@@ -51,6 +51,7 @@ const Message = (props) => {
                                 showName={false}
                                 user_id={props.sender_id}
                                 bgStyles={false}
+                                displayOnlineStatus={true}
                             />
                             <div className={styles.otherUser}>
                                 <div className={styles.otherUserName}>
@@ -105,6 +106,7 @@ const Message = (props) => {
                             showName={true}
                             user_id={props.sender_id}
                             bgStyles={false}
+                            displayOnlineStatus={true}
                         />
                         <span className={styles.messageTime}>
                             {FormatDate(props.timeStamp)}

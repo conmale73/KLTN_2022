@@ -28,6 +28,7 @@ const LikesViewer = (props) => {
                                     user_id={like.user_id || like}
                                     bgStyles={true}
                                     link={true}
+                                    displayOnlineStatus={false}
                                 />
                             );
                         })}

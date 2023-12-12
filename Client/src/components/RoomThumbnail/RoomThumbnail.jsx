@@ -28,7 +28,10 @@ const RoomThumbnail = (props) => {
         <>
             <div className={`${styles.roomThumbnail} flex`}>
                 <div className={` ${styles.thumbnail}`}>
-                    <ImageViewer image={props.data.thumbnail?.files[0]} />
+                    <ImageViewer
+                        image={props.data.thumbnail?.files[0]}
+                        objectFit="cover"
+                    />
                 </div>
                 <div className={`${styles.roomInfo}`}>
                     <div className={`${styles.roomName} text-[15px]`}>
@@ -43,6 +46,7 @@ const RoomThumbnail = (props) => {
                             user_id={props.data.creator_id}
                             bgStyles={false}
                             link={true}
+                            displayOnlineStatus={false}
                         />
                     </div>
                     <div className={styles.roomDescription}>

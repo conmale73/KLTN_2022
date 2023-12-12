@@ -11,5 +11,6 @@ export { commentService } from "./comment.service";
 export { roomService } from "./room.service";
 export { messageService } from "./message.service";
 export { voiceChannelService } from "./voiceChannel.service";
+export { groupService } from "./group.service";
 export { groupChatService } from "./groupChat.service";
 export { youtubeService } from "./youtube.service";

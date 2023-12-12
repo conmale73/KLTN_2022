@@ -39,6 +39,9 @@ const postSchema = new mongoose.Schema({
             },
         },
     ],
+    group_id: {
+        type: ObjectId,
+    },
     privacy: {
         type: String,
         required: true,
