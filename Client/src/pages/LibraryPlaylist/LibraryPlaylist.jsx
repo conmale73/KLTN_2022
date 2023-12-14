@@ -22,7 +22,11 @@ import {
     BsGlobeAsiaAustralia,
 } from "react-icons/bs";
 
-import { setPlaylists, getPlaylists } from "../../redux/playlist/playlistSlice";
+import {
+    setPlaylists,
+    getPlaylists,
+    addPlaylist,
+} from "../../redux/playlist/playlistSlice";
 const SelectItem = React.forwardRef(
     ({ children, className, ...props }, forwardedRef) => {
         return (
@@ -60,7 +64,7 @@ const LibraryPlaylist = (props) => {
             description,
             privacy
         );
-        // dispatch(addPlaylists(res.data));
+        dispatch(addPlaylist(res.data));
         return res;
     };
     const handleStateModal = (e) => {
@@ -132,7 +136,7 @@ const LibraryPlaylist = (props) => {
 
                             <Dialog.Description>
                                 <div className="flex items-center">
-                                    <Link to={`/profile/?id=${user._id}`}>
+                                    <Link to={`/profile/${user._id}`}>
                                         <div className="w-[50px] h-[50px] rounded-full ">
                                             <img
                                                 className="object-cover w-full h-full rounded-full"

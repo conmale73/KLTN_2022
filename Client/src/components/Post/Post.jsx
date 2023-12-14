@@ -106,7 +106,7 @@ const Post = (props) => {
                     </div>
                     <div className={styles.info}>
                         <Link
-                            to={`/profile/?id=${props.user_id}`}
+                            to={`/profile/${props.user_id}`}
                             className="w-fit"
                         >
                             <p className={styles.name}>{data?.username}</p>

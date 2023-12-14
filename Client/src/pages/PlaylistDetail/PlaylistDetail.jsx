@@ -151,7 +151,7 @@ const PlaylistDetail = (props) => {
                                             </span>
                                             {playlist?.creator ? (
                                                 <Link
-                                                    to={`/profile/?id=${playlist?.creator?._id}`}
+                                                    to={`/profile/${playlist?.creator?._id}`}
                                                 >
                                                     <span
                                                         className={`${styles.text} ${styles.underline}`}

@@ -79,7 +79,7 @@ function LeftSidebar() {
                     {user ? (
                         <div className="info">
                             <div className="avatar">
-                                <Link to={`/profile/?id=${user._id}`}>
+                                <Link to={`/profile/${user._id}`}>
                                     <img
                                         loading="lazy"
                                         className={`w-full h-full object-contain rounded-full`}

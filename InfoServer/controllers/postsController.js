@@ -13,24 +13,18 @@ exports.post = async (req, res, next) => {
         const { user_id, content, privacy, group_id } = req.body;
 
         // Create an array to hold the files with binary data
-        const filesWithBinary = [];
         const filesForResponse = [];
         for (const file of content.files) {
             // Convert the base64 data to a binary Buffer
             const base64Data = file.dataURL.split(",")[1];
-            const buffer = Buffer.from(base64Data, "base64");
 
             // Create an object with the binary data and other file info
-            const fileWithBinary = {
-                dataURL: buffer,
-                fileInfo: file.fileInfo,
-            };
+
             const fileForResponse = {
                 dataURL: base64Data,
                 fileInfo: file.fileInfo,
             };
 
-            filesWithBinary.push(fileWithBinary);
             filesForResponse.push(fileForResponse);
         }
 

@@ -18,6 +18,30 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 6,
     },
+    description: {
+        type: String,
+    },
+    musicType: [],
+    birthday: {
+        date: {
+            type: Date,
+            default: Date.now,
+        },
+        visible: {
+            type: String,
+            default: "PUBLIC",
+        },
+    },
+    phone: {
+        number: {
+            type: String,
+        },
+        visible: {
+            type: String,
+            default: "PUBLIC",
+        },
+    },
+    background: {},
     avatar: {},
     registration_date: {
         type: Date,

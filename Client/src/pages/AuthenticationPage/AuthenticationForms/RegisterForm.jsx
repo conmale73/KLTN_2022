@@ -102,12 +102,12 @@ const RegisterForm = () => {
                 const user = response.data.user;
                 localStorage.setItem("user", JSON.stringify(user));
                 dispatch(setUser(user));
-                navigator("/profile");
             }
         } catch (err) {
             console.error("Error: ", err);
             setError(err.response.data.message);
         } finally {
+            navigator("/social");
         }
     };
     const handleSubmitForm = (e) => {

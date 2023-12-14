@@ -88,10 +88,11 @@ const LoginForm = () => {
             io.on("go-online", (data) => {
                 console.log(data);
             });
-            navigator("/social");
         } catch (err) {
             console.error("Message:", err.response.data.message);
             setErrorLogin(err.response.data.message);
+        } finally {
+            navigator("/social");
         }
     };
 

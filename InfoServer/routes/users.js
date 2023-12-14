@@ -14,8 +14,14 @@ router.get("/email/:email", usersController.getUserByEmail);
 // POST /api/users
 router.post("/", usersController.createUser);
 
-// PUT /api/users/:id
-router.put("/:id", usersController.updateUser);
+// PUT /api/users/updateInfo
+router.put("/updateInfo", usersController.updateUserInfo);
+
+// PUT /api/users/updateAvatar
+router.put("/updateAvatar", usersController.updateUserAvatar);
+
+// PUT /api/users/updateAvatar
+router.put("/updateBackground", usersController.updateUserBackground);
 
 // DELETE /api/users/:id
 router.delete("/:id", usersController.deleteUser);

@@ -27,7 +27,7 @@ function Header() {
         navigator("/authentication/login");
     };
     const handleProfile = () => {
-        navigator("/profile/?id=" + user._id);
+        navigator("/profile/" + user._id);
     };
     return (
         <div className={styles.header}>

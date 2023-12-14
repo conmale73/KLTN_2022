@@ -15,4 +15,13 @@ export const userService = {
             `/api/users/search/${username}?page=${page}&limit=${limit}`
         );
     },
+    updateUserInfo(data) {
+        return axiosClient.put(`/api/users/updateInfo`, data);
+    },
+    updateUserAvatar(data) {
+        return axiosClient.put(`/api/users/updateAvatar`, data);
+    },
+    updateUserBackground(data) {
+        return axiosClient.put(`/api/users/updateBackground`, data);
+    },
 };

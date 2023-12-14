@@ -42,7 +42,7 @@ export const publishRoutes = [
         ),
     },
     {
-        path: "/profile",
+        path: "/profile/:user_id",
         element: (
             <Suspense fallback={<Loading isFullScreen={true} />}>
                 <Profile title="Profile" />

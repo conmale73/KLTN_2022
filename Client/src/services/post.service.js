@@ -4,8 +4,10 @@ export const postService = {
     getPostById(id) {
         return axiosClient.get(`/api/posts/${id}`);
     },
-    getPostByUserId(id, page, limit) {
-        return axiosClient.get(`/api/posts/${id}?page=${page}&limit=${limit}`);
+    getPostsByUserId(user_id, page, limit) {
+        return axiosClient.get(
+            `/api/posts/user/${user_id}?page=${page}&limit=${limit}`
+        );
     },
     getPublicPostByUserId(id, page, limit) {
         return axiosClient.get(

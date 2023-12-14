@@ -11,13 +11,6 @@ exports.signup = async (req, res, next) => {
     try {
         const { username, email, password } = req.body;
 
-        // Check if the email is already registered
-        const existingUser = await User.findOne({ email });
-
-        if (existingUser) {
-            return res.status(400).json({ message: "Email is already in use" });
-        }
-
         // Path to the default avatar in the "assets" folder
         const defaultAvatarPath = path.join(
             __dirname,
@@ -25,15 +18,44 @@ exports.signup = async (req, res, next) => {
             "assets",
             "defaultUserAvatar.png"
         );
+        const defaultBackgroundPath = path.join(
+            __dirname,
+            "..",
+            "assets",
+            "defaultUserBackground.png"
+        );
         // Read the default thumbnail image as a buffer
         const avatarBuffer = fs.readFileSync(defaultAvatarPath);
         const base64Avatar = avatarBuffer.toString("base64");
+
+        const backgroundBuffer = fs.readFileSync(defaultBackgroundPath);
+        const base64Background = backgroundBuffer.toString("base64");
+
+        // Check if the email is already registered
+        const existingUser = await User.findOne({ email });
+
+        if (existingUser) {
+            return res.status(400).json({ message: "Email is already in use" });
+        }
 
         // Create a new user
         const newUser = new User({
             username,
             email,
             password,
+            background: {
+                files: [
+                    {
+                        dataURL: base64Background,
+                        fileInfo: {
+                            type: "image/png",
+                            name: "defaultUserBackground.png",
+                            size: backgroundBuffer.length,
+                            lastModified: new Date().getTime(),
+                        },
+                    },
+                ],
+            },
             avatar: {
                 files: [
                     {
@@ -50,9 +72,10 @@ exports.signup = async (req, res, next) => {
         });
 
         // Save the user to the database
-        await newUser.save();
+        const userToResponse = await newUser.save();
 
-        res.status(201).json({ message: "User created successfully" });
+        // res.status(201).json({ message: "User created successfully" });
+        res.status(201).json({ success: true, data: userToResponse });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server error" });
@@ -88,6 +111,8 @@ exports.login = async (req, res, next) => {
                 _id: user._id,
                 username: user.username,
                 email: user.email,
+                description: user.description,
+                musicType: user.musicType,
                 avatar: user.avatar,
                 registration_date: user.registration_date,
             },

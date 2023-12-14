@@ -36,7 +36,7 @@ const SelectItem = React.forwardRef(
         );
     }
 );
-const PostTool = (props) => {
+const PostTool = ({ setPosts }) => {
     const user = useSelector((state) => state.user.data);
     const [textContent, setTextContent] = useState("");
     const [placeholder, setPlaceholder] = useState("What's on your mind?");
@@ -54,7 +54,7 @@ const PostTool = (props) => {
         try {
             const res = await postService.createNewPost(dataPost);
 
-            props.setPosts((posts) => [res.data, ...posts]);
+            setPosts((posts) => [res.data, ...posts]);
             return res.data;
         } catch (err) {
             console.log(err);
@@ -90,21 +90,11 @@ const PostTool = (props) => {
             setPlaceholder("What's on your mind?");
         }
     };
-    const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
-            if (e.shiftKey) {
-                // Add a newline character at the cursor position
-                props.setText((prevText) => prevText + "\n");
-            } else {
-                e.preventDefault();
-                handleClickSendMsg(e);
-            }
-        }
-    };
+
     return (
         <div className={styles.postTool}>
             <div className={styles.top}>
-                <Link to={`/profile/?id=${user._id}`}>
+                <Link to={`/profile/${user._id}`}>
                     <div className={styles.avatar}>
                         <img
                             loading="lazy"
@@ -154,7 +144,7 @@ const PostTool = (props) => {
 
                             <Dialog.Description>
                                 <div className="flex items-center">
-                                    <Link to={`/profile/?id=${user._id}`}>
+                                    <Link to={`/profile/${user._id}`}>
                                         <div className="w-[50px] h-[50px] rounded-full ">
                                             <img
                                                 loading="lazy"
@@ -274,7 +264,6 @@ const PostTool = (props) => {
                                                 setTextContent(e.target.value);
                                                 setPlaceholder(e.target.value);
                                             }}
-                                            onKeyDown={(e) => handleKeyDown(e)}
                                             placeholder="What's on your mind?"
                                         ></TextareaAutosize>
                                     </form>

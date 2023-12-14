@@ -19,9 +19,18 @@ exports.createUser = async (req, res, next) => {
             "assets",
             "defaultUserAvatar.png"
         );
+        const defaultBackgroundPath = path.join(
+            __dirname,
+            "..",
+            "assets",
+            "defaultUserBackground.png"
+        );
         // Read the default thumbnail image as a buffer
         const avatarBuffer = fs.readFileSync(defaultAvatarPath);
         const base64Avatar = avatarBuffer.toString("base64");
+
+        const backgroundBuffer = fs.readFileSync(defaultBackgroundPath);
+        const base64Background = backgroundBuffer.toString("base64");
 
         // Check if the email is already registered
         const existingUser = await User.findOne({ email });
@@ -35,6 +44,19 @@ exports.createUser = async (req, res, next) => {
             username,
             email,
             password,
+            background: {
+                files: [
+                    {
+                        dataURL: base64Background,
+                        fileInfo: {
+                            type: "image/png",
+                            name: "defaultUserBackground.png",
+                            size: backgroundBuffer.length,
+                            lastModified: new Date().getTime(),
+                        },
+                    },
+                ],
+            },
             avatar: {
                 files: [
                     {
@@ -51,9 +73,10 @@ exports.createUser = async (req, res, next) => {
         });
 
         // Save the user to the database
-        await newUser.save();
+        const userToResponse = await newUser.save();
 
-        res.status(201).json({ message: "User created successfully" });
+        // res.status(201).json({ message: "User created successfully" });
+        res.status(201).json({ success: true, data: userToResponse });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server error" });
@@ -94,17 +117,97 @@ exports.getUserByEmail = async (req, res, next) => {
     }
 };
 
-// Update a user
-exports.updateUser = async (req, res, next) => {
+// Update a user info
+exports.updateUserInfo = async (req, res, next) => {
     try {
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-            runValidators: true,
-        });
+        const { user_id, username, description, musicType, birthday, phone } =
+            req.body;
+
+        const user = User.findById(user_id);
+
         if (!user) {
-            throw new ErrorResponse("User not found", 404);
+            return next(new ErrorResponse(`User not found`, 404));
         }
-        res.status(200).json({ success: true, data: user });
+
+        const updateUser = await User.findByIdAndUpdate(
+            user_id,
+            {
+                username,
+                description,
+                musicType,
+                birthday,
+                phone,
+            },
+            { new: true }
+        );
+
+        res.status(200).json({ success: true, data: updateUser });
+    } catch (error) {
+        next(error);
+    }
+};
+
+//Update a user avatar
+exports.updateUserAvatar = async (req, res, next) => {
+    try {
+        const { user_id, avatar } = req.body;
+
+        const user = User.findById(user_id);
+
+        if (!user) {
+            return next(new ErrorResponse(`User not found`, 404));
+        }
+        // Create an array to hold the files with binary data
+        const filesForResponse = [];
+        for (const file of avatar.files) {
+            // Convert the base64 data to a binary Buffer
+            const base64Data = file.dataURL.split(",")[1];
+
+            // Create an object with the binary data and other file info
+
+            const fileForResponse = {
+                dataURL: base64Data,
+                fileInfo: file.fileInfo,
+            };
+
+            filesForResponse.push(fileForResponse);
+        }
+
+        // Update the avatar with the files containing binary data
+        avatar.files = filesForResponse;
+
+        const updateUser = await User.findByIdAndUpdate(
+            user_id,
+            {
+                avatar,
+            },
+            { new: true }
+        );
+        res.status(200).json({ success: true, data: updateUser });
+    } catch (error) {
+        next(error);
+    }
+};
+
+//Update a user background
+exports.updateUserBackground = async (req, res, next) => {
+    try {
+        const { user_id, background } = req.body;
+
+        const user = User.findById(user_id);
+
+        if (!user) {
+            return next(new ErrorResponse(`User not found`, 404));
+        }
+
+        const updateUser = await User.findByIdAndUpdate(
+            user_id,
+            {
+                background,
+            },
+            { new: true }
+        );
+        res.status(200).json({ success: true, data: updateUser });
     } catch (error) {
         next(error);
     }
@@ -113,7 +216,8 @@ exports.updateUser = async (req, res, next) => {
 // Delete a user
 exports.deleteUser = async (req, res, next) => {
     try {
-        const user = await User.findByIdAndDelete(req.params.id);
+        const { user_id } = req.body;
+        const user = await User.findByIdAndDelete(user_id);
         if (!user) {
             throw new ErrorResponse("User not found", 404);
         }
