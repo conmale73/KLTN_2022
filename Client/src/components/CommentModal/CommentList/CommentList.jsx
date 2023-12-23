@@ -36,7 +36,6 @@ const CommentList = (props) => {
     const [sortBy, setSortBy] = useState("likesDesc");
     const [totalPages, setTotalPages] = useState(1);
 
-    const [likes, setLikes] = useState([]);
     const fetchData = async () => {
         const res = await commentService.getCommentsByPostId(
             props.post_id,
@@ -55,13 +54,17 @@ const CommentList = (props) => {
 
     const handleClickLoadMore = async () => {
         if (page < totalPages) {
-            setPage((page) => page + 1);
             const res = await commentService.getCommentsByPostId(
                 props.post_id,
                 page + 1,
-                limit
+                limit,
+                sortBy
             );
+            setPage((page) => page + 1);
+            console.log(res.data);
             props.setComments((comments) => [...comments, ...res.data.data]);
+        } else {
+            setPage((page) => page + 1);
         }
     };
 
@@ -70,6 +73,7 @@ const CommentList = (props) => {
         props.setComments([]);
         fetchData();
     }, [sortBy]);
+
     if (isLoading) return <Loading />;
     if (error) return <p>{error.message}</p>;
 
@@ -139,28 +143,29 @@ const CommentList = (props) => {
                     </Select.Portal>
                 </Select.Root>
             </div>
+
             {props.comments?.map((comment, index) => (
                 <Comment
-                    key={comment._id}
+                    key={index}
                     comment_id={comment._id}
                     creator={comment.creator}
                     post_id={comment.post_id}
                     content={comment.content}
                     likes={comment.likes}
+                    replyCount={comment.replyCount}
                     createAt={comment.createAt}
                     comments={props.comments}
                     setComments={props.setComments}
+                    setCommentCount={props.setCommentCount}
                 />
             ))}
-            {page < totalPages ? (
+            {page < totalPages && (
                 <p
                     className="text-center text-[#adadad] hover:text-[#ffffff] cursor-pointer"
                     onClick={handleClickLoadMore}
                 >
                     Load more...
                 </p>
-            ) : (
-                <></>
             )}
         </div>
     );

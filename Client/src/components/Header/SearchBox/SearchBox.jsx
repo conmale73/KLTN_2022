@@ -1,5 +1,6 @@
 import "./SearchBox.scss";
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { AiOutlineSearch } from "react-icons/ai";
 import { searchService, userService } from "../../../services";
@@ -8,11 +9,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMainInput } from "../../../redux/search/searchSlice";
 import { IoLogoYoutube } from "react-icons/io";
 import { FaUserFriends } from "react-icons/fa";
-import UserInfoPreview from "../../UserInfoPreview/UserInfoPreview";
+import UserPreview from "../../UserPreview(FullDataProvided)";
 const SearchBox = () => {
     const user = useSelector((state) => state.user.data);
+    const [searchParams] = useSearchParams();
 
-    const [searchInput, setSearchInput] = useState("");
+    const query = searchParams.get("q");
+
+    const [searchInput, setSearchInput] = useState(query);
     const [youtubeSearchResults, setYoutubeSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
     const [page, setPage] = useState(1);
@@ -102,13 +106,13 @@ const SearchBox = () => {
                     <div className="flex flex-wrap w-full justify-start my-[10px] mx-[10px]">
                         {users.map((user, index) => (
                             <div className="w-[30%]" key={index}>
-                                <UserInfoPreview
+                                <UserPreview
                                     thumbnailWidth="30px"
                                     thumbnailHeight="30px"
                                     showName={true}
                                     bgStyles={true}
                                     link={true}
-                                    user_id={user}
+                                    userData={user}
                                     displayOnlineStatus={false}
                                 />
                             </div>

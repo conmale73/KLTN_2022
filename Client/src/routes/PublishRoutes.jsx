@@ -20,9 +20,11 @@ const Room = lazy(() => import("../pages/Room"));
 const Feed = lazy(() => import("../pages/Feed"));
 const SocialHome = lazy(() => import("../pages/SocialHome"));
 const PostDetail = lazy(() => import("../pages/PostDetail"));
+
 const Groups = lazy(() => import("../pages/Groups"));
 const GroupSearch = lazy(() => import("../pages/GroupSearch"));
 const GroupDetail = lazy(() => import("../pages/GroupDetail"));
+const GroupPostDetail = lazy(() => import("../pages/GroupPostDetail"));
 
 export const publishRoutes = [
     {
@@ -102,6 +104,14 @@ export const publishRoutes = [
         element: (
             <Suspense fallback={<Loading isFullScreen={true} />}>
                 <GroupDetail />
+            </Suspense>
+        ),
+    },
+    {
+        path: "/social/groups/:group_id/post/:post_id",
+        element: (
+            <Suspense fallback={<Loading isFullScreen={true} />}>
+                <GroupPostDetail />
             </Suspense>
         ),
     },

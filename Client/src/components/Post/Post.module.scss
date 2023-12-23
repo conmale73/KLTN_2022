@@ -10,6 +10,48 @@
         width: 100%;
         height: 60px;
         align-items: center;
+
+        .groupPostAvatar {
+            width: 70px;
+            height: 50px;
+            position: relative;
+
+            .groupThumbnail {
+                width: 50px;
+                height: 50px;
+                border-radius: 10px;
+                position: absolute;
+                top: 0;
+                left: 0;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 10px;
+                    object-fit: cover;
+                }
+
+                &:hover {
+                    opacity: 0.8;
+                }
+            }
+
+            .avatar {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                position: absolute;
+                bottom: 0;
+                right: 10px;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+            }
+        }
         .avatar {
             width: 50px;
             height: 50px;
@@ -18,6 +60,52 @@
                 width: 100%;
                 height: 100%;
                 border-radius: 50%;
+            }
+        }
+        .groupPostInfo {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            height: 50px;
+
+            .groupName {
+                width: fit-content;
+                font-size: 15px;
+                font-weight: 600;
+                color: var(--general-text-color);
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+            .bottomInfo {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                .name {
+                    width: fit-content;
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: var(--small-text-color);
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+                .dot {
+                    width: 5px;
+                    height: 5px;
+                    border-radius: 50%;
+                    background-color: var(--small-text-color);
+                }
+                .createAt {
+                    display: flex;
+                    font-size: 12px;
+                    font-weight: 400;
+                    color: var(--small-text-color);
+
+                    span {
+                        margin-left: 10px;
+                    }
+                }
             }
         }
         .info {
@@ -51,6 +139,28 @@
             gap: 10px;
             .detailButton {
                 width: 80px;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: var(--level-2);
+                border-radius: 10px;
+                cursor: pointer;
+                &:hover {
+                    background-color: var(--general-button-hover);
+                }
+                .icon {
+                    width: 20px;
+                    height: 20px;
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+            }
+            .optionButton {
+                width: 40px;
                 height: 40px;
                 display: flex;
                 justify-content: center;

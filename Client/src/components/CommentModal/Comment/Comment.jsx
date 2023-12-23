@@ -12,12 +12,17 @@ import styles from "./Comment.module.scss";
 import moment from "moment";
 import { FormatDate } from "../../../utils";
 import LikesViewer from "../../LikesViewer";
+import ReplyTool from "../ReplyTool/ReplyTool";
+import ReplyList from "./ReplyList/ReplyList";
 const Comment = (props) => {
     const user = useSelector((state) => state.user.data);
     const [likes, setLikes] = useState(props.likes);
     const [liked, setLiked] = useState(false);
     const [openImageViewer, setOpenImageViewer] = useState(false);
+    const [openReplyTool, setOpenReplyTool] = useState(false);
 
+    const [text, setText] = useState("");
+    const [replies, setReplies] = useState([]);
     useEffect(() => {
         if (likes.find((like) => like.user_id == user._id)) {
             setLiked(true);
@@ -44,6 +49,10 @@ const Comment = (props) => {
         }
     };
 
+    const handleClickReply = () => {
+        setOpenReplyTool(!openReplyTool);
+    };
+
     const handleClickDelete = async (e) => {
         try {
             await commentService.deleteComment(props.comment_id);
@@ -56,8 +65,9 @@ const Comment = (props) => {
             console.log(error);
         }
     };
+
     return (
-        <div className="flex flex-col" key={props.comment_id}>
+        <div className="flex flex-col w-full" key={props.comment_id}>
             <div className={`${styles.commentContainer} flex w-full h-fit `}>
                 <div className={`${styles.avatarContainer} flex-0 `}>
                     <UserInfoPreview
@@ -74,7 +84,9 @@ const Comment = (props) => {
                 >
                     <div className="flex flex-col ml-[10px] mr-[10px]">
                         <div className="flex items-center w-fit h-[50px]">
-                            <Link>{props.creator?.username}</Link>
+                            <Link to={`/profile/${props.creator?.user_id}`}>
+                                {props.creator?.username}
+                            </Link>
                         </div>
                         <div
                             className={`${styles.textContent} flex flex-1 flex-wrap mb-[10px] break-words whitespace-pre-line`}
@@ -126,10 +138,10 @@ const Comment = (props) => {
                     </DropdownMenu.Root>
                 )}
             </div>
-            <div className="w-full h-[50px]">
-                <div className="flex justify-start items-center ml-[45px]  gap-[20px]">
+            <div className="w-full h-fit py-[5px]">
+                <div className="flex justify-start items-center ml-[45px] gap-[20px]">
                     <div className="text-[#9d9d9d] text-[15px]">
-                        {FormatDate(props.createAt)}
+                        {moment(props.createAt).fromNow()}
                     </div>
                     {liked ? (
                         <div
@@ -150,11 +162,46 @@ const Comment = (props) => {
                             <span className=" text-[15px]">Like</span>
                         </div>
                     )}
-                    <div className="flex justify-center items-center text-[#9d9d9d] hover:text-[#ffffff] cursor-pointer">
+                    <div
+                        className="flex justify-center items-center text-[#9d9d9d] hover:text-[#ffffff] cursor-pointer"
+                        onClick={(e) => handleClickReply()}
+                    >
                         <span className=" text-[15px]">Reply</span>
                     </div>
                 </div>
             </div>
+            {props.replyCount > 0 && (
+                <div className="w-full ml-[50px]">
+                    <ReplyList
+                        comment_id={props.comment_id}
+                        replies={replies}
+                        replyCount={props.replyCount}
+                        setReplies={setReplies}
+                        setCommentCount={props.setCommentCount}
+                    />
+                </div>
+            )}
+
+            {openReplyTool && (
+                <div
+                    className="w-full"
+                    style={{
+                        display: openReplyTool ? "flex" : "none",
+                    }}
+                >
+                    <ReplyTool
+                        comment_id={props.comment_id}
+                        text={text}
+                        setText={setText}
+                        post_id={props.post_id}
+                        creator={props.creator}
+                        setReplies={setReplies}
+                        replyCount={props.replyCount}
+                        setCommentCount={props.setCommentCount}
+                        setOpenReplyTool={setOpenReplyTool}
+                    />
+                </div>
+            )}
         </div>
     );
 };

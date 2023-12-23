@@ -9,6 +9,11 @@ export const commentService = {
             `/api/comments/post/${post_id}?page=${page}&limit=${limit}&sortBy=${sortBy}`
         );
     },
+    getRepliesByCommentId(comment_id, page, limit) {
+        return axiosClient.get(
+            `/api/comments/replies/${comment_id}?page=${page}&limit=${limit}`
+        );
+    },
     createNewcomment(data) {
         return axiosClient.post(`/api/comments/`, data);
     },

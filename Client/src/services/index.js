@@ -14,3 +14,4 @@ export { voiceChannelService } from "./voiceChannel.service";
 export { groupService } from "./group.service";
 export { groupChatService } from "./groupChat.service";
 export { youtubeService } from "./youtube.service";
+export { notificationService } from "./notification.service";

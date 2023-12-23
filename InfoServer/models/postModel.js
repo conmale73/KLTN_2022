@@ -39,6 +39,17 @@ const postSchema = new mongoose.Schema({
             },
         },
     ],
+    read: [
+        {
+            user_id: {
+                type: ObjectId,
+            },
+            timeStamp: {
+                type: Date,
+                default: Date.now,
+            },
+        },
+    ],
     group_id: {
         type: ObjectId,
     },

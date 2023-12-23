@@ -1,9 +1,13 @@
 const Group = require("../models/groupModel");
 const GroupChat = require("../models/groupChatModel");
 const ErrorResponse = require("../utils/errorResponse");
+const Notification = require("../models/notificationModel");
 
 const fs = require("fs");
 const path = require("path");
+const { admin } = require("googleapis/build/src/apis/admin");
+const User = require("../models/userModel");
+const { ObjectId } = require("mongodb");
 
 // @desc    Create a new group
 // @route   POST /api/groups
@@ -198,10 +202,22 @@ exports.getGroupById = async (req, res, next) => {
                         data: group,
                     });
                 } else {
+                    const allowedData = {
+                        _id: group._id,
+                        name: group.name,
+                        creator_id: group.creator_id,
+                        admins: group.admins,
+                        privacy: group.privacy,
+                        thumbnail: group.thumbnail,
+                        description: group.description,
+                        requireVerify: group.requireVerify,
+                        visible: group.visible,
+                        pendingMembers: group.pendingMembers,
+                        pendingRequests: group.pendingRequests,
+                    };
                     res.status(200).json({
                         success: false,
-                        data: null,
-                        message: "You don't have permission to view this group",
+                        data: allowedData,
                     });
                 }
             }
@@ -220,13 +236,14 @@ exports.requestJoinGroup = async (req, res, next) => {
         const { user_id } = req.body;
 
         const group = await Group.findById(group_id);
-
+        const user = await User.findById(user_id);
         if (!group) {
             return next(
                 new ErrorResponse(`Group with id ${group_id} not found`, 404)
             );
         }
-
+        let notification;
+        let notificationIds = [];
         if (group.privacy == "PRIVATE") {
             if (group.members.includes(user_id)) {
                 return next(
@@ -237,8 +254,30 @@ exports.requestJoinGroup = async (req, res, next) => {
                 );
             } else {
                 if (group.requireVerify == true) {
-                    group.pendingRequests.push(user_id);
-                    //TODO: Send notification to group.creator_id
+                    group.admins.forEach(async (admin) => {
+                        notification = new Notification({
+                            type: "GROUP_REQUEST",
+                            sender: {
+                                user_id: new ObjectId(user_id),
+                                username: user.username,
+                                avatar: user.avatar,
+                            },
+                            receiver_id: new ObjectId(admin),
+                            group_id: group_id,
+                            status: "PENDING",
+                            content: `has requested to join group ${group.name}`,
+                            link: `/social/groups/${group_id}`,
+                        });
+
+                        const savedNotification = await notification.save();
+                        notificationIds.push(savedNotification._id);
+                        group.pendingRequests.push({
+                            user_id: new ObjectId(user_id),
+                            notification_id: notificationIds,
+                        });
+
+                        group.save();
+                    });
                 } else {
                     group.members.push(user_id);
 
@@ -259,15 +298,16 @@ exports.requestJoinGroup = async (req, res, next) => {
     }
 };
 
-// @desc    Add user to group
-// @route   PUT /api/groups/add-user/:group_id
+// @desc    invite user to group
+// @route   PUT /api/groups/invite-user/:group_id
 // @access  Public
-exports.addUserToGroup = async (req, res, next) => {
+exports.inviteUserToGroup = async (req, res, next) => {
     try {
         const { group_id } = req.params;
-        const { user_id } = req.body;
+        const { user_id, friend_id } = req.body;
 
         const group = await Group.findById(group_id);
+        const user = await User.findById(user_id);
 
         if (!group) {
             return next(
@@ -276,45 +316,247 @@ exports.addUserToGroup = async (req, res, next) => {
         }
 
         if (group.privacy == "PRIVATE") {
-            if (group.members.includes(user_id)) {
+            if (group.members.includes(friend_id)) {
                 return next(
                     new ErrorResponse(
-                        `User with id ${user_id} is already a member of group with id ${group_id}`,
+                        `User with id ${friend_id} is already a member of group with id ${group_id}`,
                         400
                     )
                 );
             } else {
                 if (group.requireVerify == true) {
-                    //TODO: Send notification to user_id
+                    if (
+                        group.pendingMembers.some(
+                            (invitation) =>
+                                invitation.sender_id.toString() == user_id &&
+                                invitation.receiver_id.toString() == friend_id
+                        )
+                    ) {
+                        return next(
+                            new ErrorResponse(
+                                `User with id ${friend_id} has already received an invitation to join group with id ${group_id} from user with id ${user_id}`,
+                                400
+                            )
+                        );
+                    }
 
-                    //Add user_id to group.pending_members
-                    group.pendingMembers.push(user_id);
-                    //TODO: if user_id accepts, add user_id to group.members
+                    const notification = new Notification({
+                        type: "GROUP_INVITE",
+                        sender: {
+                            user_id: new ObjectId(user_id),
+                            username: user.username,
+                            avatar: user.avatar,
+                        },
+                        receiver_id: new ObjectId(friend_id),
+                        status: "PENDING",
+                        content: `has invited you to join group ${group.name}`,
+                        link: `/social/groups/${group_id}`,
+                    });
+
+                    const savedNotification = await notification.save(); // Await the save operation
+
+                    group.pendingMembers.push({
+                        sender_id: new ObjectId(user_id),
+                        receiver_id: new ObjectId(friend_id),
+                        notification_id: savedNotification._id, // Now access _id property
+                    });
+
+                    await group.save();
+
+                    res.status(200).json({
+                        success: true,
+                        data: group,
+                    });
                 }
             }
         } else if (group.privacy == "PUBLIC") {
-            if (group.members.includes(user_id)) {
+            if (group.members.includes(friend_id)) {
                 return next(
                     new ErrorResponse(
-                        `User with id ${user_id} is already a member of group with id ${group_id}`,
+                        `User with id ${friend_id} is already a member of group with id ${group_id}`,
                         400
                     )
                 );
             } else {
+                if (
+                    group.pendingMembers.some(
+                        (invitation) =>
+                            invitation.sender_id.toString() == user_id &&
+                            invitation.receiver_id.toString() == friend_id
+                    )
+                ) {
+                    return next(
+                        new ErrorResponse(
+                            `User with id ${friend_id} has already received an invitation to join group with id ${group_id} from user with id ${user_id}`,
+                            400
+                        )
+                    );
+                }
+
                 //TODO: Send notification to user_id
-                // group.pendingMembers.push(user_id);
-                //TODO: if user_id accepts, add user_id to group.members
-                const updatedGroup = await Group.findOneAndUpdate(
-                    { _id: group_id },
-                    { $addToSet: { members: user_id } }, // $addToSet prevents duplicate members
-                    { new: true }
-                );
+                const notification = new Notification({
+                    type: "GROUP_INVITE",
+                    sender: {
+                        user_id: new ObjectId(user_id),
+                        username: user.username,
+                        avatar: user.avatar,
+                    },
+                    receiver_id: new ObjectId(friend_id),
+                    status: "PENDING",
+                    content: `has invited you to join group ${group.name}`,
+                    link: `/social/groups/${group_id}`,
+                });
+                const savedNotification = await notification.save();
+
+                group.pendingMembers.push({
+                    sender_id: new ObjectId(user_id),
+                    receiver_id: new ObjectId(friend_id),
+                    notification_id: savedNotification._id,
+                });
+
+                await group.save();
                 res.status(200).json({
                     success: true,
-                    data: updatedGroup,
+                    data: group,
                 });
             }
         }
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Accept invitation to join group
+// @route   PUT /api/groups/accept-invitation/:group_id
+// @access  Public
+exports.acceptInvitationToGroup = async (req, res, next) => {
+    try {
+        // const { group_id } = req.params;
+        // const { user_id, notification_id } = req.body;
+        // const group = await Group.findById(group_id);
+        // const user = await User.findById(user_id);
+        // if (!group) {
+        //     return next(
+        //         new ErrorResponse(`Group with id ${group_id} not found`, 404)
+        //     );
+        // }
+        // if (group.members.includes(user_id)) {
+        //     return next(
+        //         new ErrorResponse(
+        //             `User with id ${user_id} is already a member of group with id ${group_id}`,
+        //             400
+        //         )
+        //     );
+        // }
+        // const invitation = group.pendingMembers.find(
+        //     (invitation) => invitation.receiver_id.toString() == user_id
+        // );
+        // if (invitation) {
+        //     if (group.requireVerify == true) {
+        //         if (group.admins.includes(invitation.sender_id)) {
+        //             group.members.push(user_id);
+        //             await group.save();
+        //         } else {
+        //             group.pendingRequests.push({
+        //                 user_id: new ObjectId(user_id),
+        //                 notification_id: invitation.notification_id,
+        //             });
+        //         }
+        //     } else {
+        //         const updatedGroup = await Group.findOneAndUpdate(
+        //             { _id: group_id },
+        //             { $addToSet: { members: user_id } }, // $addToSet prevents duplicate members
+        //             { new: true }
+        //         );
+        //         const notification = await Notification.findOneAndUpdate(
+        //             {
+        //                 _id: notification_id,
+        //             },
+        //             { status: "ACCEPTED" },
+        //             { new: true }
+        //         );
+        //     }
+        //     const updatedGroup2 = await Group.findOneAndUpdate(
+        //         { _id: group_id },
+        //         {
+        //             $pull: {
+        //                 pendingMembers: {
+        //                     receiver_id: user_id,
+        //                 },
+        //             },
+        //         },
+        //         { new: true }
+        //     );
+        //     res.status(200).json({
+        //         success: true,
+        //         data: updatedGroup,
+        //     });
+        // } else {
+        //     return next(
+        //         new ErrorResponse(
+        //             `User with id ${user_id} has not received an invitation to join group with id ${group_id}`,
+        //             400
+        //         )
+        //     );
+        // }
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Decline invitation to join group
+// @route   PUT /api/groups/decline-invitation/:group_id
+// @access  Public
+exports.declineInvitationToGroup = async (req, res, next) => {
+    try {
+        const { group_id } = req.params;
+        const { user_id, notification_id } = req.body;
+
+        const group = await Group.findById(group_id);
+        const user = await User.findById(user_id);
+
+        if (!group) {
+            return next(
+                new ErrorResponse(`Group with id ${group_id} not found`, 404)
+            );
+        }
+
+        if (
+            !group.pendingMembers.some(
+                (invitation) => invitation.receiver_id.toString() == user_id
+            )
+        ) {
+            return next(
+                new ErrorResponse(
+                    `User with id ${user_id} has not received an invitation to join group with id ${group_id}`,
+                    400
+                )
+            );
+        }
+        const notification = await Notification.findOneAndUpdate(
+            {
+                _id: notification_id,
+            },
+            { status: "DECLINED" },
+            { new: true }
+        );
+
+        const updatedGroup = await Group.findOneAndUpdate(
+            { _id: group_id },
+            {
+                $pull: {
+                    pendingMembers: {
+                        receiver_id: user_id,
+                    },
+                },
+            },
+            { new: true }
+        );
+
+        res.status(200).json({
+            success: true,
+            data: updatedGroup,
+        });
     } catch (error) {
         next(error);
     }
@@ -582,11 +824,40 @@ exports.searchGroupsByName = async (req, res, next) => {
 
         const groups = await Group.find({
             name: { $regex: group_name, $options: "i" },
+            visible: true,
         });
 
         res.status(200).json({
             success: true,
             data: groups,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc  Search for groups by name
+// @route GET /api/groups/search/:group_name
+// @access Public
+exports.getSearchRecommend = async (req, res, next) => {
+    try {
+        const { group_name } = req.params;
+
+        const groups = await Group.find({
+            name: { $regex: group_name, $options: "i" },
+            visible: true,
+        });
+        // return only group names and ids
+        const allowedData = groups.map((group) => {
+            return {
+                _id: group._id,
+                name: group.name,
+            };
+        });
+
+        res.status(200).json({
+            success: true,
+            data: allowedData,
         });
     } catch (error) {
         next(error);
@@ -608,6 +879,35 @@ exports.searchGroupsByNameAndUserId = async (req, res, next) => {
         res.status(200).json({
             success: true,
             data: groups,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc Search members of a group by name
+// @route GET /api/groups/:group_id/search-members/:member_name
+// @access Public
+exports.searchMembersOfGroupByName = async (req, res, next) => {
+    try {
+        const { group_id, member_name } = req.params;
+
+        const group = await Group.findById(group_id);
+
+        if (!group) {
+            return next(
+                new ErrorResponse(`Group with id ${group_id} not found`, 404)
+            );
+        }
+
+        const members = await User.find({
+            _id: { $in: group.members },
+            username: { $regex: new RegExp(member_name, "i") },
+        });
+
+        res.status(200).json({
+            success: true,
+            data: members,
         });
     } catch (error) {
         next(error);

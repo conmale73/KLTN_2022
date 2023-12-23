@@ -61,6 +61,12 @@ const CommentTool = (props) => {
             creator: {
                 user_id: user._id,
                 username: user.username,
+                avatar: user.avatar,
+            },
+            replyTo: {
+                user_id: props.user_id,
+                username: null,
+                comment_id: null,
             },
             content: {
                 text: props.text,
@@ -89,7 +95,7 @@ const CommentTool = (props) => {
         if (e.key === "Enter") {
             if (e.shiftKey) {
                 // Add a newline character at the cursor position
-                props.setText((prevText) => prevText + "\n");
+                // props.setText((prevText) => prevText + "\n");
             } else {
                 e.preventDefault();
                 handleClickSend();

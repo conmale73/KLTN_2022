@@ -23,6 +23,7 @@ import { userService } from "../../../services";
 import Loading from "../../../components/Loading";
 import SelectPrivacy from "../../../components/Select/SelectPrivacy";
 import { setUser } from "../../../redux/user/userSlice";
+import ProfileFriends from "../Friends/ProfileFriends";
 const compareDates = (d1, d2) => {
     let date1 = new Date(d1).getTime();
     let date2 = new Date(d2).getTime();
@@ -307,260 +308,581 @@ const ProfileAbout = ({ user_id }) => {
                                 </div>
                             </div>
                         </div>
-                        {/*phone*/}
-                        <div className="w-full flex gap-[10px] items-center">
-                            <FaPhoneAlt size="25px" />
-                            {isEditPhone ? (
-                                <div className="flex flex-col w-full">
-                                    <input
-                                        className="w-full p-[10px] border-[1px] border-solid border-[#ffff] text-[20px] rounded-[4px] resize-none bg-transparent"
-                                        type="tel"
-                                        maxLength="10"
-                                        value={phoneNumber}
-                                        onChange={(e) =>
-                                            setPhoneNumber(e.target.value)
-                                        }
-                                    />
-                                    <div className="w-full flex items-start mt-[20px]">
-                                        <div className="flex-1">
-                                            <div className="w-[150px] h-[50px]">
-                                                <SelectPrivacy
-                                                    value={phoneVisible}
-                                                    setValue={setPhoneVisible}
-                                                    listValue={[
-                                                        "PUBLIC",
-                                                        "PRIVATE",
-                                                    ]}
+                        {user._id != userData?._id ? (
+                            <>
+                                {/*phone*/}
+                                {userData?.phone.visible == "PUBLIC" && (
+                                    <div className="w-full flex gap-[10px] items-center">
+                                        <FaPhoneAlt size="25px" />
+                                        {isEditPhone ? (
+                                            <div className="flex flex-col w-full">
+                                                <input
+                                                    className="w-full p-[10px] border-[1px] border-solid border-[#ffff] text-[20px] rounded-[4px] resize-none bg-transparent"
+                                                    type="tel"
+                                                    maxLength="10"
+                                                    value={phoneNumber}
+                                                    onChange={(e) =>
+                                                        setPhoneNumber(
+                                                            e.target.value
+                                                        )
+                                                    }
                                                 />
-                                            </div>
-                                        </div>
+                                                <div className="w-full flex items-start mt-[20px]">
+                                                    <div className="flex-1">
+                                                        <div className="w-[150px] h-[50px]">
+                                                            <SelectPrivacy
+                                                                value={
+                                                                    phoneVisible
+                                                                }
+                                                                setValue={
+                                                                    setPhoneVisible
+                                                                }
+                                                                listValue={[
+                                                                    "PUBLIC",
+                                                                    "PRIVATE",
+                                                                ]}
+                                                            />
+                                                        </div>
+                                                    </div>
 
-                                        <div className="w-full flex gap-[10px]">
-                                            <div
-                                                className="flex justify-center items-center h-[30px] w-[100px] rounded-[5px] cursor-pointer
+                                                    <div className="w-full flex gap-[10px]">
+                                                        <div
+                                                            className="flex justify-center items-center h-[30px] w-[100px] rounded-[5px] cursor-pointer
                                         p-[5px] gap-[5px] bg-[#404040] hover:bg-[#555555] hover:text-[#fff]"
-                                                onClick={() => {
-                                                    setIsEditPhone(false);
-                                                    setPhoneNumber(
-                                                        userData?.phone.number
-                                                    );
-                                                    setPhoneVisible(
-                                                        userData?.phone.visible
-                                                    );
-                                                }}
-                                            >
-                                                Cancel
+                                                            onClick={() => {
+                                                                setIsEditPhone(
+                                                                    false
+                                                                );
+                                                                setPhoneNumber(
+                                                                    userData
+                                                                        ?.phone
+                                                                        .number
+                                                                );
+                                                                setPhoneVisible(
+                                                                    userData
+                                                                        ?.phone
+                                                                        .visible
+                                                                );
+                                                            }}
+                                                        >
+                                                            Cancel
+                                                        </div>
+                                                        {phoneNumber !=
+                                                            userData?.phone
+                                                                .number ||
+                                                        phoneVisible !=
+                                                            userData?.phone
+                                                                .visible ? (
+                                                            <div
+                                                                className="flex justify-center cursor-pointer items-center h-[30px] w-[100px] rounded-[5px] 
+                                                        p-[5px] gap-[5px] bg-[#606060] hover:bg-[#555555] hover:text-[#fff]"
+                                                                onClick={() =>
+                                                                    handleEditPhone()
+                                                                }
+                                                            >
+                                                                Save
+                                                            </div>
+                                                        ) : (
+                                                            <div
+                                                                className="flex justify-center items-center h-[30px] w-[100px] rounded-[5px] opacity-[0.5]
+                                                        p-[5px] gap-[5px] bg-[#606060] hover:bg-[#555555] hover:text-[#fff]"
+                                                            >
+                                                                Save
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
                                             </div>
-                                            {phoneNumber !=
-                                                userData?.phone.number ||
-                                            phoneVisible !=
-                                                userData?.phone.visible ? (
-                                                <div
-                                                    className="flex justify-center cursor-pointer items-center h-[30px] w-[100px] rounded-[5px] 
-                                                        p-[5px] gap-[5px] bg-[#606060] hover:bg-[#555555] hover:text-[#fff]"
-                                                    onClick={() =>
-                                                        handleEditPhone()
-                                                    }
-                                                >
-                                                    Save
+                                        ) : (
+                                            <>
+                                                <div className="w-full">
+                                                    <div className="text-[18px] flex-1">
+                                                        {userData?.phone.number}
+                                                    </div>
+                                                    <div className="text-[15px] text-[#adadad]">
+                                                        Phone
+                                                    </div>
                                                 </div>
-                                            ) : (
-                                                <div
-                                                    className="flex justify-center items-center h-[30px] w-[100px] rounded-[5px] opacity-[0.5]
-                                                        p-[5px] gap-[5px] bg-[#606060] hover:bg-[#555555] hover:text-[#fff]"
-                                                >
-                                                    Save
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <>
-                                    <div className="w-full">
-                                        <div className="text-[18px] flex-1">
-                                            {userData?.phone.number}
-                                        </div>
-                                        <div className="text-[15px] text-[#adadad]">
-                                            Phone
-                                        </div>
-                                    </div>
-                                    {userData?._id == user._id && (
-                                        <>
-                                            {userData?.phone.visible ==
-                                                "PUBLIC" && (
-                                                <div
-                                                    className="mr-[10px]"
-                                                    title="Public"
-                                                >
-                                                    <FaGlobeAsia size="20px" />
-                                                </div>
-                                            )}
-                                            {userData?.phone.visible ==
-                                                "PRIVATE" && (
-                                                <div
-                                                    className="mr-[10px]"
-                                                    title="Private"
-                                                >
-                                                    <FaLock size="20px" />
-                                                </div>
-                                            )}
-                                            <button
-                                                className="flex justify-center items-center h-[30px] w-[100px] p-[5px] gap-[5px] bg-[#555555] hover:bg-[#676668] hover:text-[#fff]
+                                                {userData?._id == user._id && (
+                                                    <>
+                                                        {userData?.phone
+                                                            .visible ==
+                                                            "PUBLIC" && (
+                                                            <div
+                                                                className="mr-[10px]"
+                                                                title="Public"
+                                                            >
+                                                                <FaGlobeAsia size="20px" />
+                                                            </div>
+                                                        )}
+                                                        {userData?.phone
+                                                            .visible ==
+                                                            "PRIVATE" && (
+                                                            <div
+                                                                className="mr-[10px]"
+                                                                title="Private"
+                                                            >
+                                                                <FaLock size="20px" />
+                                                            </div>
+                                                        )}
+                                                        <button
+                                                            className="flex justify-center items-center h-[30px] w-[100px] p-[5px] gap-[5px] bg-[#555555] hover:bg-[#676668] hover:text-[#fff]
                                           rounded-[5px]"
-                                                onClick={() => {
-                                                    setIsEditPhone(true);
-                                                    setPhoneNumber(
-                                                        userData?.phone.number
-                                                    );
-                                                }}
-                                            >
-                                                <FaPen size="15px" />
-                                                <p className="text-[16px] font-[500] text-[#e4e6eb]">
-                                                    Edit
-                                                </p>
-                                            </button>
-                                        </>
-                                    )}
-                                </>
-                            )}
-                        </div>
-                        {/*birthday*/}
-                        <div className="w-full flex gap-[10px] items-center">
-                            <FaBirthdayCake size="25px" />
-                            {isEditBirthday ? (
-                                <div className="w-full">
-                                    <div className="w-full">
-                                        <DayPicker
-                                            defaultMonth={birthdayDate}
-                                            mode="single"
-                                            selected={birthdayDate}
-                                            onSelect={setBirthdayDate}
-                                            fromDate={new Date(1800, 9, 10)}
-                                            toDate={new Date()}
-                                            captionLayout="dropdown"
-                                        />
+                                                            onClick={() => {
+                                                                setIsEditPhone(
+                                                                    true
+                                                                );
+                                                                setPhoneNumber(
+                                                                    userData
+                                                                        ?.phone
+                                                                        .number
+                                                                );
+                                                            }}
+                                                        >
+                                                            <FaPen size="15px" />
+                                                            <p className="text-[16px] font-[500] text-[#e4e6eb]">
+                                                                Edit
+                                                            </p>
+                                                        </button>
+                                                    </>
+                                                )}
+                                            </>
+                                        )}
                                     </div>
+                                )}
 
-                                    <div className="w-full flex items-start mt-[20px]">
-                                        <div className="flex-1">
-                                            <div className="w-[150px] h-[50px]">
-                                                <SelectPrivacy
-                                                    value={birthdayVisible}
-                                                    setValue={
-                                                        setBirthdayVisible
-                                                    }
-                                                    listValue={[
-                                                        "PUBLIC",
-                                                        "PRIVATE",
-                                                    ]}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="w-full flex gap-[10px]">
-                                            <div
-                                                className="
+                                {/*birthday*/}
+                                {userData?.birthday.visible == "PUBLIC" && (
+                                    <div className="w-full flex gap-[10px] items-center">
+                                        <FaBirthdayCake size="25px" />
+                                        {isEditBirthday ? (
+                                            <div className="w-full">
+                                                <div className="w-full">
+                                                    <DayPicker
+                                                        defaultMonth={
+                                                            birthdayDate
+                                                        }
+                                                        mode="single"
+                                                        selected={birthdayDate}
+                                                        onSelect={
+                                                            setBirthdayDate
+                                                        }
+                                                        fromDate={
+                                                            new Date(
+                                                                1800,
+                                                                9,
+                                                                10
+                                                            )
+                                                        }
+                                                        toDate={new Date()}
+                                                        captionLayout="dropdown"
+                                                    />
+                                                </div>
+
+                                                <div className="w-full flex items-start mt-[20px]">
+                                                    <div className="flex-1">
+                                                        <div className="w-[150px] h-[50px]">
+                                                            <SelectPrivacy
+                                                                value={
+                                                                    birthdayVisible
+                                                                }
+                                                                setValue={
+                                                                    setBirthdayVisible
+                                                                }
+                                                                listValue={[
+                                                                    "PUBLIC",
+                                                                    "PRIVATE",
+                                                                ]}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="w-full flex gap-[10px]">
+                                                        <div
+                                                            className="
                                                         flex justify-center items-center h-[30px] w-[100px] rounded-[5px] cursor-pointer
                                                         p-[5px] gap-[5px] bg-[#404040] hover:bg-[#555555] hover:text-[#fff]
                                                         "
-                                                onClick={() => {
-                                                    setIsEditBirthday(false);
+                                                            onClick={() => {
+                                                                setIsEditBirthday(
+                                                                    false
+                                                                );
 
-                                                    setBirthdayVisible(
-                                                        userData?.birthday
-                                                            .visible
-                                                    );
-                                                }}
-                                            >
-                                                Cancel
-                                            </div>
-                                            {compareDates(
-                                                birthdayDate,
-                                                userData?.birthday.date
-                                            ) != 0 ||
-                                            birthdayVisible !=
-                                                userData?.birthday.visible ? (
-                                                <div
-                                                    className="
+                                                                setBirthdayVisible(
+                                                                    userData
+                                                                        ?.birthday
+                                                                        .visible
+                                                                );
+                                                            }}
+                                                        >
+                                                            Cancel
+                                                        </div>
+                                                        {compareDates(
+                                                            birthdayDate,
+                                                            userData?.birthday
+                                                                .date
+                                                        ) != 0 ||
+                                                        birthdayVisible !=
+                                                            userData?.birthday
+                                                                .visible ? (
+                                                            <div
+                                                                className="
                                                         flex justify-center cursor-pointer items-center h-[30px] w-[100px] rounded-[5px]
                                                         p-[5px] gap-[5px] bg-[#606060] hover:bg-[#555555] hover:text-[#fff]
                                                         "
-                                                    onClick={() =>
-                                                        handleEditBirthday()
-                                                    }
-                                                >
-                                                    Save
-                                                </div>
-                                            ) : (
-                                                <div
-                                                    className="
+                                                                onClick={() =>
+                                                                    handleEditBirthday()
+                                                                }
+                                                            >
+                                                                Save
+                                                            </div>
+                                                        ) : (
+                                                            <div
+                                                                className="
                                                         flex justify-center items-center h-[30px] w-[100px] rounded-[5px] opacity-[0.5]
                                                         p-[5px] gap-[5px] bg-[#606060] hover:bg-[#555555] hover:text-[#fff]
                                                         "
-                                                >
-                                                    Save
+                                                            >
+                                                                Save
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <>
-                                    <div className="w-full">
-                                        <div className="text-[18px] flex-1">
-                                            {moment(birthdayDate).format("LL")}
-                                        </div>
-                                        <div className="text-[15px] text-[#adadad]">
-                                            Birthday
-                                        </div>
-                                    </div>
-                                    {userData?._id == user._id && (
-                                        <>
-                                            {userData?.birthday.visible ==
-                                                "PUBLIC" && (
-                                                <div
-                                                    className="mr-[10px]"
-                                                    title="Public"
-                                                >
-                                                    <FaGlobeAsia size="20px" />
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <div className="w-full">
+                                                    <div className="text-[18px] flex-1">
+                                                        {moment(
+                                                            birthdayDate
+                                                        ).format("LL")}
+                                                    </div>
+                                                    <div className="text-[15px] text-[#adadad]">
+                                                        Birthday
+                                                    </div>
                                                 </div>
-                                            )}
-                                            {userData?.birthday.visible ==
-                                                "PRIVATE" && (
-                                                <div
-                                                    className="mr-[10px]"
-                                                    title="Private"
-                                                >
-                                                    <FaLock size="20px" />
-                                                </div>
-                                            )}
-                                            <button
-                                                className="flex justify-center items-center h-[30px] w-[100px] p-[5px] gap-[5px] bg-[#555555] hover:bg-[#676668] hover:text-[#fff]
+                                                {userData?._id == user._id && (
+                                                    <>
+                                                        {userData?.birthday
+                                                            .visible ==
+                                                            "PUBLIC" && (
+                                                            <div
+                                                                className="mr-[10px]"
+                                                                title="Public"
+                                                            >
+                                                                <FaGlobeAsia size="20px" />
+                                                            </div>
+                                                        )}
+                                                        {userData?.birthday
+                                                            .visible ==
+                                                            "PRIVATE" && (
+                                                            <div
+                                                                className="mr-[10px]"
+                                                                title="Private"
+                                                            >
+                                                                <FaLock size="20px" />
+                                                            </div>
+                                                        )}
+                                                        <button
+                                                            className="flex justify-center items-center h-[30px] w-[100px] p-[5px] gap-[5px] bg-[#555555] hover:bg-[#676668] hover:text-[#fff]
                                           rounded-[5px]"
-                                                onClick={() => {
-                                                    setIsEditBirthday(true);
-                                                }}
-                                            >
-                                                <FaPen size="15px" />
-                                                <p className="text-[16px] font-[500] text-[#e4e6eb]">
-                                                    Edit
-                                                </p>
-                                            </button>
+                                                            onClick={() => {
+                                                                setIsEditBirthday(
+                                                                    true
+                                                                );
+                                                            }}
+                                                        >
+                                                            <FaPen size="15px" />
+                                                            <p className="text-[16px] font-[500] text-[#e4e6eb]">
+                                                                Edit
+                                                            </p>
+                                                        </button>
+                                                    </>
+                                                )}
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            <>
+                                {/*phone*/}
+                                <div className="w-full flex gap-[10px] items-center">
+                                    <FaPhoneAlt size="25px" />
+                                    {isEditPhone ? (
+                                        <div className="flex flex-col w-full">
+                                            <input
+                                                className="w-full p-[10px] border-[1px] border-solid border-[#ffff] text-[20px] rounded-[4px] resize-none bg-transparent"
+                                                type="tel"
+                                                maxLength="10"
+                                                value={phoneNumber}
+                                                onChange={(e) =>
+                                                    setPhoneNumber(
+                                                        e.target.value
+                                                    )
+                                                }
+                                            />
+                                            <div className="w-full flex items-start mt-[20px]">
+                                                <div className="flex-1">
+                                                    <div className="w-[150px] h-[50px]">
+                                                        <SelectPrivacy
+                                                            value={phoneVisible}
+                                                            setValue={
+                                                                setPhoneVisible
+                                                            }
+                                                            listValue={[
+                                                                "PUBLIC",
+                                                                "PRIVATE",
+                                                            ]}
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className="w-full flex gap-[10px]">
+                                                    <div
+                                                        className="flex justify-center items-center h-[30px] w-[100px] rounded-[5px] cursor-pointer
+                                        p-[5px] gap-[5px] bg-[#404040] hover:bg-[#555555] hover:text-[#fff]"
+                                                        onClick={() => {
+                                                            setIsEditPhone(
+                                                                false
+                                                            );
+                                                            setPhoneNumber(
+                                                                userData?.phone
+                                                                    .number
+                                                            );
+                                                            setPhoneVisible(
+                                                                userData?.phone
+                                                                    .visible
+                                                            );
+                                                        }}
+                                                    >
+                                                        Cancel
+                                                    </div>
+                                                    {phoneNumber !=
+                                                        userData?.phone
+                                                            .number ||
+                                                    phoneVisible !=
+                                                        userData?.phone
+                                                            .visible ? (
+                                                        <div
+                                                            className="flex justify-center cursor-pointer items-center h-[30px] w-[100px] rounded-[5px] 
+                                                        p-[5px] gap-[5px] bg-[#606060] hover:bg-[#555555] hover:text-[#fff]"
+                                                            onClick={() =>
+                                                                handleEditPhone()
+                                                            }
+                                                        >
+                                                            Save
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            className="flex justify-center items-center h-[30px] w-[100px] rounded-[5px] opacity-[0.5]
+                                                        p-[5px] gap-[5px] bg-[#606060] hover:bg-[#555555] hover:text-[#fff]"
+                                                        >
+                                                            Save
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div className="w-full">
+                                                <div className="text-[18px] flex-1">
+                                                    {userData?.phone.number}
+                                                </div>
+                                                <div className="text-[15px] text-[#adadad]">
+                                                    Phone
+                                                </div>
+                                            </div>
+                                            {userData?._id == user._id && (
+                                                <>
+                                                    {userData?.phone.visible ==
+                                                        "PUBLIC" && (
+                                                        <div
+                                                            className="mr-[10px]"
+                                                            title="Public"
+                                                        >
+                                                            <FaGlobeAsia size="20px" />
+                                                        </div>
+                                                    )}
+                                                    {userData?.phone.visible ==
+                                                        "PRIVATE" && (
+                                                        <div
+                                                            className="mr-[10px]"
+                                                            title="Private"
+                                                        >
+                                                            <FaLock size="20px" />
+                                                        </div>
+                                                    )}
+                                                    <button
+                                                        className="flex justify-center items-center h-[30px] w-[100px] p-[5px] gap-[5px] bg-[#555555] hover:bg-[#676668] hover:text-[#fff]
+                                          rounded-[5px]"
+                                                        onClick={() => {
+                                                            setIsEditPhone(
+                                                                true
+                                                            );
+                                                            setPhoneNumber(
+                                                                userData?.phone
+                                                                    .number
+                                                            );
+                                                        }}
+                                                    >
+                                                        <FaPen size="15px" />
+                                                        <p className="text-[16px] font-[500] text-[#e4e6eb]">
+                                                            Edit
+                                                        </p>
+                                                    </button>
+                                                </>
+                                            )}
                                         </>
                                     )}
-                                </>
-                            )}
-                        </div>
+                                </div>
+
+                                {/*birthday*/}
+                                <div className="w-full flex gap-[10px] items-center">
+                                    <FaBirthdayCake size="25px" />
+                                    {isEditBirthday ? (
+                                        <div className="w-full">
+                                            <div className="w-full">
+                                                <DayPicker
+                                                    defaultMonth={birthdayDate}
+                                                    mode="single"
+                                                    selected={birthdayDate}
+                                                    onSelect={setBirthdayDate}
+                                                    fromDate={
+                                                        new Date(1800, 9, 10)
+                                                    }
+                                                    toDate={new Date()}
+                                                    captionLayout="dropdown"
+                                                />
+                                            </div>
+
+                                            <div className="w-full flex items-start mt-[20px]">
+                                                <div className="flex-1">
+                                                    <div className="w-[150px] h-[50px]">
+                                                        <SelectPrivacy
+                                                            value={
+                                                                birthdayVisible
+                                                            }
+                                                            setValue={
+                                                                setBirthdayVisible
+                                                            }
+                                                            listValue={[
+                                                                "PUBLIC",
+                                                                "PRIVATE",
+                                                            ]}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="w-full flex gap-[10px]">
+                                                    <div
+                                                        className="
+                                                        flex justify-center items-center h-[30px] w-[100px] rounded-[5px] cursor-pointer
+                                                        p-[5px] gap-[5px] bg-[#404040] hover:bg-[#555555] hover:text-[#fff]
+                                                        "
+                                                        onClick={() => {
+                                                            setIsEditBirthday(
+                                                                false
+                                                            );
+
+                                                            setBirthdayVisible(
+                                                                userData
+                                                                    ?.birthday
+                                                                    .visible
+                                                            );
+                                                        }}
+                                                    >
+                                                        Cancel
+                                                    </div>
+                                                    {compareDates(
+                                                        birthdayDate,
+                                                        userData?.birthday.date
+                                                    ) != 0 ||
+                                                    birthdayVisible !=
+                                                        userData?.birthday
+                                                            .visible ? (
+                                                        <div
+                                                            className="
+                                                        flex justify-center cursor-pointer items-center h-[30px] w-[100px] rounded-[5px]
+                                                        p-[5px] gap-[5px] bg-[#606060] hover:bg-[#555555] hover:text-[#fff]
+                                                        "
+                                                            onClick={() =>
+                                                                handleEditBirthday()
+                                                            }
+                                                        >
+                                                            Save
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            className="
+                                                        flex justify-center items-center h-[30px] w-[100px] rounded-[5px] opacity-[0.5]
+                                                        p-[5px] gap-[5px] bg-[#606060] hover:bg-[#555555] hover:text-[#fff]
+                                                        "
+                                                        >
+                                                            Save
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div className="w-full">
+                                                <div className="text-[18px] flex-1">
+                                                    {moment(
+                                                        birthdayDate
+                                                    ).format("LL")}
+                                                </div>
+                                                <div className="text-[15px] text-[#adadad]">
+                                                    Birthday
+                                                </div>
+                                            </div>
+                                            {userData?._id == user._id && (
+                                                <>
+                                                    {userData?.birthday
+                                                        .visible ==
+                                                        "PUBLIC" && (
+                                                        <div
+                                                            className="mr-[10px]"
+                                                            title="Public"
+                                                        >
+                                                            <FaGlobeAsia size="20px" />
+                                                        </div>
+                                                    )}
+                                                    {userData?.birthday
+                                                        .visible ==
+                                                        "PRIVATE" && (
+                                                        <div
+                                                            className="mr-[10px]"
+                                                            title="Private"
+                                                        >
+                                                            <FaLock size="20px" />
+                                                        </div>
+                                                    )}
+                                                    <button
+                                                        className="flex justify-center items-center h-[30px] w-[100px] p-[5px] gap-[5px] bg-[#555555] hover:bg-[#676668] hover:text-[#fff]
+                                          rounded-[5px]"
+                                                        onClick={() => {
+                                                            setIsEditBirthday(
+                                                                true
+                                                            );
+                                                        }}
+                                                    >
+                                                        <FaPen size="15px" />
+                                                        <p className="text-[16px] font-[500] text-[#e4e6eb]">
+                                                            Edit
+                                                        </p>
+                                                    </button>
+                                                </>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
-            <div className="w-full flex gap-[20px]">
-                <div className="flex flex-col w-full p-[20px] bg-[#303030] rounded-[20px] gap-[10px]">
-                    <div className="w-full flex-1 text-[25px] font-bold">
-                        Friends
-                    </div>
-                </div>
-            </div>
+            <ProfileFriends user_id={user_id} />
         </div>
     );
 };

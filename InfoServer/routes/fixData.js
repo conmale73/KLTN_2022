@@ -10,4 +10,10 @@ router.patch("/fixPostTimeStamps", fixDataController.fixPostTimeStamps);
 
 // PATCH /api/fixData/fixPostCommentsCount
 router.patch("/fixPostCommentsCount", fixDataController.fixPostCommentsCount);
+
+// PATCH /api/fixData/refreshPost
+router.patch("/refreshPost", fixDataController.refreshPost);
+
+// PATCH /api/fixData/refreshComments
+router.patch("/refreshComments", fixDataController.refreshComments);
 module.exports = router;

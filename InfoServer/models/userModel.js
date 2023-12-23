@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { ObjectId } = require("mongodb");
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -43,6 +44,31 @@ const userSchema = new mongoose.Schema({
     },
     background: {},
     avatar: {},
+    friendList: [
+        {
+            type: ObjectId,
+        },
+    ],
+    friendRequest: [
+        {
+            user_id: {
+                type: ObjectId,
+            },
+            notification_id: {
+                type: ObjectId,
+            },
+        },
+    ],
+    friendRequestSent: [
+        {
+            user_id: {
+                type: ObjectId,
+            },
+            notification_id: {
+                type: ObjectId,
+            },
+        },
+    ],
     registration_date: {
         type: Date,
         default: Date.now,

@@ -5,12 +5,12 @@ import {
     openChat,
 } from "../../redux/currentChatList/currentChatListSlice";
 import { groupChatService } from "../../services";
-
-const Contact = (props) => {
+import UserPreview from "../UserPreview(FullDataProvided)/UserPreview";
+const Contact = ({ contact }) => {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.data);
     const handleClickContact = async () => {
-        const members = [user._id, props.contact._id];
+        const members = [user._id, contact._id];
 
         try {
             const dataPost = {
@@ -25,17 +25,19 @@ const Contact = (props) => {
     };
     return (
         <div
-            key={props.index}
+            key={contact._id}
             className="w-full h-fit cursor-pointer"
             onClick={handleClickContact}
         >
-            <UserInfoPreview
+            <UserPreview
                 thumbnailHeight="40px"
                 thumbnailWidth="40px"
-                showName={true}
                 bgStyles={true}
-                user_id={props.contact._id}
+                userData={contact}
                 displayOnlineStatus={true}
+                key={contact._id}
+                link={false}
+                showName={true}
             />
         </div>
     );

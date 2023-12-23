@@ -16,7 +16,7 @@ const ProfilePosts = ({ user_id }) => {
     const [totalPages, setTotalPages] = useState(1);
 
     const fetchPosts = async () => {
-        if (!user || user._id != user_id) {
+        if (!user) {
             const res = await postService.getPublicPostByUserId(
                 user_id,
                 page,
@@ -26,7 +26,15 @@ const ProfilePosts = ({ user_id }) => {
             setTotalPages(res.data.totalPages);
             return res.data.data;
         } else {
-            const res = await postService.getPostsByUserId(user_id);
+            const data = {
+                viewer_id: user._id,
+            };
+            const res = await postService.getPostsByUserId(
+                user_id,
+                data,
+                page,
+                limit
+            );
             setPosts(res.data.data);
             setTotalPages(res.data.totalPages);
             return res.data.data;
@@ -44,7 +52,7 @@ const ProfilePosts = ({ user_id }) => {
     const handleClickLoadMore = async () => {
         if (page < totalPages) {
             setPage((page) => page + 1);
-            if (!user || user._id != user_id) {
+            if (!user) {
                 const res = await postService.getPublicPostByUserId(
                     user_id,
                     page + 1,
@@ -52,8 +60,12 @@ const ProfilePosts = ({ user_id }) => {
                 );
                 setPosts((posts) => [...posts, ...res.data.data]);
             } else {
+                const data = {
+                    viewer_id: user._id,
+                };
                 const res = await postService.getPostsByUserId(
                     user_id,
+                    data,
                     page + 1,
                     limit
                 );
@@ -63,9 +75,14 @@ const ProfilePosts = ({ user_id }) => {
     };
     return (
         <div className="w-full flex flex-col items-center">
-            <div className="w-[90%] flex justify-center">
-                <PostTool setPosts={setPosts} />
-            </div>
+            {user_id === user._id ? (
+                <div className="w-[90%] flex justify-center">
+                    <PostTool setPosts={setPosts} />
+                </div>
+            ) : (
+                <></>
+            )}
+
             <div className="flex flex-col w-[90%] items-center">
                 <PostList data={posts} />
                 {page < totalPages ? (

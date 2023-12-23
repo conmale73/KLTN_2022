@@ -13,7 +13,9 @@ export const groupChatService = {
     getGroupChatOfTwoUsers(data) {
         return axiosClient.post(`/api/groupChats/two/`, data);
     },
-    getChatsHaveMessagesByUserID(id) {
-        return axiosClient.get(`/api/groupChats/messages/${id}`);
+    getChatsHaveMessagesByUserID(user_id, page, limit) {
+        return axiosClient.get(
+            `/api/groupChats/messages/${user_id}?page=${page}&limit=${limit}`
+        );
     },
 };

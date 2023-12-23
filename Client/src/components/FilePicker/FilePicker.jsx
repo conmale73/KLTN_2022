@@ -227,6 +227,12 @@ const FilePicker = ({ files, setFiles }) => {
             {file.fileInfo.type.startsWith("audio/") && (
                 <div className={styles.audioFile} id={index}>
                     <MiniAudioPlayer dataURL={file.dataURL} />
+                    <div
+                        className={styles.removeButton}
+                        onClick={() => handleRemove(index)}
+                    >
+                        <AiOutlineClose size="20px" />
+                    </div>
                 </div>
             )}
         </>

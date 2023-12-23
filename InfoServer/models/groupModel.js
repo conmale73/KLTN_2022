@@ -38,12 +38,27 @@ const groupSchema = new mongoose.Schema({
     ],
     pendingMembers: [
         {
-            type: ObjectId,
+            sender_id: {
+                type: ObjectId,
+            },
+            receiver_id: {
+                type: ObjectId,
+            },
+            notification_id: {
+                type: ObjectId,
+            },
         },
     ],
     pendingRequests: [
         {
-            type: ObjectId,
+            user_id: {
+                type: ObjectId,
+            },
+            notification_id: [
+                {
+                    type: ObjectId,
+                },
+            ],
         },
     ],
     chat_id: [

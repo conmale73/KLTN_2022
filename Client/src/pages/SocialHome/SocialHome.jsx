@@ -22,11 +22,7 @@ const SocialHome = () => {
         const [totalPages, setTotalPages] = useState(1);
         const [posts, setPosts] = useState([]);
         const fetchData = async () => {
-            const res = await postService.getPublicPostByUserId(
-                user._id,
-                page,
-                limit
-            );
+            const res = await postService.getHome(user._id, page, limit);
             setPosts(res.data.data);
             setTotalPages(res.data.totalPages);
             return res.data.data;
@@ -43,7 +39,7 @@ const SocialHome = () => {
         const handleClickLoadMore = async () => {
             if (page < totalPages) {
                 setPage((page) => page + 1);
-                const res = await postService.getPublicPostByUserId(
+                const res = await postService.getHome(
                     user._id,
                     page + 1,
                     limit

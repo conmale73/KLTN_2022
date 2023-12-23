@@ -29,7 +29,7 @@ const Menu = () => {
 
     const dispatch = useDispatch();
     const fetchData = async () => {
-        if (!user) return;
+        if (user === null) return;
         const res = await playlistService.getAllPlaylistsByUserID(user._id);
 
         dispatch(setPlaylists(res.data.data));

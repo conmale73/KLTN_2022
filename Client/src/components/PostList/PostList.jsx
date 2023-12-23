@@ -19,6 +19,7 @@ const PostList = (props) => {
                                 text={post.content.text}
                                 createAt={post.createAt}
                                 updateAt={post.updateAt}
+                                group_id={post.group_id}
                                 privacy={post.privacy}
                                 files={post.content.files}
                                 likes={post.likes}

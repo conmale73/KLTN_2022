@@ -7,12 +7,18 @@ import ChatPreview from "./ChatPreview";
 const ChatList = () => {
     const user = useSelector((state) => state.user.data);
     const [chats, setChats] = useState([]);
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(8);
+    const [totalPages, setTotalPages] = useState(0);
     const fetchData = async () => {
         try {
             const res = await groupChatService.getChatsHaveMessagesByUserID(
-                user._id
+                user._id,
+                page,
+                limit
             );
             setChats(res.data.data);
+            setTotalPages(res.data.totalPages);
             return res.data.data;
         } catch (err) {
             console.log(err);
@@ -27,8 +33,19 @@ const ChatList = () => {
         console.log(error);
         return <p>{error.message}</p>;
     }
+    const handleClickLoadMore = async () => {
+        if (page < totalPages) {
+            setPage((page) => page + 1);
+            const res = await groupChatService.getChatsHaveMessagesByUserID(
+                user._id,
+                page + 1,
+                limit
+            );
+            setChats((chats) => [...chats, ...res.data.data]);
+        }
+    };
     return (
-        <div className="w-full h-fit max-h-[800px]">
+        <div className="w-full h-fit max-h-[800px] overflow-y-auto">
             {chats.length === 0 && (
                 <div className="text-center text-lg text-gray-500 mt-4">
                     No chat found
@@ -44,6 +61,16 @@ const ChatList = () => {
                     />
                 );
             })}
+            {page < totalPages ? (
+                <p
+                    className="text-center text-[#adadad] hover:text-[#ffffff] cursor-pointer my-[20px]"
+                    onClick={handleClickLoadMore}
+                >
+                    Load more...
+                </p>
+            ) : (
+                <></>
+            )}
         </div>
     );
 };

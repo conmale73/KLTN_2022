@@ -1,13 +1,15 @@
 import styles from "./CommentModal.module.scss";
 import * as Dialog from "@radix-ui/react-dialog";
-import UserInfoPreview from "../UserInfoPreview";
+import { useState } from "react";
+
 import { FaRegCommentAlt } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+
 import Post from "../Post";
 import CommentTool from "./CommentTool";
 import CommentList from "./CommentList/CommentList";
+import UserInfoPreview from "../UserInfoPreview";
+
 const CommentModal = (props) => {
     const [comments, setComments] = useState([]);
 
@@ -97,6 +99,8 @@ const CommentModal = (props) => {
                                 text={text}
                                 setText={setText}
                                 post_id={props.id}
+                                user_id={props.user_id}
+                                username={props.username}
                                 setComments={setComments}
                                 setCommentCount={props.setCommentCount}
                             />

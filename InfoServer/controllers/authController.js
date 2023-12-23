@@ -105,7 +105,7 @@ exports.login = async (req, res, next) => {
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
         // Send the token as a response
-        res.json({
+        res.status(200).json({
             token,
             user: {
                 _id: user._id,
@@ -113,6 +113,7 @@ exports.login = async (req, res, next) => {
                 email: user.email,
                 description: user.description,
                 musicType: user.musicType,
+                friendList: user.friendList,
                 avatar: user.avatar,
                 registration_date: user.registration_date,
             },

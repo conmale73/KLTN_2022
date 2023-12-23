@@ -28,10 +28,10 @@ const UserInfoPreview = ({
                             {link ? (
                                 <Link
                                     to={`/profile/${user._id}`}
-                                    className="flex w-fit"
+                                    className="w-fit"
                                 >
                                     <div
-                                        className="text-[20px] line-clamp-1 hover:underline"
+                                        className="w-fit text-[20px] line-clamp-1 hover:underline"
                                         title={user.username}
                                     >
                                         {user.username}
@@ -50,7 +50,7 @@ const UserInfoPreview = ({
                         <>
                             {bgStyles ? (
                                 <div
-                                    className={`flex items-center gap-[5px] hover:bg-[#545454] w-full p-[5px] rounded-[3px]`}
+                                    className={`flex items-center gap-[5px] hover:bg-[#545454] w-full p-[5px] rounded-[10px]`}
                                 >
                                     <HoverCard.Trigger asChild>
                                         <div
@@ -83,9 +83,10 @@ const UserInfoPreview = ({
                                             {link ? (
                                                 <Link
                                                     to={`/profile/${user._id}`}
+                                                    className="w-fit"
                                                 >
                                                     <div
-                                                        className="text-[20px] line-clamp-1 hover:underline"
+                                                        className="w-fit text-[20px] line-clamp-1 hover:underline"
                                                         title={user.username}
                                                     >
                                                         {user.username}
@@ -122,16 +123,10 @@ const UserInfoPreview = ({
                                             />
                                             {displayOnlineStatus && (
                                                 <>
-                                                    {onlineUsers?.some(
-                                                        (user) =>
-                                                            user?.user_id ===
-                                                            user._id
-                                                    ) && (
-                                                        <div
-                                                            className="w-[15px] h-[15px] absolute bottom-[-3px] 
+                                                    <div
+                                                        className="w-[15px] h-[15px] absolute bottom-[-3px] 
                                 right-[-3px] rounded-full bg-[#23A55A] border-neutral-950 border-[2px]"
-                                                        ></div>
-                                                    )}
+                                                    ></div>
                                                 </>
                                             )}
                                         </div>
@@ -142,9 +137,10 @@ const UserInfoPreview = ({
                                                 {link ? (
                                                     <Link
                                                         to={`/profile/${user._id}`}
+                                                        className="w-fit"
                                                     >
                                                         <div
-                                                            className="text-[20px] line-clamp-1 hover:underline"
+                                                            className="w-fit text-[20px] line-clamp-1 hover:underline"
                                                             title={
                                                                 user.username
                                                             }
@@ -206,7 +202,7 @@ const UserInfoPreview = ({
                                             to={`/profile/${user._id}`}
                                             className="w-fit"
                                         >
-                                            <div className="text-[20px] line-clamp-1 max-w-[100%] hover:underline m-0  font-medium leading-[1.5]">
+                                            <div className="w-fit text-[20px] line-clamp-1 max-w-[100%] hover:underline m-0  font-medium leading-[1.5]">
                                                 {user.username}
                                             </div>
                                         </Link>
@@ -256,10 +252,10 @@ const UserInfoPreview = ({
                             {link ? (
                                 <Link
                                     to={`/profile/${data._id}`}
-                                    className="flex w-fit"
+                                    className="w-fit"
                                 >
                                     <div
-                                        className="text-[20px] line-clamp-1 hover:underline"
+                                        className="w-fit text-[20px] line-clamp-1 hover:underline"
                                         title={data.username}
                                     >
                                         {data.username}
@@ -278,7 +274,7 @@ const UserInfoPreview = ({
                         <>
                             {bgStyles ? (
                                 <div
-                                    className={`flex items-center gap-[5px] hover:bg-[#545454] w-full p-[5px] rounded-[3px]`}
+                                    className={`flex items-center gap-[5px] hover:bg-[#545454] w-full p-[5px] rounded-[10px]`}
                                 >
                                     <HoverCard.Trigger asChild>
                                         <div
@@ -317,9 +313,10 @@ const UserInfoPreview = ({
                                             {link ? (
                                                 <Link
                                                     to={`/profile/${data._id}`}
+                                                    className="w-fit"
                                                 >
                                                     <div
-                                                        className="text-[20px] line-clamp-1 hover:underline"
+                                                        className="w-fit text-[20px] line-clamp-1 hover:underline"
                                                         title={data.username}
                                                     >
                                                         {data.username}
@@ -376,9 +373,10 @@ const UserInfoPreview = ({
                                                 {link ? (
                                                     <Link
                                                         to={`/profile/${data._id}`}
+                                                        className="w-fit"
                                                     >
                                                         <div
-                                                            className="text-[20px] line-clamp-1 hover:underline"
+                                                            className="w-fit text-[20px] line-clamp-1 hover:underline"
                                                             title={
                                                                 data.username
                                                             }
@@ -436,8 +434,11 @@ const UserInfoPreview = ({
                                 )}
                                 <div className="flex flex-col gap-[15px]">
                                     <div>
-                                        <Link to={`/profile/${data._id}`}>
-                                            <div className="text-[20px] line-clamp-1 max-w-[100%] hover:underline m-0  font-medium leading-[1.5]">
+                                        <Link
+                                            to={`/profile/${data._id}`}
+                                            className="w-fit"
+                                        >
+                                            <div className="w-fit text-[20px] line-clamp-1 max-w-[100%] hover:underline m-0  font-medium leading-[1.5]">
                                                 {data.username}
                                             </div>
                                         </Link>

@@ -8,6 +8,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 
 import { FaPen } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
+import { IoMdPersonAdd } from "react-icons/io";
+import { MdPersonAddDisabled, MdPersonRemove } from "react-icons/md";
 
 import { userService } from "../../services";
 import Loading from "../../components/Loading";
@@ -99,8 +101,88 @@ const Profile = () => {
                 console.log(error);
             }
         };
+
+        const handleAddFriend = async () => {
+            try {
+                const data = {
+                    user_id: user._id,
+                    friend_id: user_id,
+                };
+                const res = await userService.addFriend(data);
+                setUserData(res.data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        const handleUnFriend = async () => {
+            try {
+                const data = {
+                    user_id: user._id,
+                    friend_id: user_id,
+                };
+                const res = await userService.removeFriend(data);
+                console.log(res.data);
+                setUserData(res.data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        const handleCancelRequest = async () => {
+            try {
+                const data = {
+                    user_id: user._id,
+                    friend_id: user_id,
+                    notification_id: userData?.friendRequest?.find(
+                        (request) => request.user_id == user._id
+                    ).notification_id,
+                };
+
+                const res = await userService.cancelFriendRequest(data);
+                console.log(res.data);
+                setUserData(res.data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        const handleAcceptRequest = async () => {
+            try {
+                const data = {
+                    user_id: user._id,
+                    friend_id: user_id,
+                    notification_id: userData?.friendRequestSent?.find(
+                        (request) => request.user_id == user._id
+                    ).notification_id,
+                };
+
+                const res = await userService.acceptFriendRequest(data);
+                console.log(res.data);
+                setUserData(res.data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        const handleDeclineRequest = async () => {
+            try {
+                const data = {
+                    user_id: user._id,
+                    friend_id: user_id,
+                    notification_id: userData?.friendRequestSent?.find(
+                        (request) => request.user_id == user._id
+                    ).notification_id,
+                };
+                const res = await userService.declineFriendRequest(data);
+                console.log(res.data);
+                setUserData(res.data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
         return (
-            <div className="container flex w-full flex-col gap-[20px] rounded-[20px]">
+            <div className="container flex w-full flex-col gap-[20px] rounded-[20px] mb-[110px]">
                 <div
                     className={`profileHeader w-full h-[580px] flex flex-col items-center bg-[#303030] rounded-[20px]
              `}
@@ -117,7 +199,7 @@ const Profile = () => {
                         )}
                         <div className="profileAvatar w-[150px] h-[150px] flex absolute bottom-[-100px] left-[20px] rounded-full">
                             {userData && (
-                                <div className="rounded-full">
+                                <div className="rounded-full overflow-hidden">
                                     <ImageViewer
                                         image={userData?.avatar?.files[0]}
                                         objectFit="cover"
@@ -132,10 +214,10 @@ const Profile = () => {
                                 {userData?.username}
                             </div>
                             <div className="profileName pl-[140px] text-[18px] font-[400] text-[#adadad] text-start">
-                                5 friends
+                                {userData?.friendList?.length} friends
                             </div>
-                            <Dialog.Root>
-                                {userData?._id == user._id && (
+                            {userData?._id == user._id && (
+                                <Dialog.Root>
                                     <Dialog.Trigger asChild>
                                         <div
                                             className="flex items-center justify-center gap-2 p-[7px] rounded-[5px] cursor-pointer bg-[#555555]
@@ -147,192 +229,282 @@ const Profile = () => {
                                             </div>
                                         </div>
                                     </Dialog.Trigger>
-                                )}
 
-                                <Dialog.Portal>
-                                    <Dialog.Overlay className="bg-black/30 data-[state=open]:animate-overlayShow fixed inset-0" />
+                                    <Dialog.Portal>
+                                        <Dialog.Overlay className="bg-black/30 data-[state=open]:animate-overlayShow fixed inset-0" />
 
-                                    <Dialog.Content
-                                        className={` flex data-[state=open]:animate-contentShow fixed top-[50%] 
+                                        <Dialog.Content
+                                            className={` flex data-[state=open]:animate-contentShow fixed top-[50%] 
                                     left-[50%] min-w-[600px] h-fit translate-x-[-50%] translate-y-[-50%] overflow-x-hidden 
                                     rounded-[6px] bg-neutral-800 p-[25px] 
                                     shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none`}
-                                    >
-                                        <div className="flex flex-col gap-2 overflow-auto w-full min-h-[600px] max-h-[800px] relative">
-                                            <div
-                                                style={{
-                                                    display: "flex",
-                                                    borderBottom:
-                                                        "1px solid #4d4d4d",
-                                                    paddingBottom: "10px",
-                                                }}
-                                            >
-                                                <Dialog.Title className="text-[#e4e6eb] m-0 text-[22px] font-sans font-bold flex justify-center flex-1">
-                                                    Edit Profile
-                                                </Dialog.Title>
-                                                <Dialog.Close asChild>
-                                                    <button className="rounded-full bg-[#404040] p-[5px] hover:bg-[#505050] ">
-                                                        <AiOutlineClose
-                                                            size="25px"
-                                                            color="#9d9d9d"
-                                                        />
-                                                    </button>
-                                                </Dialog.Close>
-                                            </div>
+                                        >
+                                            <div className="flex flex-col gap-2 overflow-auto w-full min-h-[600px] max-h-[800px] relative">
+                                                <div
+                                                    style={{
+                                                        display: "flex",
+                                                        borderBottom:
+                                                            "1px solid #4d4d4d",
+                                                        paddingBottom: "10px",
+                                                    }}
+                                                >
+                                                    <Dialog.Title className="text-[#e4e6eb] m-0 text-[22px] font-sans font-bold flex justify-center flex-1">
+                                                        Edit Profile
+                                                    </Dialog.Title>
+                                                    <Dialog.Close asChild>
+                                                        <button className="rounded-full bg-[#404040] p-[5px] hover:bg-[#505050] ">
+                                                            <AiOutlineClose
+                                                                size="25px"
+                                                                color="#9d9d9d"
+                                                            />
+                                                        </button>
+                                                    </Dialog.Close>
+                                                </div>
 
-                                            <div className="flex flex-col h-fit min-h-[300px] mt-[20px]">
-                                                <div className="w-full h-fit mb-[40px]">
-                                                    <div className="text-[#e4e6eb] text-[18px] font-bold relative">
-                                                        Username
-                                                        <div
-                                                            className="flex items-center justify-center gap-2 p-[7px] rounded-[5px] cursor-pointer bg-[#555555]
+                                                <div className="flex flex-col h-fit min-h-[300px] mt-[20px]">
+                                                    <div className="w-full h-fit mb-[40px]">
+                                                        <div className="text-[#e4e6eb] text-[18px] font-bold relative">
+                                                            Username
+                                                            <div
+                                                                className="flex items-center justify-center gap-2 p-[7px] rounded-[5px] cursor-pointer bg-[#555555]
                                                             hover:bg-[#676668] absolute right-0 top-0 w-fit h-[40px]"
-                                                            onClick={() => {
-                                                                setIsEditUsername(
-                                                                    true
-                                                                );
-                                                            }}
-                                                        >
-                                                            <FaPen size="18px" />
-                                                            <div className="text-[18px] font-bold">
-                                                                Edit
+                                                                onClick={() => {
+                                                                    setIsEditUsername(
+                                                                        true
+                                                                    );
+                                                                }}
+                                                            >
+                                                                <FaPen size="18px" />
+                                                                <div className="text-[18px] font-bold">
+                                                                    Edit
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div className="flex gap-[10px]">
-                                                        {isEditUsername ? (
-                                                            <div className="w-full">
-                                                                <input
-                                                                    value={
-                                                                        username
-                                                                    }
-                                                                    onChange={(
-                                                                        e
-                                                                    ) => {
-                                                                        setUsername(
+                                                        <div className="flex gap-[10px]">
+                                                            {isEditUsername ? (
+                                                                <div className="w-full">
+                                                                    <input
+                                                                        value={
+                                                                            username
+                                                                        }
+                                                                        onChange={(
                                                                             e
-                                                                                .target
-                                                                                .value
-                                                                        );
-                                                                    }}
-                                                                    maxLength={
-                                                                        24
-                                                                    }
-                                                                    type="text"
-                                                                    className="w-full max-w-[300px] h-[40px] rounded-[5px] bg-[#404040] text-[#e4e6eb] p-[10px] text-[18px] m-[10px]"
-                                                                />
-                                                                <div className="w-full flex gap-[10px] m-[10px]">
-                                                                    <div
-                                                                        className="
+                                                                        ) => {
+                                                                            setUsername(
+                                                                                e
+                                                                                    .target
+                                                                                    .value
+                                                                            );
+                                                                        }}
+                                                                        maxLength={
+                                                                            24
+                                                                        }
+                                                                        type="text"
+                                                                        className="w-full max-w-[300px] h-[40px] rounded-[5px] bg-[#404040] text-[#e4e6eb] p-[10px] text-[18px] m-[10px]"
+                                                                    />
+                                                                    <div className="w-full flex gap-[10px] m-[10px]">
+                                                                        <div
+                                                                            className="
                                                         flex justify-center items-center h-[30px] w-[100px] rounded-[5px] cursor-pointer
                                                         p-[5px] gap-[5px] bg-[#404040] hover:bg-[#555555] hover:text-[#fff]
                                                         "
-                                                                        onClick={() => {
-                                                                            setIsEditUsername(
-                                                                                false
-                                                                            );
-                                                                            setUsername(
-                                                                                userData?.username
-                                                                            );
-                                                                        }}
-                                                                    >
-                                                                        Cancel
-                                                                    </div>
-                                                                    {username !=
-                                                                    userData?.username ? (
-                                                                        <div
-                                                                            className="
+                                                                            onClick={() => {
+                                                                                setIsEditUsername(
+                                                                                    false
+                                                                                );
+                                                                                setUsername(
+                                                                                    userData?.username
+                                                                                );
+                                                                            }}
+                                                                        >
+                                                                            Cancel
+                                                                        </div>
+                                                                        {username !=
+                                                                        userData?.username ? (
+                                                                            <div
+                                                                                className="
                                                         flex justify-center cursor-pointer items-center h-[30px] w-[100px] rounded-[5px]
                                                         p-[5px] gap-[5px] bg-[#606060] hover:bg-[#555555] hover:text-[#fff]
                                                         "
-                                                                            onClick={() =>
-                                                                                handleEditUsername()
-                                                                            }
-                                                                        >
-                                                                            Save
-                                                                        </div>
-                                                                    ) : (
-                                                                        <div
-                                                                            className="
+                                                                                onClick={() =>
+                                                                                    handleEditUsername()
+                                                                                }
+                                                                            >
+                                                                                Save
+                                                                            </div>
+                                                                        ) : (
+                                                                            <div
+                                                                                className="
                                                         flex justify-center items-center h-[30px] w-[100px] rounded-[5px] opacity-[0.5]
                                                         p-[5px] gap-[5px] bg-[#606060] hover:bg-[#555555] hover:text-[#fff]
                                                         "
-                                                                        >
-                                                                            Save
-                                                                        </div>
-                                                                    )}
+                                                                            >
+                                                                                Save
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        ) : (
-                                                            <div className="text-[#e4e6eb] text-[15px] font-bold m-[10px]">
-                                                                {
-                                                                    userData?.username
+                                                            ) : (
+                                                                <div className="text-[#e4e6eb] text-[15px] font-bold m-[10px]">
+                                                                    {
+                                                                        userData?.username
+                                                                    }
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                    <div className="w-full">
+                                                        <div className="text-[#e4e6eb] text-[18px] font-bold relative">
+                                                            Avatar
+                                                            <AvatarEditorComponent
+                                                                image={file}
+                                                                setImage={
+                                                                    setFile
                                                                 }
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                                <div className="w-full">
-                                                    <div className="text-[#e4e6eb] text-[18px] font-bold relative">
-                                                        Avatar
-                                                        <AvatarEditorComponent
-                                                            image={file}
-                                                            setImage={setFile}
-                                                            originalImage={
-                                                                originalFile
-                                                            }
-                                                            setUserData={
-                                                                setUserData
-                                                            }
-                                                        />
-                                                    </div>
-                                                    <div className="w-full h-[200px] rounded-[10px] mt-[10px] flex items-center justify-center">
-                                                        <div className="w-[150px] h-[150px]">
-                                                            <ImageViewer
-                                                                image={
-                                                                    userData
-                                                                        ?.avatar
-                                                                        ?.files[0]
+                                                                originalImage={
+                                                                    originalFile
+                                                                }
+                                                                setUserData={
+                                                                    setUserData
                                                                 }
                                                             />
                                                         </div>
+                                                        <div className="w-full h-[200px] rounded-[10px] mt-[10px] flex items-center justify-center">
+                                                            <div className="w-[150px] h-[150px]">
+                                                                <ImageViewer
+                                                                    image={
+                                                                        userData
+                                                                            ?.avatar
+                                                                            ?.files[0]
+                                                                    }
+                                                                />
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="w-full h-fit">
-                                                    <div className="text-[#e4e6eb] text-[18px] font-bold relative">
-                                                        Background
-                                                        <BackgroundEditor
-                                                            image={
-                                                                backgroundFile
-                                                            }
-                                                            setImage={
-                                                                setBackgroundFile
-                                                            }
-                                                            originalImage={
-                                                                originalBackgroundFile
-                                                            }
-                                                            setUserData={
-                                                                setUserData
-                                                            }
-                                                        />
-                                                    </div>
-                                                    <div className="w-full h-[200px] rounded-[10px] mt-[30px] flex items-center justify-center">
-                                                        <div className="w-[400px] h-[200px]">
-                                                            <ImageViewer
+                                                    <div className="w-full h-fit">
+                                                        <div className="text-[#e4e6eb] text-[18px] font-bold relative">
+                                                            Background
+                                                            <BackgroundEditor
                                                                 image={
-                                                                    userData
-                                                                        ?.background
-                                                                        ?.files[0]
+                                                                    backgroundFile
+                                                                }
+                                                                setImage={
+                                                                    setBackgroundFile
+                                                                }
+                                                                originalImage={
+                                                                    originalBackgroundFile
+                                                                }
+                                                                setUserData={
+                                                                    setUserData
                                                                 }
                                                             />
+                                                        </div>
+                                                        <div className="w-full h-[200px] rounded-[10px] mt-[30px] flex items-center justify-center">
+                                                            <div className="w-[400px] h-[200px]">
+                                                                <ImageViewer
+                                                                    image={
+                                                                        userData
+                                                                            ?.background
+                                                                            ?.files[0]
+                                                                    }
+                                                                />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </Dialog.Content>
+                                    </Dialog.Portal>
+                                </Dialog.Root>
+                            )}
+
+                            {userData?._id != user._id && (
+                                <>
+                                    {userData?.friendList?.includes(
+                                        user._id
+                                    ) ? (
+                                        <div
+                                            className="flex items-center justify-center gap-2 p-[7px] rounded-[5px] cursor-pointer bg-[#555555]
+                         hover:bg-[#676668] absolute right-0 top-[10px] w-fit h-[40px]"
+                                            onClick={() => handleUnFriend()}
+                                        >
+                                            <MdPersonRemove size="18px" />
+                                            <div className="text-[18px] font-bold">
+                                                Unfriend
+                                            </div>
                                         </div>
-                                    </Dialog.Content>
-                                </Dialog.Portal>
-                            </Dialog.Root>
+                                    ) : (
+                                        <>
+                                            {userData?.friendRequest?.some(
+                                                (request) =>
+                                                    request.user_id == user._id
+                                            ) ? (
+                                                <div
+                                                    className="flex items-center justify-center gap-2 p-[7px] rounded-[5px] cursor-pointer bg-[#555555]
+                         hover:bg-[#676668] absolute right-0 top-[10px] w-fit h-[40px]"
+                                                    onClick={() =>
+                                                        handleCancelRequest()
+                                                    }
+                                                >
+                                                    <MdPersonAddDisabled size="18px" />
+                                                    <div className="text-[18px] font-bold">
+                                                        Cancel Request
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    {userData?.friendRequestSent?.some(
+                                                        (request) =>
+                                                            request.user_id ==
+                                                            user._id
+                                                    ) ? (
+                                                        <div className="flex absolute right-0 top-[10px] gap-[10px]">
+                                                            <div
+                                                                className="flex items-center justify-center gap-2 p-[7px] rounded-[5px] cursor-pointer bg-[#404040]
+                                    hover:bg-[#555555] w-fit h-[40px]"
+                                                                onClick={() =>
+                                                                    handleDeclineRequest()
+                                                                }
+                                                            >
+                                                                <div className="text-[18px] font-bold">
+                                                                    Decline
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                className="flex items-center justify-center gap-2 p-[7px] rounded-[5px] cursor-pointer bg-[#555555]
+                         hover:bg-[#676668]  w-fit h-[40px]"
+                                                                onClick={() =>
+                                                                    handleAcceptRequest()
+                                                                }
+                                                            >
+                                                                <IoMdPersonAdd size="18px" />
+                                                                <div className="text-[18px] font-bold">
+                                                                    Accept
+                                                                    Friend
+                                                                    Request
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            className="flex items-center justify-center gap-2 p-[7px] rounded-[5px] cursor-pointer bg-[#555555]
+                         hover:bg-[#676668] absolute right-0 top-[10px] w-fit h-[40px]"
+                                                            onClick={() =>
+                                                                handleAddFriend()
+                                                            }
+                                                        >
+                                                            <IoMdPersonAdd size="18px" />
+                                                            <div className="text-[18px] font-bold">
+                                                                Add Friend
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            )}
+                                        </>
+                                    )}
+                                </>
+                            )}
                         </div>
                         <div className={`${styles.nav}`}>
                             <div className={`${styles.navMenu}`}>
@@ -344,7 +516,15 @@ const Profile = () => {
                                     }`}
                                     onClick={(e) => setSelectedTab("Posts")}
                                 >
-                                    <p className={styles.text}>Posts</p>
+                                    <p
+                                        className={`${styles.text} ${
+                                            selectedTab == "Posts"
+                                                ? styles.selectedText
+                                                : ""
+                                        }`}
+                                    >
+                                        Posts
+                                    </p>
                                 </div>
                                 <div
                                     className={`${styles.navItem} ${
@@ -354,7 +534,15 @@ const Profile = () => {
                                     }`}
                                     onClick={(e) => setSelectedTab("About")}
                                 >
-                                    <p className={styles.text}>About</p>
+                                    <p
+                                        className={`${styles.text} ${
+                                            selectedTab == "About"
+                                                ? styles.selectedText
+                                                : ""
+                                        }`}
+                                    >
+                                        About
+                                    </p>
                                 </div>
                                 <div
                                     className={`${styles.navItem} ${
@@ -364,7 +552,15 @@ const Profile = () => {
                                     }`}
                                     onClick={(e) => setSelectedTab("Friends")}
                                 >
-                                    <p className={styles.text}>Friends</p>
+                                    <p
+                                        className={`${styles.text} ${
+                                            selectedTab == "Friends"
+                                                ? styles.selectedText
+                                                : ""
+                                        }`}
+                                    >
+                                        Friends
+                                    </p>
                                 </div>
                             </div>
                         </div>

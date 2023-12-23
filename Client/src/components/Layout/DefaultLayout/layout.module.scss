@@ -20,8 +20,7 @@
 
     .headerAndContent {
         position: absolute;
-        left: 250px;
-        flex: 1;
+        left: 300px;
         display: flex;
         flex-direction: column;
         width: var(--globalContentWidth);
@@ -33,7 +32,7 @@
 }
 
 .left {
-    width: 250px; /* Adjust the width of the left sidebar */
+    width: 300px; /* Adjust the width of the left sidebar */
     height: calc(100% - var(--globalFooterHeight));
     position: fixed;
     top: 0;

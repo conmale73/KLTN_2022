@@ -14,6 +14,17 @@ const messageSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    read: [
+        {
+            user_id: {
+                type: ObjectId,
+            },
+            read_at: {
+                type: Date,
+                default: Date.now,
+            },
+        },
+    ],
     content: {
         type: String,
         required: true,

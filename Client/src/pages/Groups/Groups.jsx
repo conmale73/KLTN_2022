@@ -47,8 +47,8 @@ const Groups = (props) => {
         }
     };
     return (
-        <div className="flex flex-col w-full h-fit items-center gap-[15px]">
-            <div className="w-[1000px]">
+        <div className="w-full flex items-center flex-col gap-[20px]">
+            <div className="w-[1000px] flex items-center flex-col gap-[20px]">
                 {groups.map((group, index) => (
                     <GroupCard key={index} group={group} />
                 ))}

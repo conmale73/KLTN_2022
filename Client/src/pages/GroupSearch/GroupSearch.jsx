@@ -37,12 +37,12 @@ const GroupSearch = (props) => {
     if (error) return <p>{error.message}</p>;
 
     return (
-        <div className="flex flex-col w-full h-fit items-center">
-            <div className="w-[1000px]">
-                {groups?.map((group, index) => (
+        <div className="w-full min-h-[600px] flex items-center flex-col gap-[20px]">
+            {groups?.map((group, index) => (
+                <div className="w-[1000px]">
                     <GroupCard group={group} key={index} />
-                ))}
-            </div>
+                </div>
+            ))}
         </div>
     );
 };

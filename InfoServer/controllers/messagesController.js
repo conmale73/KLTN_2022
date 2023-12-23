@@ -12,6 +12,7 @@ exports.createMessage = async (req, res, next) => {
             chat_id,
             sender_id,
             sender_name,
+            read: [{ user_id: sender_id }],
             content,
         });
 
@@ -79,6 +80,37 @@ exports.getLastMessageByChatID = async (req, res, next) => {
             success: true,
             data: lastMessage,
         });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc  Mark message as read
+// @route PUT /api/messages/markAsRead/:message_id
+// @access Public
+exports.markMessageAsRead = async (req, res, next) => {
+    try {
+        const { message_id } = req.params;
+        const { user_id } = req.body;
+
+        const message = await Message.findOne({ _id: message_id });
+
+        if (!message) {
+            return next(new ErrorResponse("Message not found", 404));
+        }
+
+        if (message.read.find((read) => read.user_id == user_id)) {
+            return;
+        } else {
+            message.read.push({ user_id: user_id, read_at: Date.now() });
+
+            await message.save();
+
+            res.status(200).json({
+                success: true,
+                data: message,
+            });
+        }
     } catch (error) {
         next(error);
     }

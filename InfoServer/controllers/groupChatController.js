@@ -117,6 +117,12 @@ exports.getAllChatsHaveMessagesByUserID = async (req, res, next) => {
     try {
         const { user_id } = req.params;
 
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+
         // Find group chats where members include user_id
         const groupChats = await GroupChat.find({
             members: user_id,
@@ -134,13 +140,23 @@ exports.getAllChatsHaveMessagesByUserID = async (req, res, next) => {
             }
         }
 
+        const totalResults = await GroupChat.find({
+            _id: chatsWithMessages,
+        }).countDocuments();
+        const totalPages = Math.ceil(totalResults / limit);
+
         const chats = await GroupChat.find({
             _id: chatsWithMessages,
-        }).sort({ last_message_timeStamp: -1 });
+        })
+            .sort({ last_message_timeStamp: -1 })
+            .skip(startIndex)
+            .limit(limit);
 
         res.status(200).json({
             success: true,
             data: chats,
+            page,
+            totalPages,
         });
     } catch (error) {
         next(error);

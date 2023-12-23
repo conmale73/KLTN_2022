@@ -1,6 +1,6 @@
 import styles from "./Post.module.scss";
-import { useState, useEffect } from "react";
-import { userService, postService } from "../../services";
+import React, { useState, useEffect, useRef } from "react";
+import { userService, postService, groupService } from "../../services";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -24,6 +24,8 @@ import { BiDetail } from "react-icons/bi";
 import { FaRegShareFromSquare } from "react-icons/fa6";
 import { AiFillLock } from "react-icons/ai";
 import { FormatDate } from "../../utils";
+import { SlOptions } from "react-icons/sl";
+import { MdGroups } from "react-icons/md";
 
 const Post = (props) => {
     const images =
@@ -36,6 +38,7 @@ const Post = (props) => {
         }) || [];
 
     const user = useSelector((state) => state.user.data);
+    const extendMode = useSelector((state) => state.mode.extend);
     const [more, setMore] = useState(false);
     const [liked, setLiked] = useState(false);
     const [likes, setLikes] = useState(props.likes);
@@ -43,13 +46,18 @@ const Post = (props) => {
     const [openCommentModal, setOpenCommentModal] = useState(false);
     const [openImageViewer, setOpenImageViewer] = useState(false);
     const [userInfo, setUserInfo] = useState();
+    const [groupData, setGroupData] = useState();
 
     const fetchUserInfo = async () => {
         const res = await userService.getUserById(props.user_id);
         setUserInfo(res.data.data);
         return res.data.data;
     };
-    const fetchComments = async () => {};
+    const fetchGroupData = async () => {
+        const res = await groupService.getGroupById(props.group_id, user._id);
+        setGroupData(res.data.data);
+        return res.data.data;
+    };
     const { isLoading, error, data, isFetching } = useQuery({
         queryKey: ["homeUserInfoPreview", props.user_id],
         queryFn: () => fetchUserInfo(),
@@ -59,7 +67,54 @@ const Post = (props) => {
         if (likes.find((like) => like.user_id == user._id)) {
             setLiked(true);
         }
+        if (props.privacy == "GROUP") {
+            fetchGroupData();
+        }
     }, []);
+
+    const postRef = useRef(null);
+    const timeoutRef = useRef(null);
+
+    // Use IntersectionObserver to detect when the post is in the viewport
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    // Clear the previous timeout
+                    clearTimeout(timeoutRef.current);
+
+                    // Set timeout to add user to read list after 4 seconds
+                    timeoutRef.current = setTimeout(() => {
+                        addUserToReadList();
+                    }, 4000);
+                } else {
+                    clearTimeout(timeoutRef.current);
+                }
+            },
+            {
+                root: null, // viewport
+                rootMargin: "0px",
+                threshold: 0.4, // 40% of the post must be visible
+            }
+        );
+
+        if (postRef.current) {
+            observer.observe(postRef.current);
+        }
+
+        return () => {
+            observer.disconnect();
+            clearTimeout(timeoutRef.current);
+        };
+    }, []);
+
+    const addUserToReadList = async () => {
+        const data = {
+            user_id: user._id,
+        };
+        await postService.readPost(props.id, data);
+    };
+
     if (isLoading) return <Loading />;
 
     if (error) return <p>{error.message}</p>;
@@ -92,53 +147,196 @@ const Post = (props) => {
     };
     return (
         <>
-            <div className={styles.post} key={props.id}>
-                <div className={styles.infoContainer}>
-                    <div className={styles.avatar}>
-                        <UserInfoPreview
-                            thumbnailHeight="40px"
-                            thumbnailWidth="40px"
-                            showName={false}
-                            user_id={props.user_id}
-                            bgStyles={false}
-                            displayOnlineStatus={true}
-                        />
-                    </div>
-                    <div className={styles.info}>
-                        <Link
-                            to={`/profile/${props.user_id}`}
-                            className="w-fit"
-                        >
-                            <p className={styles.name}>{data?.username}</p>
-                        </Link>
-
-                        <p className={styles.createAt}>
-                            {FormatDate(props.createAt)}
-
-                            <span className={styles.privacy}>
-                                {props.privacy == "PUBLIC" && (
-                                    <BsGlobeAsiaAustralia
-                                        size="15px"
-                                        title="Public"
-                                    />
-                                )}
-                                {props.privacy == "FRIEND" && (
-                                    <FaUserFriends size="15px" title="Friend" />
-                                )}
-                                {props.privacy == "PRIVATE" && (
-                                    <AiFillLock size="15px" Private />
-                                )}
-                            </span>
-                        </p>
-                    </div>
-                    <div className={styles.optionButtons}>
-                        <Link to={`/social/post/${props.id}`}>
-                            <div className={styles.detailButton} title="Detail">
-                                <BiDetail className={styles.icon} />
+            <div className={styles.post} key={props.id} ref={postRef}>
+                {extendMode == "groupDetail" ? (
+                    <>
+                        <div className={styles.infoContainer}>
+                            <div className={styles.avatar}>
+                                <UserInfoPreview
+                                    thumbnailHeight="40px"
+                                    thumbnailWidth="40px"
+                                    showName={false}
+                                    user_id={props.user_id}
+                                    bgStyles={false}
+                                    displayOnlineStatus={true}
+                                />
                             </div>
-                        </Link>
-                    </div>
-                </div>
+                            <div className={styles.info}>
+                                <Link
+                                    to={`/profile/${props.user_id}`}
+                                    className="w-fit"
+                                >
+                                    <p className={styles.name}>
+                                        {data?.username}
+                                    </p>
+                                </Link>
+
+                                <p className={styles.createAt}>
+                                    {FormatDate(props.createAt)}
+
+                                    <span className={styles.privacy}>
+                                        <MdGroups size="20px" title="Group" />
+                                    </span>
+                                </p>
+                            </div>
+
+                            <div className={styles.optionButtons}>
+                                <Link
+                                    to={`/social/groups/${props.group_id}/post/${props.id}`}
+                                >
+                                    <div
+                                        className={styles.detailButton}
+                                        title="Detail"
+                                    >
+                                        <BiDetail className={styles.icon} />
+                                    </div>
+                                </Link>
+                                <div className={styles.optionButton}>
+                                    <SlOptions className={styles.icon} />
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        {props.privacy == "GROUP" ? (
+                            <div className={styles.infoContainer}>
+                                <div className={styles.groupPostAvatar}>
+                                    <div className={styles.groupThumbnail}>
+                                        <Link
+                                            to={`/social/groups/${groupData?._id}`}
+                                        >
+                                            <img
+                                                src={`data:${groupData?.thumbnail?.files[0].fileInfo.type};base64,${groupData?.thumbnail?.files[0].dataURL}`}
+                                                alt=""
+                                                className="rounded-full w-10 h-10 object-cover"
+                                            />
+                                        </Link>
+                                    </div>
+                                    <div className={styles.avatar}>
+                                        <UserInfoPreview
+                                            thumbnailHeight="30px"
+                                            thumbnailWidth="30px"
+                                            showName={false}
+                                            user_id={props.user_id}
+                                            bgStyles={false}
+                                            displayOnlineStatus={true}
+                                        />
+                                    </div>
+                                </div>
+                                <div className={styles.groupPostInfo}>
+                                    <Link
+                                        to={`/profile/${props.user_id}`}
+                                        className="w-fit"
+                                    >
+                                        <p className={styles.groupName}>
+                                            {groupData?.name}
+                                        </p>
+                                    </Link>
+                                    <div className={styles.bottomInfo}>
+                                        <Link
+                                            to={`/profile/${props.user_id}`}
+                                            className="w-fit"
+                                        >
+                                            <p className={styles.name}>
+                                                {data?.username}
+                                            </p>
+                                        </Link>
+                                        <span className={styles.dot}></span>
+                                        <p className={styles.createAt}>
+                                            {FormatDate(props.createAt)}
+
+                                            <span className={styles.privacy}>
+                                                <MdGroups
+                                                    size="20px"
+                                                    title="Group"
+                                                />
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className={styles.optionButtons}>
+                                    <Link
+                                        to={`/social/groups/${props.group_id}/post/${props.id}`}
+                                    >
+                                        <div
+                                            className={styles.detailButton}
+                                            title="Detail"
+                                        >
+                                            <BiDetail className={styles.icon} />
+                                        </div>
+                                    </Link>
+                                    <div className={styles.optionButton}>
+                                        <SlOptions className={styles.icon} />
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className={styles.infoContainer}>
+                                <div className={styles.avatar}>
+                                    <UserInfoPreview
+                                        thumbnailHeight="40px"
+                                        thumbnailWidth="40px"
+                                        showName={false}
+                                        user_id={props.user_id}
+                                        bgStyles={false}
+                                        displayOnlineStatus={true}
+                                    />
+                                </div>
+                                <div className={styles.info}>
+                                    <Link
+                                        to={`/profile/${props.user_id}`}
+                                        className="w-fit"
+                                    >
+                                        <p className={styles.name}>
+                                            {data?.username}
+                                        </p>
+                                    </Link>
+
+                                    <p className={styles.createAt}>
+                                        {FormatDate(props.createAt)}
+
+                                        <span className={styles.privacy}>
+                                            {props.privacy == "PUBLIC" && (
+                                                <BsGlobeAsiaAustralia
+                                                    size="15px"
+                                                    title="Public"
+                                                />
+                                            )}
+                                            {props.privacy == "FRIEND" && (
+                                                <FaUserFriends
+                                                    size="15px"
+                                                    title="Friend"
+                                                />
+                                            )}
+                                            {props.privacy == "PRIVATE" && (
+                                                <AiFillLock
+                                                    size="15px"
+                                                    Private
+                                                />
+                                            )}
+                                        </span>
+                                    </p>
+                                </div>
+
+                                <div className={styles.optionButtons}>
+                                    <Link to={`/social/post/${props.id}`}>
+                                        <div
+                                            className={styles.detailButton}
+                                            title="Detail"
+                                        >
+                                            <BiDetail className={styles.icon} />
+                                        </div>
+                                    </Link>
+                                    <div className={styles.optionButton}>
+                                        <SlOptions className={styles.icon} />
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </>
+                )}
 
                 <div className={styles.content}>
                     <p className={styles.text}>

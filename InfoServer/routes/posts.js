@@ -5,11 +5,14 @@ const postsController = require("../controllers/postsController");
 // POST /api/posts
 router.post("/", postsController.post);
 
-// GET /api/posts/:post_id
-router.get("/:post_id", postsController.getPostById);
+// PUT /api/posts/:post_id
+router.put("/:post_id", postsController.getPostById);
 
 // GET /api/posts/:user_id
-router.get("/user/:user_id", postsController.getPostsByUserID);
+router.put("/user/:user_id", postsController.getPostsByUserID);
+
+// GET /api/posts/group/:group_id
+router.get("/group/:group_id", postsController.getPostsByGroupID);
 
 // GET /api/posts/:user_id
 router.get("/public/:user_id", postsController.getPublicPostsByUserID);
@@ -22,4 +25,10 @@ router.patch("/unlike/:post_id", postsController.unlikePost);
 
 // GET /api/posts/newsfeed/:user_id
 router.get("/newsfeed/:user_id", postsController.getNewsfeed);
+
+// GET /api/posts/home/:user_id
+router.get("/home/:user_id", postsController.getHomePosts);
+
+// POST /api/posts/read/:post_id
+router.post("/read/:post_id", postsController.readPost);
 module.exports = router;

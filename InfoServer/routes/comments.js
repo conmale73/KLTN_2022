@@ -17,6 +17,9 @@ router.patch("/unlike/:comment_id", CommentController.unlikeComment);
 // GET /api/comments/:comment_id
 router.get("/:comment_id", CommentController.getCommentById);
 
+// GET /api/comments/replies/:comment_id
+router.get("/replies/:comment_id", CommentController.getRepliesByCommentId);
+
 // PUT /api/comments/:comment_id
 router.put("/:comment_id", CommentController.updateCommentById);
 

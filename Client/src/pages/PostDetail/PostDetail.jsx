@@ -1,22 +1,34 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
-import { postService } from "../../services";
+import { postService, userService } from "../../services";
 import Loading from "../../components/Loading";
 import Post from "../../components/Post";
 import CommentList from "../../components/CommentModal/CommentList/CommentList";
 import CommentTool from "../../components/CommentModal/CommentTool";
+
 const PostDetail = () => {
     const { id } = useParams();
+    const user = useSelector((state) => state.user.data);
 
     const [text, setText] = useState("");
     const [comments, setComments] = useState([]);
     const [commentCount, setCommentCount] = useState(0);
+
     const fetchData = async () => {
-        const res = await postService.getPostById(id);
-        setCommentCount(res.data.data.commentCount);
-        return res.data.data;
+        try {
+            const data = {
+                user_id: user._id,
+            };
+            const res = await postService.getPostById(id, data);
+            setCommentCount(res.data.data.commentCount);
+            console.log(res.data);
+            return res.data.data;
+        } catch (error) {
+            console.log(error);
+        }
     };
     const { isLoading, error, data, isFetching } = useQuery({
         queryKey: ["postDetail", id],
@@ -45,6 +57,7 @@ const PostDetail = () => {
                         text={text}
                         setText={setText}
                         post_id={data._id}
+                        user_id={data.user_id}
                         setComments={setComments}
                         setCommentCount={setCommentCount}
                     />

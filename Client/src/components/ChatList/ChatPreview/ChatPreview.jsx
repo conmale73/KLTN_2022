@@ -16,31 +16,14 @@ const ChatPreview = (props) => {
         dispatch(addChat(props.chat));
         dispatch(openChat(props.chat));
     };
-    // const fetchData = async () => {
-    //     try {
-    //         const res = await messageService.getLastMessage(props.chat?._id);
-    //         setLastMessage(res.data.data);
-    //         return res.data.data;
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    // };
-    // const { isLoading, error, data } = useQuery({
-    //     queryKey: ["chatPreview", props.chat?._id],
-    //     queryFn: () => fetchData(),
-    // });
-    // if (isLoading) return <Loading />;
-    // if (error) {
-    //     console.log(error);
-    //     return <p>{error.message}</p>;
-    // }
+
     return (
         <div
             className="chatPreviewContainer w-full h-[80px] p-[5px] rounded-[5px]"
             key={props.index}
         >
             <div
-                className="p-[5px] m-[5px] hover:bg-[#505050] rounded-[10px] cursor-pointer"
+                className="p-[5px] m-[5px] hover:bg-[#505050] rounded-[10px] cursor-pointer text-[18px]"
                 onClick={handleOnClick}
             >
                 {props.chat?.group_id ? (
@@ -51,11 +34,11 @@ const ChatPreview = (props) => {
                             alt=""
                         />
                         <div className="flex flex-col flex-1">
-                            <p className="text-[20px] line-clamp-1 max-w-[100%]">
+                            <p className="text-[18px] line-clamp-1 max-w-[100%]">
                                 {props.chat?.group_name}
                             </p>
                             <p
-                                className="text-[15px] text-ellipsis line-clamp-1 
+                                className="text-[14px] text-ellipsis line-clamp-1 
                             max-w-[100%] font-[400] text-[#adadad]"
                             >
                                 {`${

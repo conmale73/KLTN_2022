@@ -8,6 +8,8 @@ import { Toast } from "flowbite-react";
 import { userService } from "../../../services";
 import { useQuery } from "@tanstack/react-query";
 import io from "socket.io-client";
+import { showToast, hideToast } from "../../../redux/toast/toastSlice";
+import { Root as ToastRoot } from "@radix-ui/react-toast";
 
 const LoginForm = () => {
     const [email, setEmail] = useState("");
@@ -16,6 +18,7 @@ const LoginForm = () => {
     let [emailError, setEmailError] = useState([]);
     let [passwordError, setPasswordError] = useState([]);
     let [errorLogin, setErrorLogin] = useState("");
+    const toast = useSelector((state) => state.toast);
 
     const [openLogin, setOpenLogin] = useState(false);
 
@@ -76,6 +79,15 @@ const LoginForm = () => {
         try {
             const response = await authService.login(email, password);
 
+            if (response.status !== 200) {
+                dispatch(
+                    showToast({
+                        message: `${response.status} ${response.data.message}`,
+                        type: "error",
+                    })
+                );
+                return;
+            }
             const token = response.data.token;
             localStorage.setItem("token", JSON.stringify(token));
 
@@ -91,8 +103,14 @@ const LoginForm = () => {
         } catch (err) {
             console.error("Message:", err.response.data.message);
             setErrorLogin(err.response.data.message);
+
+            dispatch(
+                showToast({
+                    message: err.response.data.message,
+                    type: "error",
+                })
+            );
         } finally {
-            navigator("/social");
         }
     };
 
@@ -172,14 +190,26 @@ const LoginForm = () => {
             </div>
             {errorLogin && (
                 <div className="flex justify-center">
-                    <Toast className="bg-[#303030]">
-                        <div className="ml-3 text-[15px] font-bold text-[#e4e6eb]">
+                    <Toast className="bg-[#303030]" duration={4}>
+                        <div className="ml-3 text-[15px] font-bold text-[#e4e6eb] flex-1">
                             {errorLogin}
                         </div>
-                        <Toast.Toggle onDismiss={() => setErrorLogin("")} />
+                        <Toast.Toggle
+                            className="w-[30px] h-[30px] rounded-full bg-[#505050] hover:bg-[#606060] flex justify-center items-center cursor-pointer"
+                            onDismiss={() => setErrorLogin("")}
+                        />
                     </Toast>
                 </div>
             )}
+            <ToastRoot
+                className=""
+                open={toast.show}
+                onOpenChange={(open) => {
+                    if (open === false) {
+                        dispatch(hideToast());
+                    }
+                }}
+            ></ToastRoot>
         </div>
     );
 };

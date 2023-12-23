@@ -12,7 +12,9 @@ const GroupSearchbar = ({ searchQuery, setSearchQuery }) => {
     const navigator = useNavigate();
 
     const fetchGroups = async () => {
-        const res = await groupService.searchGroupsByName(searchQuery);
+        const res = await groupService.getGroupSearchRecommendation(
+            searchQuery
+        );
         setGroups(res.data.data);
         return res.data.data;
     };
@@ -34,31 +36,35 @@ const GroupSearchbar = ({ searchQuery, setSearchQuery }) => {
         setIsSearching(false);
         navigator(`/social/groups/search/${encodeURIComponent(group.name)}`);
     };
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            navigator(
+                `/social/groups/search/${encodeURIComponent(searchQuery)}`
+            );
+        }
+    };
     return (
-        <div className="w-full h-[50px] ">
+        <div className="w-full h-[50px] relative">
             <input
                 className="w-full h-full bg-transparent rounded-[20px] p-[10px]
-                 text-[#e4e6eb] text-[20px] border-[1px] border-[#e0d9d9]"
+                 text-[#e4e6eb] text-[20px] border-[1px] border-[#e0d9d9] focus:outline-none"
                 type="text"
                 placeholder="Search groups..."
                 value={searchQuery}
                 onChange={(e) => handleSearchInput(e)}
+                onKeyDown={(e) => handleKeyDown(e)}
             />
             {isSearching && searchQuery != "" && (
-                <div className="w-full bg-[#0000005d] pt-[10px] pb-[10px] rounded-[5px]">
-                    <div className="flex flex-col w-full justify-start my-[10px] px-[10px]">
+                <div className="w-full bg-[#000000] pt-[10px] pb-[10px] rounded-[5px] absolute top-[50px]">
+                    <div className="flex flex-col-reverse w-full justify-start my-[10px] px-[10px] gap-[20px]">
                         {groups.map((group, index) => (
                             <div
                                 className="flex items-center w-full h-[50px] p-[5px] gap-[10px] cursor-pointer rounded-[10px] hover:bg-[#303030]"
                                 key={index}
+                                onClick={() => handleClickSearchResult(group)}
                             >
                                 <FaSearch size="20px" />
-                                <div
-                                    className="overflow-ellipsis"
-                                    onClick={() =>
-                                        handleClickSearchResult(group)
-                                    }
-                                >
+                                <div className="overflow-ellipsis">
                                     {group.name}
                                 </div>
                             </div>

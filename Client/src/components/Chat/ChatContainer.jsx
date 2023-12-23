@@ -87,6 +87,7 @@ const ChatContainer = (props) => {
                                         thumbnailWidth="40px"
                                         showName={true}
                                         bgStyles={false}
+                                        link={true}
                                         user_id={currentChat.members.find(
                                             (member) => member !== user._id
                                         )}

@@ -106,8 +106,6 @@ const RegisterForm = () => {
         } catch (err) {
             console.error("Error: ", err);
             setError(err.response.data.message);
-        } finally {
-            navigator("/social");
         }
     };
     const handleSubmitForm = (e) => {

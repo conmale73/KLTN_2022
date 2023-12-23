@@ -11,6 +11,7 @@ import currentVoiceChannelSlice from "./currentVoiceChannel/currentVoiceChannelS
 import voiceChannelsSlice from "./voiceChannels/voiceChannelsSlice";
 import showFooterSlice from "./showFooter/showFooterSlice";
 import currentChatListSlice from "./currentChatList/currentChatListSlice";
+import groupDetailSlice from "./groupDetail/groupDetailSlice";
 import toastSlice from "./toast/toastSlice";
 //initializing store
 export const store = configureStore({
@@ -21,6 +22,7 @@ export const store = configureStore({
         search: searchSlice,
         user: userSlice,
         playlists: playlistSlice,
+        groupDetail: groupDetailSlice,
         onlineUsers: onlineUsersSlice,
         voiceChannels: voiceChannelsSlice,
         currentVoiceChannel: currentVoiceChannelSlice,

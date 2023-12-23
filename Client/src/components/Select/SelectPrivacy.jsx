@@ -91,7 +91,7 @@ shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_
                                         }}
                                     >
                                         <AiFillLock size="15px" />
-                                        Only me
+                                        Private
                                     </div>
                                 </SelectItem>
                             )}

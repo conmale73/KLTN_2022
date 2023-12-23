@@ -15,6 +15,23 @@ const commentSchema = new mongoose.Schema({
             type: String,
             required: true,
         },
+        avatar: {},
+    },
+    replyTo: {
+        user_id: {
+            type: ObjectId,
+            required: true,
+        },
+        username: {
+            type: String,
+        },
+        comment_id: {
+            type: ObjectId || null,
+        },
+    },
+    replyCount: {
+        type: Number,
+        default: 0,
     },
     content: {
         text: {

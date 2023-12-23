@@ -2,13 +2,14 @@ const Comment = require("../models/commentModel");
 const Post = require("../models/postModel");
 const ErrorResponse = require("../utils/errorResponse");
 const { ObjectId } = require("mongodb");
+const Notification = require("../models/notificationModel");
 
 // @desc    Add a new comment
 // @route   POST /api/comments
 // @access  Public
 exports.postComment = async (req, res, next) => {
     try {
-        const { post_id, creator, content } = req.body;
+        const { post_id, creator, replyTo, content } = req.body;
 
         // Create an array to hold the files with binary data
         const filesWithBinary = [];
@@ -35,10 +36,88 @@ exports.postComment = async (req, res, next) => {
         // Update the content with the files containing binary data
         content.files = filesForResponse;
 
-        const newComment = new Comment({ post_id, creator, content });
-
+        const newComment = new Comment({
+            post_id,
+            creator,
+            replyTo,
+            content,
+        });
         const savedComment = await newComment.save();
+
         const post = await Post.findById(post_id);
+
+        if (post.group_id) {
+            // Create a notification
+            if (replyTo.comment_id == null) {
+                const notification = new Notification({
+                    receiver_id: new ObjectId(replyTo.user_id),
+                    sender: {
+                        user_id: new ObjectId(creator.user_id),
+                        username: creator.username,
+                        avatar: creator.avatar,
+                    },
+                    type: "COMMENT",
+                    content: `commented on your post`,
+                    link: `/social/group/post/${post_id}?comment_id=${savedComment._id}`,
+                });
+                await notification.save();
+            } else {
+                const notification = new Notification({
+                    receiver_id: new ObjectId(replyTo.user_id),
+                    sender: {
+                        user_id: new ObjectId(creator.user_id),
+                        username: creator.username,
+                        avatar: creator.avatar,
+                    },
+                    type: "COMMENT_REPLY",
+                    content: `mentioned you in a comment`,
+                    link: `/social/group/post/${post_id}?comment_id=${savedComment._id}`,
+                });
+                await notification.save();
+
+                const replyToComment = await Comment.findById(
+                    replyTo.comment_id
+                );
+                replyToComment.replyCount = replyToComment.replyCount + 1;
+                await replyToComment.save();
+            }
+        } else {
+            // Create a notification
+            if (replyTo.comment_id == null) {
+                const notification = new Notification({
+                    receiver_id: new ObjectId(replyTo.user_id),
+                    sender: {
+                        user_id: new ObjectId(creator.user_id),
+                        username: creator.username,
+                        avatar: creator.avatar,
+                    },
+                    type: "COMMENT",
+                    content: `commented on your post`,
+                    link: `/social/post/${post_id}?comment_id=${savedComment._id}`,
+                });
+                await notification.save();
+            } else {
+                const notification = new Notification({
+                    receiver_id: new ObjectId(replyTo.user_id),
+                    sender: {
+                        user_id: new ObjectId(creator.user_id),
+                        username: creator.username,
+                        avatar: creator.avatar,
+                    },
+                    type: "COMMENT_REPLY",
+                    content: `mentioned you in a comment`,
+                    link: `/social/post/${post_id}?comment_id=${savedComment._id}`,
+                });
+                await notification.save();
+
+                const replyToComment = await Comment.findById(
+                    replyTo.comment_id
+                );
+                replyToComment.replyCount = replyToComment.replyCount + 1;
+                await replyToComment.save();
+            }
+        }
+
         post.commentCount = post.commentCount + 1;
         await post.save();
 
@@ -61,27 +140,41 @@ exports.getCommentsByPostId = async (req, res, next) => {
 
         const startIndex = (page - 1) * limit;
 
-        const totalComments = await Comment.find({ post_id }).countDocuments();
+        const totalComments = await Comment.find({
+            post_id,
+            "replyTo.comment_id": null,
+        }).countDocuments();
         const totalPages = Math.ceil(totalComments / limit);
 
         let comments;
 
         switch (sortBy) {
             case "createAtAsc":
-                comments = await Comment.find({ post_id })
+                comments = await Comment.find({
+                    post_id,
+                    "replyTo.comment_id": null,
+                })
                     .sort({ createAt: -1 })
                     .skip(startIndex)
                     .limit(limit);
                 break;
             case "createAtDesc":
-                comments = await Comment.find({ post_id })
+                comments = await Comment.find({
+                    post_id,
+                    "replyTo.comment_id": null,
+                })
                     .sort({ createAt: 1 })
                     .skip(startIndex)
                     .limit(limit);
                 break;
             case "likesDesc":
                 comments = await Comment.aggregate([
-                    { $match: { post_id: new ObjectId(post_id) } },
+                    {
+                        $match: {
+                            post_id: new ObjectId(post_id),
+                            "replyTo.comment_id": null,
+                        },
+                    },
                     {
                         $project: {
                             _id: 1,
@@ -89,8 +182,10 @@ exports.getCommentsByPostId = async (req, res, next) => {
                             creator: 1,
                             content: 1,
                             likes: 1,
+                            replyTo: 1,
                             createAt: 1,
                             updateAt: 1,
+                            replyCount: 1,
                             likesCount: { $size: "$likes" },
                         },
                     },
@@ -100,7 +195,10 @@ exports.getCommentsByPostId = async (req, res, next) => {
                 ]);
                 break;
             default:
-                comments = await Comment.find({ post_id })
+                comments = await Comment.find({
+                    post_id,
+                    "replyTo.comment_id": null,
+                })
                     .sort({ createAt: 1 })
                     .skip(startIndex)
                     .limit(limit);
@@ -110,6 +208,43 @@ exports.getCommentsByPostId = async (req, res, next) => {
         res.status(200).json({
             success: true,
             data: comments,
+            page,
+            totalPages,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc   Get replies by comment id
+// @route  GET /api/comments/replies/:comment_id
+// @access Public
+exports.getRepliesByCommentId = async (req, res, next) => {
+    try {
+        const { comment_id } = req.params;
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        const startIndex = (page - 1) * limit;
+
+        const totalReplies = await Comment.find({
+            "replyTo.comment_id": new ObjectId(comment_id),
+        }).countDocuments();
+
+        const totalPages = Math.ceil(totalReplies / limit);
+
+        const replies = await Comment.find({
+            "replyTo.comment_id": new ObjectId(comment_id),
+        })
+            .sort({ createAt: 1 })
+            .skip(startIndex)
+            .limit(limit);
+
+        res.status(200).json({
+            success: true,
+            data: replies,
+            totalReplies,
             page,
             totalPages,
         });

@@ -36,7 +36,7 @@ const SelectItem = React.forwardRef(
         );
     }
 );
-const PostTool = ({ setPosts }) => {
+const PostTool = ({ setPosts, group_name, group_id }) => {
     const user = useSelector((state) => state.user.data);
     const [textContent, setTextContent] = useState("");
     const [placeholder, setPlaceholder] = useState("What's on your mind?");
@@ -70,10 +70,23 @@ const PostTool = ({ setPosts }) => {
             },
             privacy: privacy,
         };
-        console.log("datapost: ", dataPost);
+        const dataPostGroup = {
+            user_id: user._id,
+            content: {
+                text: textContent,
+                files: files,
+            },
+            privacy: "GROUP",
+            group_id: group_id,
+        };
 
         try {
-            post(dataPost);
+            if (group_id) {
+                post(dataPostGroup);
+            } else {
+                post(dataPost);
+            }
+
             setOpen(!open);
 
             // Reset state
@@ -165,20 +178,35 @@ const PostTool = ({ setPosts }) => {
                                                     setPrivacy(e)
                                                 }
                                             >
-                                                <Select.Trigger
-                                                    className="inline-flex items-center justify-center 
+                                                {group_name ? (
+                                                    <div
+                                                        className="inline-flex items-center justify-center 
+                                                    bg-[#3A3B3C] cursor-not-allowed
+                                                    rounded px-[15px] text-[13px] leading-none h-[30px] gap-[5px] 
+                                                    text-violet11 shadow-[0_2px_10px] shadow-white/10 
+                                                    hover:bg-[#606060] focus:shadow-[0_0_0_2px] focus:shadow-white 
+                                                    data-[placeholder]:text-violet9 outline-none"
+                                                        aria-label="Privacy"
+                                                    >
+                                                        {`Members of ${group_name}`}
+                                                    </div>
+                                                ) : (
+                                                    <Select.Trigger
+                                                        className="inline-flex items-center justify-center 
                                                     bg-[#3A3B3C]
                                                     rounded px-[15px] text-[13px] leading-none h-[30px] gap-[5px] 
                                                     text-violet11 shadow-[0_2px_10px] shadow-white/10 
                                                     hover:bg-[#606060] focus:shadow-[0_0_0_2px] focus:shadow-white 
                                                     data-[placeholder]:text-violet9 outline-none"
-                                                    aria-label="Privacy"
-                                                >
-                                                    <Select.Value placeholder="Select privacy for your post..." />
-                                                    <Select.Icon className="text-violet11">
-                                                        <BsChevronDown size="15px" />
-                                                    </Select.Icon>
-                                                </Select.Trigger>
+                                                        aria-label="Privacy"
+                                                    >
+                                                        <Select.Value placeholder="Select privacy for your post..." />
+                                                        <Select.Icon className="text-violet11">
+                                                            <BsChevronDown size="15px" />
+                                                        </Select.Icon>
+                                                    </Select.Trigger>
+                                                )}
+
                                                 <Select.Portal>
                                                     <Select.Content
                                                         className="overflow-hidden rounded-md 
