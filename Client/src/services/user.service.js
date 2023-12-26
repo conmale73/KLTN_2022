@@ -10,7 +10,9 @@ export const userService = {
     getUserByEmail(email) {
         return axiosClient.get(`/api/users/email/${email}`);
     },
-
+    updateUserPassword(data) {
+        return axiosClient.put(`/api/users/updatePassword`, data);
+    },
     updateUserInfo(data) {
         return axiosClient.put(`/api/users/updateInfo`, data);
     },

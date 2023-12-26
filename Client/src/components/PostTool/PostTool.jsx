@@ -318,7 +318,7 @@ const PostTool = ({ setPosts, group_name, group_id }) => {
                 <div className={styles.buttons}>
                     <div className={styles.button}>
                         <img src="https://static.xx.fbcdn.net/rsrc.php/v3/y7/r/Ivw7nhRtXyo.png" />
-                        <p className={styles.text}>Photo/Video</p>
+                        <p className={styles.text}>Photo/Audio</p>
                     </div>
                     <div className={styles.button}>
                         <img src="https://static.xx.fbcdn.net/rsrc.php/v3/yd/r/Y4mYLVOhTwq.png" />

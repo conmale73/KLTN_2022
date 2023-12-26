@@ -247,7 +247,7 @@ const Menu = () => {
                                             <div className="text">Feed</div>
                                         </div>
                                     </Link>
-                                    <Link to="/social/friend">
+                                    <Link to="/social/friends">
                                         <div className="button">
                                             <div className="icon">
                                                 <FaUserFriends
@@ -270,8 +270,11 @@ const Menu = () => {
                                                     size="25px"
                                                 />
                                             </div>
-                                            <div className="text">
-                                                Playground
+                                            <div
+                                                className="text"
+                                                title="Playground (In development)"
+                                            >
+                                                Playground (In development)
                                             </div>
                                         </div>
                                     </Link>

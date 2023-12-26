@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { groupService } from "../../services/group.service";
 import Loading from "../../components/Loading";
 import GroupCard from "../../components/GroupComponents/GroupCard";
+import RecommendGroups from "./RecommendGroups/RecommendGroups";
 const Groups = (props) => {
     document.title = props.title || "Groups | MySPACE";
     const dispatch = useDispatch();
@@ -48,21 +49,32 @@ const Groups = (props) => {
     };
     return (
         <div className="w-full flex items-center flex-col gap-[20px]">
-            <div className="w-[1000px] flex items-center flex-col gap-[20px]">
-                {groups.map((group, index) => (
-                    <GroupCard key={index} group={group} />
-                ))}
-            </div>
-            {page < totalPages ? (
-                <p
-                    className="text-center text-[#adadad] hover:text-[#ffffff] cursor-pointer my-[20px]"
-                    onClick={handleClickLoadMore}
-                >
-                    Load more...
+            <div>
+                <p className="text-[#ffffff] text-[20px] font-bold">
+                    Your groups
                 </p>
-            ) : (
-                <></>
-            )}
+                <div className="w-[1000px] flex items-center flex-col gap-[20px]">
+                    {groups.map((group, index) => (
+                        <GroupCard key={index} group={group} />
+                    ))}
+                </div>
+                {page < totalPages ? (
+                    <p
+                        className="text-center text-[#adadad] hover:text-[#ffffff] cursor-pointer my-[20px]"
+                        onClick={handleClickLoadMore}
+                    >
+                        Load more...
+                    </p>
+                ) : (
+                    <></>
+                )}
+            </div>
+            <div className="w-[1000px]">
+                <p className="text-[#ffffff] text-[20px] font-bold my-[10px]">
+                    Groups you may like
+                </p>
+                <RecommendGroups user_id={user._id} />
+            </div>
         </div>
     );
 };

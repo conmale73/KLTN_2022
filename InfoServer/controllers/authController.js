@@ -5,6 +5,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const path = require("path");
+const { ObjectId } = require("mongodb");
 
 // Sign up
 exports.signup = async (req, res, next) => {
@@ -43,6 +44,7 @@ exports.signup = async (req, res, next) => {
             username,
             email,
             password,
+            friendList: [new ObjectId("64a572c866ab977f9fc0bdd7")],
             background: {
                 files: [
                     {

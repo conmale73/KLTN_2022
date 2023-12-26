@@ -45,7 +45,7 @@ export const postService = {
     updatePost(data) {
         return axiosClient.put(`/api/posts/`, data);
     },
-    deletePost(id) {
-        return axiosClient.delete(`/api/posts/${id}`);
+    deletePost(id, user_id) {
+        return axiosClient.delete(`/api/posts/${id}/${user_id}`);
     },
 };

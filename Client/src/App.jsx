@@ -11,6 +11,7 @@ import { setOnlineUsers } from "./redux/onlineUsers/onlineUsersSlice";
 import { voiceChannelService } from "./services";
 import * as Toast from "@radix-ui/react-toast";
 import { setExtend } from "../src/redux/mode/modeSlice";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
     useShowScrollbar();
@@ -55,6 +56,7 @@ function App() {
 
     return (
         <Router>
+            <ScrollToTop />
             <Toast.Provider swipeDirection="right" duration={4000}>
                 <SongProvider>
                     <div className="background-image">

@@ -101,7 +101,7 @@ const SearchBox = () => {
                 <div className="results">
                     <div className="flex gap-[10px] ml-[20px]">
                         <FaUserFriends size="24px" />
-                        Friends
+                        People
                     </div>
                     <div className="flex flex-wrap w-full justify-start my-[10px] mx-[10px]">
                         {users.map((user, index) => (

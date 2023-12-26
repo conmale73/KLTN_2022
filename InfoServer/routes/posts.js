@@ -31,4 +31,7 @@ router.get("/home/:user_id", postsController.getHomePosts);
 
 // POST /api/posts/read/:post_id
 router.post("/read/:post_id", postsController.readPost);
+
+// DELETE /api/posts/:post_id
+router.delete("/:post_id/:user_id", postsController.deletePost);
 module.exports = router;

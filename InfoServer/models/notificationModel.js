@@ -6,6 +6,9 @@ const notificationSchema = new mongoose.Schema({
         type: ObjectId,
         required: true,
     },
+    group_id: {
+        type: ObjectId,
+    },
     sender: {
         user_id: {
             type: ObjectId,

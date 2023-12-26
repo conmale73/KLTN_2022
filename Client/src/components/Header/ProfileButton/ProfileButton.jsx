@@ -23,7 +23,7 @@ const ProfileButton = () => {
         navigator("/profile/" + user._id);
     };
     return (
-        <DropdownMenu.Root>
+        <DropdownMenu.Root modal={false}>
             <DropdownMenu.Trigger asChild>
                 <div className="w-[30px] h-[30px] rounded-full overflow-hidden cursor-pointer">
                     <img

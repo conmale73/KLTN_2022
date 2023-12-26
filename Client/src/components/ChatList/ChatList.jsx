@@ -47,7 +47,7 @@ const ChatList = () => {
     return (
         <div className="w-full h-fit max-h-[800px] overflow-y-auto">
             {chats.length === 0 && (
-                <div className="text-center text-lg text-gray-500 mt-4">
+                <div className="text-center text-[20px] text-[#e4e6eb] mt-4">
                     No chat found
                 </div>
             )}

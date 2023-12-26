@@ -35,7 +35,12 @@ const GroupCard = ({ group }) => {
                             Visit
                         </Link>
                     ) : (
-                        <button className={styles.joinButton}>Join</button>
+                        <Link
+                            to={`/social/groups/${group._id}`}
+                            className={styles.joinButton}
+                        >
+                            Join
+                        </Link>
                     )}
                 </div>
             </div>

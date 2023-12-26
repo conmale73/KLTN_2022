@@ -23,7 +23,7 @@ const Messenger = ({ open, setOpen }) => {
                 </div>
             </DropdownMenu.Trigger>
             <DropdownMenu.Portal>
-                <DropdownMenu.Content className="w-[400px] h-fit bg-[#303030] rounded-[10px] shadow-lg">
+                <DropdownMenu.Content className="w-[400px] h-fit min-h-[200px] bg-[#303030] rounded-[10px] shadow-lg">
                     <ChatList />
                 </DropdownMenu.Content>
             </DropdownMenu.Portal>

@@ -565,7 +565,7 @@ input[type="number"] {
 
 ::-webkit-scrollbar {
     width: var(--globalScrollbarWidth);
-    background-color: var(--general-background);
+    background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -578,87 +578,87 @@ input[type="number"] {
     background: #c5c5c5;
 }
 
-.swiper {
-    width: 100%;
-    height: 100%;
-}
+// .swiper {
+//     width: 100%;
+//     height: 100%;
+// }
 
-.swiper-slide {
-    font-size: 18px;
+// .swiper-slide {
+//     font-size: 18px;
 
-    /* Center slide text vertically */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+//     /* Center slide text vertically */
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+// }
 
-.swiper {
-    width: 100%;
-}
-.swiper-slide {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 10px 0;
-}
+// .swiper {
+//     width: 100%;
+// }
+// .swiper-slide {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     margin: 10px 0;
+// }
 
-.custom_next,
-.custom_prev {
-    width: 50px;
-    height: 50px;
-    margin: 0 10px;
-    background-color: rgba(83, 83, 83, 0.301);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+// .custom_next,
+// .custom_prev {
+//     width: 50px;
+//     height: 50px;
+//     margin: 0 10px;
+//     background-color: rgba(83, 83, 83, 0.301);
+//     border-radius: 50%;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
 
-    &:hover {
-        background-color: rgba(255, 255, 255, 0.145);
-    }
-}
-.btn_disabled {
-    opacity: 0.4;
-}
-.swiper {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-}
+//     &:hover {
+//         background-color: rgba(255, 255, 255, 0.145);
+//     }
+// }
+// .btn_disabled {
+//     opacity: 0.4;
+// }
+// .swiper {
+//     width: 100%;
+//     margin-left: auto;
+//     margin-right: auto;
+// }
 
-.swiper-slide {
-    background-size: cover;
-    background-position: center;
-}
+// .swiper-slide {
+//     background-size: cover;
+//     background-position: center;
+// }
 
-.mySwiper2 {
-    width: fit-content;
-    height: fit-content;
-    max-width: 100%;
-    object-fit: cover;
-}
+// .mySwiper2 {
+//     width: fit-content;
+//     height: fit-content;
+//     max-width: 100%;
+//     object-fit: cover;
+// }
 
-.mySwiper {
-    height: 20%;
-    max-height: 100px;
-    padding: 10px 0;
-}
-.mySwiper img {
-    width: 100%;
-    height: 100%;
-    max-width: 500px;
-    max-height: 100px;
-    object-fit: scale-down;
-}
-.mySwiper img:hover {
-    cursor: pointer;
-}
+// .mySwiper {
+//     height: 20%;
+//     max-height: 100px;
+//     padding: 10px 0;
+// }
+// .mySwiper img {
+//     width: 100%;
+//     height: 100%;
+//     max-width: 500px;
+//     max-height: 100px;
+//     object-fit: scale-down;
+// }
+// .mySwiper img:hover {
+//     cursor: pointer;
+// }
 
-.mySwiper .swiper-slide {
-    width: 25%;
-    opacity: 0.4;
-}
+// .mySwiper .swiper-slide {
+//     width: 25%;
+//     opacity: 0.4;
+// }
 
-.mySwiper .swiper-slide-thumb-active {
-    opacity: 1;
-}
+// .mySwiper .swiper-slide-thumb-active {
+//     opacity: 1;
+// }

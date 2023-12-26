@@ -7,6 +7,9 @@ export const groupService = {
     getAllPublicGroups() {
         return axiosClient.get(`/api/groups/public/`);
     },
+    getRecommendGroups(user_id) {
+        return axiosClient.get(`/api/groups/recommend/${user_id}/`);
+    },
     getGroupsByUserId(user_id, page, limit) {
         return axiosClient.get(
             `/api/groups/user/${user_id}?page=${page}&limit=${limit}`
@@ -28,6 +31,15 @@ export const groupService = {
             `/api/groups/${group_id}/search-members/${username}`
         );
     },
+    setUserAsAdmin(group_id, data) {
+        return axiosClient.put(`/api/groups/set-admin/${group_id}/`, data);
+    },
+    removeUserAsAdmin(group_id, data) {
+        return axiosClient.put(`/api/groups/remove-admin/${group_id}/`, data);
+    },
+    removeUserFromGroup(group_id, data) {
+        return axiosClient.put(`/api/groups/remove-user/${group_id}/`, data);
+    },
     inviteFriendToGroup(group_id, data) {
         return axiosClient.put(`/api/groups/invite-user/${group_id}/`, data);
     },
@@ -46,8 +58,17 @@ export const groupService = {
     joinGroup(group_id, data) {
         return axiosClient.put(`/api/groups/join/${group_id}/`, data);
     },
+    requestJoinGroup(group_id, data) {
+        return axiosClient.put(`/api/groups/request-join/${group_id}/`, data);
+    },
+    cancelRequestJoinGroup(group_id, data) {
+        return axiosClient.put(
+            `/api/groups/cancel-request-join/${group_id}/`,
+            data
+        );
+    },
     leaveGroup(group_id, data) {
-        return axiosClient.patch(`/api/groups/leave/${group_id}/`, data);
+        return axiosClient.put(`/api/groups/leave/${group_id}/`, data);
     },
     getGroupByCreatorId(id) {
         return axiosClient.get(`/api/groups/?creator_id=${id}`);

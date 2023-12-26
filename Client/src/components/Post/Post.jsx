@@ -5,14 +5,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import MiniAudioPlayer from "../MiniAudioPlayer";
-import UserInfoPreview from "../UserInfoPreview";
-import ImageContainer from "../ImageContainer/ImageContainer";
-import Loading from "../Loading";
-import ImageViewer from "../ImageViewer";
-import LikesViewer from "../LikesViewer";
-import CommentModal from "../CommentModal";
-
 import { BsGlobeAsiaAustralia } from "react-icons/bs";
 import {
     FaUserFriends,
@@ -27,6 +19,14 @@ import { FormatDate } from "../../utils";
 import { SlOptions } from "react-icons/sl";
 import { MdGroups } from "react-icons/md";
 
+import MiniAudioPlayer from "../MiniAudioPlayer";
+import UserInfoPreview from "../UserInfoPreview";
+import ImageContainer from "../ImageContainer/ImageContainer";
+import Loading from "../Loading";
+import ImageViewer from "../ImageViewer";
+import LikesViewer from "../LikesViewer";
+import CommentModal from "../CommentModal";
+import OptionButton from "./OptionButton";
 const Post = (props) => {
     const images =
         props?.files?.filter((file) => {
@@ -47,6 +47,8 @@ const Post = (props) => {
     const [openImageViewer, setOpenImageViewer] = useState(false);
     const [userInfo, setUserInfo] = useState();
     const [groupData, setGroupData] = useState();
+
+    const [isDeleted, setIsDeleted] = useState(false);
 
     const fetchUserInfo = async () => {
         const res = await userService.getUserById(props.user_id);
@@ -148,6 +150,13 @@ const Post = (props) => {
     return (
         <>
             <div className={styles.post} key={props.id} ref={postRef}>
+                {isDeleted && (
+                    <div className={styles.overlay}>
+                        <div className={styles.content}>
+                            This post has been deleted.
+                        </div>
+                    </div>
+                )}
                 {extendMode == "groupDetail" ? (
                     <>
                         <div className={styles.infoContainer}>
@@ -191,9 +200,10 @@ const Post = (props) => {
                                         <BiDetail className={styles.icon} />
                                     </div>
                                 </Link>
-                                <div className={styles.optionButton}>
-                                    <SlOptions className={styles.icon} />
-                                </div>
+                                <OptionButton
+                                    post_id={props.id}
+                                    setIsDeleted={setIsDeleted}
+                                />
                             </div>
                         </div>
                     </>
@@ -267,9 +277,10 @@ const Post = (props) => {
                                             <BiDetail className={styles.icon} />
                                         </div>
                                     </Link>
-                                    <div className={styles.optionButton}>
-                                        <SlOptions className={styles.icon} />
-                                    </div>
+                                    <OptionButton
+                                        post_id={props.id}
+                                        setIsDeleted={setIsDeleted}
+                                    />
                                 </div>
                             </div>
                         ) : (
@@ -329,9 +340,10 @@ const Post = (props) => {
                                             <BiDetail className={styles.icon} />
                                         </div>
                                     </Link>
-                                    <div className={styles.optionButton}>
-                                        <SlOptions className={styles.icon} />
-                                    </div>
+                                    <OptionButton
+                                        post_id={props.id}
+                                        setIsDeleted={setIsDeleted}
+                                    />
                                 </div>
                             </div>
                         )}

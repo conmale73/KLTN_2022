@@ -19,6 +19,7 @@ const Playground = lazy(() => import("../pages/Playground"));
 const Room = lazy(() => import("../pages/Room"));
 const Feed = lazy(() => import("../pages/Feed"));
 const SocialHome = lazy(() => import("../pages/SocialHome"));
+const Friends = lazy(() => import("../pages/Friends"));
 const PostDetail = lazy(() => import("../pages/PostDetail"));
 
 const Groups = lazy(() => import("../pages/Groups"));
@@ -88,6 +89,14 @@ export const publishRoutes = [
         element: (
             <Suspense fallback={<Loading isFullScreen={true} />}>
                 <Feed title="News feed" />
+            </Suspense>
+        ),
+    },
+    {
+        path: "/social/friends",
+        element: (
+            <Suspense fallback={<Loading isFullScreen={true} />}>
+                <Friends />
             </Suspense>
         ),
     },

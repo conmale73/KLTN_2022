@@ -54,11 +54,9 @@ const groupSchema = new mongoose.Schema({
             user_id: {
                 type: ObjectId,
             },
-            notification_id: [
-                {
-                    type: ObjectId,
-                },
-            ],
+            notification_id: {
+                type: ObjectId,
+            },
         },
     ],
     chat_id: [

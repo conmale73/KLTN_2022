@@ -136,8 +136,8 @@ const InviteModal = ({ open, setOpen, memberList }) => {
         <Dialog.Root open={open} onOpenChange={(e) => handleStateModal(e)}>
             <Dialog.Trigger asChild>
                 <span
-                    className="flex items-center justify-center gap-2 p-[7px] rounded-[5px] cursor-pointer bg-[#555555]
-                             hover:bg-[#676668] absolute right-0 w-fit h-[40px]"
+                    className="flex items-center justify-center gap-2 p-[7px] rounded-[10px] cursor-pointer bg-[#555555]
+                             hover:bg-[#676668] w-fit h-[40px]"
                     onClick={() => handleClickInvite()}
                 >
                     <FaPlus size="18px" />
@@ -197,11 +197,11 @@ const InviteModal = ({ open, setOpen, memberList }) => {
                                                 {searchResults.map(
                                                     (friend, index) => {
                                                         return (
-                                                            <div className="w-full">
+                                                            <div
+                                                                className="w-full"
+                                                                key={friend._id}
+                                                            >
                                                                 <UserCheckbox
-                                                                    key={
-                                                                        friend._id
-                                                                    }
                                                                     userData={
                                                                         friend
                                                                     }
@@ -240,11 +240,11 @@ const InviteModal = ({ open, setOpen, memberList }) => {
                                                 {friends.map(
                                                     (friend, index) => {
                                                         return (
-                                                            <div className="w-full">
+                                                            <div
+                                                                className="w-full"
+                                                                key={friend._id}
+                                                            >
                                                                 <UserCheckbox
-                                                                    key={
-                                                                        friend._id
-                                                                    }
                                                                     userData={
                                                                         friend
                                                                     }

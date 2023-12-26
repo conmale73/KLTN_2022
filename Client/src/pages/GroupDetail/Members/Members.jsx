@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
 import { MdOutlineKey } from "react-icons/md";
 
@@ -8,7 +9,9 @@ import Loading from "../../../components/Loading";
 import UserPreview from "../../../components/UserPreview(FullDataProvided)";
 import UserInfoPreview from "../../../components/UserInfoPreview";
 import Divider from "../../../components/Divider";
-const Members = ({ group_id, memberList, admins }) => {
+import OptionButton from "./OptionButton";
+const Members = ({ group_id, memberList, admins, creator_id, role }) => {
+    const user = useSelector((state) => state.user.data);
     const [searchQuery, setSearchQuery] = useState("");
     const [isSearching, setIsSearching] = useState(false);
 
@@ -53,40 +56,66 @@ const Members = ({ group_id, memberList, admins }) => {
             {isSearching && searchQuery != "" ? (
                 <div className="w-full pt-[10px] pb-[10px] rounded-[5px]">
                     <p>Search results</p>
-                    <div className="flex flex-wrap w-full justify-start my-[10px] px-[10px] gap-[20px]">
+                    <div className="flex flex-wrap w-full justify-between my-[10px] px-[10px] gap-[20px]">
                         {members.map((member, index) => {
                             if (admins.includes(member._id)) {
                                 return (
-                                    <div className="w-[30%] border-[1px] border-solid border-[#ababab] rounded-[20px] p-[2px] relative">
-                                        <UserPreview
-                                            key={member._id}
-                                            thumbnailHeight="50px"
-                                            thumbnailWidth="50px"
-                                            userData={member}
-                                            link={true}
-                                            showName={true}
-                                            bgStyles={true}
-                                        />
+                                    <div
+                                        className="flex w-[45%] p-[5px] hover:bg-[#404040] border-[1px] border-solid border-[#ababab] rounded-[20px] relative"
+                                        key={index}
+                                    >
+                                        <div className="flex-1">
+                                            <UserPreview
+                                                key={member._id}
+                                                thumbnailHeight="50px"
+                                                thumbnailWidth="50px"
+                                                userData={member}
+                                                link={true}
+                                                showName={true}
+                                                bgStyles={false}
+                                            />
+                                        </div>
                                         <p
                                             className="absolute top-[-10px] left-[-5px]"
                                             title="Admin"
                                         >
                                             <MdOutlineKey size="20px" />
                                         </p>
+                                        {role > 0 && (
+                                            <OptionButton
+                                                role={role}
+                                                creator_id={creator_id}
+                                                user_id={member_id}
+                                                admins={admins}
+                                            />
+                                        )}
                                     </div>
                                 );
                             } else {
                                 return (
-                                    <div className="w-[30%]">
-                                        <UserPreview
-                                            key={member._id}
-                                            thumbnailHeight="50px"
-                                            thumbnailWidth="50px"
-                                            userData={member}
-                                            link={true}
-                                            showName={true}
-                                            bgStyles={true}
-                                        />
+                                    <div
+                                        className="w-[45%] p-[5px] hover:bg-[#404040] rounded-[20px]"
+                                        key={index}
+                                    >
+                                        <div className="flex-1">
+                                            <UserPreview
+                                                key={member._id}
+                                                thumbnailHeight="50px"
+                                                thumbnailWidth="50px"
+                                                userData={member}
+                                                link={true}
+                                                showName={true}
+                                                bgStyles={false}
+                                            />
+                                        </div>
+                                        {role > 0 && (
+                                            <OptionButton
+                                                role={role}
+                                                creator_id={creator_id}
+                                                user_id={member._id}
+                                                admins={admins}
+                                            />
+                                        )}
                                     </div>
                                 );
                             }
@@ -95,40 +124,67 @@ const Members = ({ group_id, memberList, admins }) => {
                 </div>
             ) : (
                 <div className="w-full mb-[10px] rounded-[5px]">
-                    <div className="flex flex-wrap w-full justify-start mb-[20px] mt-[20px] px-[10px] gap-[20px]">
+                    <div className="flex flex-wrap w-full justify-between mb-[20px] mt-[20px] px-[10px] gap-[20px]">
                         {memberList.map((member, index) => {
                             if (admins.includes(member)) {
                                 return (
-                                    <div className="w-[30%] border-[1px] border-solid border-[#ababab] rounded-[20px] p-[2px] relative">
-                                        <UserInfoPreview
-                                            key={member}
-                                            thumbnailHeight="50px"
-                                            thumbnailWidth="50px"
-                                            user_id={member}
-                                            link={true}
-                                            showName={true}
-                                            bgStyles={true}
-                                        />
+                                    <div
+                                        className="flex w-[45%] p-[5px] hover:bg-[#404040] border-[1px] border-solid border-[#ababab] rounded-[20px] relative"
+                                        key={index}
+                                    >
+                                        <div className="flex-1">
+                                            <UserInfoPreview
+                                                key={member}
+                                                thumbnailHeight="50px"
+                                                thumbnailWidth="50px"
+                                                user_id={member}
+                                                link={true}
+                                                showName={true}
+                                                bgStyles={false}
+                                            />
+                                        </div>
+
                                         <p
                                             className="absolute top-[-10px] left-[-5px]"
                                             title="Admin"
                                         >
                                             <MdOutlineKey size="20px" />
                                         </p>
+                                        {role > 0 && (
+                                            <OptionButton
+                                                role={role}
+                                                creator_id={creator_id}
+                                                user_id={member}
+                                                admins={admins}
+                                            />
+                                        )}
                                     </div>
                                 );
                             } else {
                                 return (
-                                    <div className="w-[30%]">
-                                        <UserInfoPreview
-                                            key={member}
-                                            thumbnailHeight="50px"
-                                            thumbnailWidth="50px"
-                                            user_id={member}
-                                            link={true}
-                                            showName={true}
-                                            bgStyles={true}
-                                        />
+                                    <div
+                                        className="flex w-[45%] p-[5px] hover:bg-[#404040] rounded-[20px]"
+                                        key={index}
+                                    >
+                                        <div className="flex-1">
+                                            <UserInfoPreview
+                                                key={member}
+                                                thumbnailHeight="50px"
+                                                thumbnailWidth="50px"
+                                                user_id={member}
+                                                link={true}
+                                                showName={true}
+                                                bgStyles={false}
+                                            />
+                                        </div>
+                                        {role > 0 && (
+                                            <OptionButton
+                                                role={role}
+                                                creator_id={creator_id}
+                                                user_id={member}
+                                                admins={admins}
+                                            />
+                                        )}
                                     </div>
                                 );
                             }
@@ -139,24 +195,37 @@ const Members = ({ group_id, memberList, admins }) => {
                         <p className="text-[20px] text-[#e4e6eb] font-[700]">
                             Group Admins
                         </p>
-                        <div className="flex flex-wrap w-full justify-start mb-[20px] px-[10px] gap-[20px]">
+                        <div className="flex flex-wrap w-full justify-between mb-[20px] px-[10px] gap-[20px]">
                             {admins.map((admin, index) => (
-                                <div className="w-[30%] border-[1px] border-solid border-[#ababab] rounded-[20px] p-[2px] relative">
-                                    <UserInfoPreview
-                                        key={admin}
-                                        thumbnailHeight="50px"
-                                        thumbnailWidth="50px"
-                                        user_id={admin}
-                                        link={true}
-                                        showName={true}
-                                        bgStyles={true}
-                                    />
+                                <div
+                                    className="flex w-[45%] p-[5px] hover:bg-[#404040] border-[1px] border-solid border-[#ababab] rounded-[20px] relative"
+                                    key={index}
+                                >
+                                    <div className="flex-1">
+                                        <UserInfoPreview
+                                            key={admin}
+                                            thumbnailHeight="50px"
+                                            thumbnailWidth="50px"
+                                            user_id={admin}
+                                            link={true}
+                                            showName={true}
+                                            bgStyles={false}
+                                        />
+                                    </div>
                                     <p
                                         className="absolute top-[-10px] left-[-5px]"
                                         title="Admin"
                                     >
                                         <MdOutlineKey size="20px" />
                                     </p>
+                                    {role > 0 && (
+                                        <OptionButton
+                                            role={role}
+                                            creator_id={creator_id}
+                                            user_id={admin}
+                                            admins={admins}
+                                        />
+                                    )}
                                 </div>
                             ))}
                         </div>

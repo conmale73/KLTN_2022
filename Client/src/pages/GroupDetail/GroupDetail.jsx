@@ -21,6 +21,7 @@ import GroupSettings from "./GroupSettings";
 import GroupModeration from "./GroupModeration";
 import { setGroupDetail } from "../../redux/groupDetail/groupDetailSlice";
 import InviteModal from "./InviteModal/InviteModal";
+import LeaveGroupButton from "./LeaveGroupButton/LeaveGroupButton";
 const GroupDetail = () => {
     const { group_id } = useParams();
     const dispatch = useDispatch();
@@ -36,6 +37,8 @@ const GroupDetail = () => {
     const [selectedTab, setSelectedTab] = useState("Discussion"); // ["Discussion", "Members", "Events", "GroupSettings"]
 
     const [group, setGroup] = useState(null);
+    const groupDetail = useSelector((state) => state.groupDetail.data);
+    const [role, setRole] = useState(0); // 0: member, 1: admin, 2: creator, 3: creator & admin
 
     const [openInviteModal, setOpenInviteModal] = useState(false);
     const fetchGroup = async () => {
@@ -51,6 +54,27 @@ const GroupDetail = () => {
         queryFn: () => fetchGroup(),
     });
 
+    useEffect(() => {
+        const checkRole = () => {
+            if (
+                user._id === groupDetail?.creator_id &&
+                groupDetail?.admins.includes(user._id)
+            ) {
+                setRole(3);
+            } else if (
+                user._id === groupDetail?.creator_id &&
+                !groupDetail?.admins.includes(user._id)
+            ) {
+                setRole(2);
+            } else if (groupDetail?.admins.includes(user._id)) {
+                setRole(1);
+            } else {
+                setRole(0);
+            }
+        };
+        checkRole();
+    }, [groupDetail?._id]);
+
     if (isLoading) return <Loading isFullScreen={true} />;
     if (error) return <p>{error.message}</p>;
 
@@ -58,38 +82,51 @@ const GroupDetail = () => {
         const data = {
             user_id: user._id,
         };
-        if (group?.privacy == "PUBLIC") {
+        if (groupDetail?.privacy == "PUBLIC") {
             const res = await groupService.joinGroup(group_id, data);
-            setGroup(res.data.data);
+            dispatch(setGroupDetail(res.data.data));
+        } else if (groupDetail?.privacy == "PRIVATE") {
+            const res = await groupService.requestJoinGroup(group_id, data);
+            dispatch(setGroupDetail(res.data.data));
         }
     };
 
-    const handleClickCancelRequest = () => {};
+    const handleClickCancelRequest = async () => {
+        const data = {
+            user_id: user._id,
+            notification_id: groupDetail?.pendingRequests.find(
+                (request) => request.user_id == user._id
+            ).notification_id,
+        };
+        console.log(data);
+        const res = await groupService.cancelRequestJoinGroup(group_id, data);
+        dispatch(setGroupDetail(res.data.data));
+    };
 
     const handleAcceptInvitation = async () => {
         const data = {
             user_id: user._id,
-            notification_id: group?.pendingMembers.find(
+            notification_id: groupDetail?.pendingMembers.find(
                 (member) => member.receiver_id == user._id
             ).notification_id,
         };
         console.log(data);
-        // const res = await groupService.acceptInvitationToGroup(group_id, data);
-        // setGroup(res.data.data);
+        const res = await groupService.acceptInvitationToGroup(group_id, data);
+        dispatch(setGroupDetail(res.data.data));
     };
 
     const handleDeclineInvitation = async () => {
         const data = {
             user_id: user._id,
-            notification_id: group?.pendingMembers.find(
+            notification_id: groupDetail?.pendingMembers.find(
                 (member) => member.receiver_id == user._id
             ).notification_id,
         };
         console.log(data);
 
-        // const res = await groupService.declineInvitationToGroup(group_id, data);
-        // console.log(res.data);
-        // setGroup(res.data.data);
+        const res = await groupService.declineInvitationToGroup(group_id, data);
+        console.log(res.data);
+        dispatch(setGroupDetail(res.data.data));
     };
     return (
         <div
@@ -104,7 +141,7 @@ const GroupDetail = () => {
                 >
                     {group && (
                         <ImageViewer
-                            image={group?.thumbnail?.files[0]}
+                            image={groupDetail?.thumbnail?.files[0]}
                             objectFit="cover"
                         />
                     )}
@@ -114,7 +151,7 @@ const GroupDetail = () => {
                         {group && (
                             <UserInfoPreview
                                 nameOnly={true}
-                                user_id={group?.creator_id}
+                                user_id={groupDetail?.creator_id}
                                 link={true}
                             />
                         )}
@@ -123,10 +160,10 @@ const GroupDetail = () => {
                 <div className="groupInfo w-full h-fit flex justify-center">
                     <div className="w-[80%]">
                         <div className="groupName text-[30px] font-bold text-start">
-                            {group?.name}
+                            {groupDetail?.name}
                         </div>
                         <div className="groupDescription flex gap-[10px] items-center mt-[5px] mb-[10px]">
-                            {group?.privacy == "PUBLIC" ? (
+                            {groupDetail?.privacy == "PUBLIC" ? (
                                 <div className="groupPrivacy flex gap-[5px] items-center">
                                     <FaGlobeAsia size="14px" />
                                     <p className="text-[14px] text-[#adadad]">
@@ -145,15 +182,15 @@ const GroupDetail = () => {
                             <p
                                 className="text-[16px] font-[600] hover:underline cursor-pointer"
                                 onClick={() => setSelectedTab("Members")}
-                            >{`${group?.members.length} members`}</p>
+                            >{`${groupDetail?.members.length} members`}</p>
                             <span>•</span>
 
                             <p className="text-[16px] font-[500] flex-1 text-ellipsis">
-                                {group?.description}
+                                {groupDetail?.description}
                             </p>
                         </div>
                         <div className="groupMemberPreview flex w-full h-fit items-center gap-2 relative">
-                            {group?.members?.map((member, index) => {
+                            {groupDetail?.members?.map((member, index) => {
                                 if (index < 10) {
                                     return (
                                         <UserInfoPreview
@@ -167,16 +204,23 @@ const GroupDetail = () => {
                                     );
                                 }
                             })}
-                            {group?.members.includes(user._id) ? (
-                                <InviteModal
-                                    key="invitemodal"
-                                    open={openInviteModal}
-                                    setOpen={setOpenInviteModal}
-                                    memberList={group?.members}
-                                />
+                            {groupDetail?.members.includes(user._id) ? (
+                                <div className="flex gap-[10px] absolute right-0">
+                                    <InviteModal
+                                        key="invitemodal"
+                                        open={openInviteModal}
+                                        setOpen={setOpenInviteModal}
+                                        memberList={groupDetail?.members}
+                                    />
+                                    <LeaveGroupButton
+                                        group_id={group_id}
+                                        key="leaveGroupButton"
+                                        creator_id={groupDetail?.creator_id}
+                                    />
+                                </div>
                             ) : (
                                 <>
-                                    {group?.pendingMembers.some(
+                                    {groupDetail?.pendingMembers.some(
                                         (member) =>
                                             member.receiver_id == user._id
                                     ) ? (
@@ -207,7 +251,7 @@ const GroupDetail = () => {
                                         </div>
                                     ) : (
                                         <>
-                                            {group?.pendingRequests.some(
+                                            {groupDetail?.pendingRequests.some(
                                                 (request) =>
                                                     request.user_id == user._id
                                             ) ? (
@@ -300,31 +344,8 @@ const GroupDetail = () => {
                                         Events
                                     </p>
                                 </div>
-                                {group?.admins.some(
-                                    (admin) => admin == user._id
-                                ) ? (
-                                    <div
-                                        className={`${styles.navItem} ${
-                                            selectedTab == "Moderate"
-                                                ? styles.selected
-                                                : ""
-                                        }`}
-                                        onClick={(e) =>
-                                            setSelectedTab("Moderate")
-                                        }
-                                    >
-                                        <p
-                                            className={`${styles.text} ${
-                                                selectedTab == "Moderate"
-                                                    ? styles.selectedText
-                                                    : ""
-                                            }`}
-                                        >
-                                            Moderate
-                                        </p>
-                                    </div>
-                                ) : null}
-                                {group?.creator_id == user._id ? (
+
+                                {groupDetail?.creator_id == user._id ? (
                                     <div
                                         className={`${styles.navItem} ${
                                             selectedTab == "GroupSettings"
@@ -353,26 +374,33 @@ const GroupDetail = () => {
             </div>
             <div className="w-[80%] h-fit min-h-[1000px] flex justify-center">
                 {selectedTab == "Discussion" && (
-                    <Discussion group_id={group_id} group_name={group?.name} />
+                    <Discussion
+                        group_id={group_id}
+                        group_name={groupDetail?.name}
+                    />
                 )}
                 {selectedTab == "Members" && (
                     <Members
                         group_id={group_id}
-                        memberList={group?.members}
-                        admins={group?.admins}
+                        memberList={groupDetail?.members}
+                        admins={groupDetail?.admins}
+                        creator_id={groupDetail?.creator_id}
+                        role={role}
                     />
                 )}
                 {selectedTab == "Events" && <Events group_id={group_id} />}
                 {selectedTab == "GroupSettings" && (
                     <>
-                        {group?.creator_id == user._id ? (
+                        {groupDetail?.creator_id == user._id ? (
                             <GroupSettings group_id={group_id} />
                         ) : null}
                     </>
                 )}
                 {selectedTab == "GroupSettings" && (
                     <>
-                        {group?.admins.some((admin) => admin == user._id) ? (
+                        {groupDetail?.admins.some(
+                            (admin) => admin == user._id
+                        ) ? (
                             <GroupModeration group_id={group_id} />
                         ) : null}
                     </>

@@ -585,3 +585,37 @@ exports.readPost = async (req, res, next) => {
         next(error);
     }
 };
+
+// @desc    Delete a post
+// @route   DELETE /api/posts/:post_id/:user_id
+exports.deletePost = async (req, res, next) => {
+    try {
+        const { post_id, user_id } = req.params;
+
+        const post = await Post.findById(post_id);
+
+        if (!post) {
+            return next(
+                new ErrorResponse(`Post with id ${post_id} not found`, 404)
+            );
+        }
+
+        if (post.user_id.toString() !== user_id) {
+            return next(
+                new ErrorResponse(
+                    `User with id ${user_id} is not authorized to delete this post`,
+                    401
+                )
+            );
+        }
+
+        // Only reach this point if everything is okay
+        await Post.findByIdAndDelete(post_id);
+
+        res.status(200).json({
+            success: true,
+        });
+    } catch (error) {
+        next(error);
+    }
+};

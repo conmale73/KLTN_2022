@@ -39,6 +39,7 @@ exports.createGroup = async (req, res, next) => {
             name,
             creator_id,
             privacy,
+            admins: [creator_id],
             members: [creator_id],
             requireVerify,
             visible,
@@ -127,9 +128,59 @@ exports.getAllPublicGroups = async (req, res, next) => {
     try {
         const groups = await Group.find({ privacy: "PUBLIC" });
 
+        const page = parseInt(req.query.page) || 1; // Current page
+        const limit = parseInt(req.query.limit) || 10; // Number of posts per page
+
+        const startIndex = (page - 1) * limit;
+
+        const totalResults = await Group.find({
+            privacy: "PUBLIC",
+        }).countDocuments();
+
+        const totalPages = Math.ceil(totalResults / limit);
+
+        const publicGroups = await Group.find({ privacy: "PUBLIC" })
+            .skip(startIndex)
+            .limit(limit);
+
         res.status(200).json({
             success: true,
-            data: groups,
+            data: publicGroups,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Get all recommend groups that user is not a member of
+// @route   GET /api/groups/recommend/:user_id
+// @access  Public
+exports.getRecommendGroups = async (req, res, next) => {
+    try {
+        const { user_id } = req.params;
+
+        const page = parseInt(req.query.page) || 1; // Current page
+        const limit = parseInt(req.query.limit) || 10; // Number of posts per page
+
+        const startIndex = (page - 1) * limit;
+
+        const totalResults = await Group.find({
+            visible: true,
+            members: { $ne: user_id },
+        }).countDocuments();
+
+        const totalPages = Math.ceil(totalResults / limit);
+
+        const publicGroups = await Group.find({
+            visible: true,
+            members: { $ne: user_id },
+        })
+            .skip(startIndex)
+            .limit(limit);
+
+        res.status(200).json({
+            success: true,
+            data: publicGroups,
         });
     } catch (error) {
         next(error);
@@ -242,57 +293,133 @@ exports.requestJoinGroup = async (req, res, next) => {
                 new ErrorResponse(`Group with id ${group_id} not found`, 404)
             );
         }
-        let notification;
-        let notificationIds = [];
-        if (group.privacy == "PRIVATE") {
-            if (group.members.includes(user_id)) {
+
+        if (group.members.includes(user_id)) {
+            return next(
+                new ErrorResponse(
+                    `User with id ${user_id} is already a member of group with id ${group_id}`,
+                    400
+                )
+            );
+        }
+
+        if (group.requireVerify == true) {
+            if (
+                group.pendingRequests.some(
+                    (request) => request.user_id.toString() == user_id
+                )
+            ) {
                 return next(
                     new ErrorResponse(
-                        `User with id ${user_id} is already a member of group with id ${group_id}`,
+                        `User with id ${user_id} has already sent a request to join group with id ${group_id}`,
                         400
                     )
                 );
-            } else {
-                if (group.requireVerify == true) {
-                    group.admins.forEach(async (admin) => {
-                        notification = new Notification({
-                            type: "GROUP_REQUEST",
-                            sender: {
-                                user_id: new ObjectId(user_id),
-                                username: user.username,
-                                avatar: user.avatar,
-                            },
-                            receiver_id: new ObjectId(admin),
-                            group_id: group_id,
-                            status: "PENDING",
-                            content: `has requested to join group ${group.name}`,
-                            link: `/social/groups/${group_id}`,
-                        });
-
-                        const savedNotification = await notification.save();
-                        notificationIds.push(savedNotification._id);
-                        group.pendingRequests.push({
-                            user_id: new ObjectId(user_id),
-                            notification_id: notificationIds,
-                        });
-
-                        group.save();
-                    });
-                } else {
-                    group.members.push(user_id);
-
-                    const updatedGroup = await Group.findOneAndUpdate(
-                        { _id: group_id },
-                        { $addToSet: { members: user_id } }, // $addToSet prevents duplicate members
-                        { new: true }
-                    );
-                    res.status(200).json({
-                        success: true,
-                        data: updatedGroup,
-                    });
-                }
             }
+
+            const notification = new Notification({
+                type: "GROUP_REQUEST",
+                sender: {
+                    user_id: new ObjectId(user_id),
+                    username: user.username,
+                    avatar: user.avatar,
+                },
+                receiver_id: new ObjectId(group.creator_id),
+                group_id: new ObjectId(group_id),
+                status: "PENDING",
+                content: `has requested to join group ${group.name}`,
+                link: `/social/groups/${group_id}`,
+            });
+
+            const savedNotification = await notification.save(); // Await the save operation
+
+            group.pendingRequests.push({
+                user_id: new ObjectId(user_id),
+                notification_id: savedNotification._id, // Now access _id property
+            });
+
+            const updatedGroup = await group.save();
+
+            res.status(200).json({
+                success: true,
+                data: updatedGroup,
+            });
+        } else {
+            const updatedGroup = await Group.findOneAndUpdate(
+                { _id: group_id },
+                { $addToSet: { members: user_id } }, // $addToSet prevents duplicate members
+                { new: true }
+            );
+
+            res.status(200).json({
+                success: true,
+                data: updatedGroup,
+            });
         }
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Cancel request to join group
+// @route   PUT /api/groups/cancel-request-join/:group_id
+// @access  Public
+exports.cancelRequestJoinGroup = async (req, res, next) => {
+    try {
+        const { group_id } = req.params;
+        const { user_id, notification_id } = req.body;
+
+        const group = await Group.findById(group_id);
+        const user = await User.findById(user_id);
+        if (!group) {
+            return next(
+                new ErrorResponse(`Group with id ${group_id} not found`, 404)
+            );
+        }
+
+        if (group.members.includes(user_id)) {
+            return next(
+                new ErrorResponse(
+                    `User with id ${user_id} is already a member of group with id ${group_id}`,
+                    400
+                )
+            );
+        }
+
+        if (
+            !group.pendingRequests.some(
+                (request) => request.user_id.toString() == user_id
+            )
+        ) {
+            return next(
+                new ErrorResponse(
+                    `User with id ${user_id} has not sent a request to join group with id ${group_id}`,
+                    400
+                )
+            );
+        }
+
+        const notification = await Notification.findOneAndDelete(
+            { _id: notification_id },
+            { new: true }
+        );
+
+        const updatedGroup = await Group.findOneAndUpdate(
+            { _id: group_id },
+            {
+                $pull: {
+                    pendingRequests: {
+                        user_id: user_id,
+                    },
+                },
+            },
+            { new: true }
+        );
+
+        res.status(200).json({
+            success: true,
+            data: updatedGroup,
+        });
     } catch (error) {
         next(error);
     }
@@ -431,74 +558,115 @@ exports.inviteUserToGroup = async (req, res, next) => {
 // @access  Public
 exports.acceptInvitationToGroup = async (req, res, next) => {
     try {
-        // const { group_id } = req.params;
-        // const { user_id, notification_id } = req.body;
-        // const group = await Group.findById(group_id);
-        // const user = await User.findById(user_id);
-        // if (!group) {
-        //     return next(
-        //         new ErrorResponse(`Group with id ${group_id} not found`, 404)
-        //     );
-        // }
-        // if (group.members.includes(user_id)) {
-        //     return next(
-        //         new ErrorResponse(
-        //             `User with id ${user_id} is already a member of group with id ${group_id}`,
-        //             400
-        //         )
-        //     );
-        // }
-        // const invitation = group.pendingMembers.find(
-        //     (invitation) => invitation.receiver_id.toString() == user_id
-        // );
-        // if (invitation) {
-        //     if (group.requireVerify == true) {
-        //         if (group.admins.includes(invitation.sender_id)) {
-        //             group.members.push(user_id);
-        //             await group.save();
-        //         } else {
-        //             group.pendingRequests.push({
-        //                 user_id: new ObjectId(user_id),
-        //                 notification_id: invitation.notification_id,
-        //             });
-        //         }
-        //     } else {
-        //         const updatedGroup = await Group.findOneAndUpdate(
-        //             { _id: group_id },
-        //             { $addToSet: { members: user_id } }, // $addToSet prevents duplicate members
-        //             { new: true }
-        //         );
-        //         const notification = await Notification.findOneAndUpdate(
-        //             {
-        //                 _id: notification_id,
-        //             },
-        //             { status: "ACCEPTED" },
-        //             { new: true }
-        //         );
-        //     }
-        //     const updatedGroup2 = await Group.findOneAndUpdate(
-        //         { _id: group_id },
-        //         {
-        //             $pull: {
-        //                 pendingMembers: {
-        //                     receiver_id: user_id,
-        //                 },
-        //             },
-        //         },
-        //         { new: true }
-        //     );
-        //     res.status(200).json({
-        //         success: true,
-        //         data: updatedGroup,
-        //     });
-        // } else {
-        //     return next(
-        //         new ErrorResponse(
-        //             `User with id ${user_id} has not received an invitation to join group with id ${group_id}`,
-        //             400
-        //         )
-        //     );
-        // }
+        const { group_id } = req.params;
+        const { user_id, notification_id } = req.body;
+
+        const group = await Group.findById(group_id);
+
+        const invitation = group.pendingMembers.find(
+            (invitation) => invitation.receiver_id.toString() == user_id
+        );
+        if (!group) {
+            return next(
+                new ErrorResponse(`Group with id ${group_id} not found`, 404)
+            );
+        }
+
+        if (group.members.includes(user_id)) {
+            return next(
+                new ErrorResponse(
+                    `User with id ${user_id} is already a member of group with id ${group_id}`,
+                    400
+                )
+            );
+        }
+
+        if (group.privacy == "PUBLIC") {
+            const updatedGroup = await Group.findOneAndUpdate(
+                { _id: group_id },
+                {
+                    $addToSet: { members: user_id },
+                    $pull: {
+                        pendingMembers: {
+                            receiver_id: user_id,
+                        },
+                    },
+                }, // $addToSet prevents duplicate members
+                { new: true }
+            );
+
+            res.status(200).json({
+                success: true,
+                data: updatedGroup,
+            });
+        } else {
+            if (
+                group.admins.some(
+                    (admin) =>
+                        admin.toString() == invitation.sender_id.toString()
+                ) ||
+                group.creator_id.toString() == invitation.sender_id.toString()
+            ) {
+                const updatedGroup = await Group.findOneAndUpdate(
+                    { _id: group_id },
+                    {
+                        $addToSet: { members: user_id },
+                        $pull: {
+                            pendingMembers: {
+                                receiver_id: user_id,
+                            },
+                        },
+                    }, // $addToSet prevents duplicate members
+                    { new: true }
+                );
+
+                res.status(200).json({
+                    success: true,
+                    data: updatedGroup,
+                });
+            } else {
+                if (group.requireVerify == false) {
+                    const updatedGroup = await Group.findOneAndUpdate(
+                        { _id: group_id },
+                        {
+                            $addToSet: { members: user_id },
+                            $pull: {
+                                pendingMembers: {
+                                    receiver_id: user_id,
+                                },
+                            },
+                        }, // $addToSet prevents duplicate members
+                        { new: true }
+                    );
+                    res.status(200).json({
+                        success: true,
+                        data: updatedGroup,
+                    });
+                } else {
+                    const updatedGroup = await Group.findOneAndUpdate(
+                        { _id: group_id },
+                        {
+                            $push: {
+                                pendingRequests: {
+                                    user_id: user_id,
+                                    notification_id: notification_id,
+                                },
+                            },
+                            $pull: {
+                                pendingMembers: {
+                                    receiver_id: user_id,
+                                },
+                            },
+                        }, // $addToSet prevents duplicate members
+                        { new: true }
+                    );
+                    res.status(200).json({
+                        success: true,
+                        data: updatedGroup,
+                    });
+                }
+            }
+        }
     } catch (error) {
         next(error);
     }
@@ -562,13 +730,13 @@ exports.declineInvitationToGroup = async (req, res, next) => {
     }
 };
 
-// @desc    Remove user from group
-// @route   PUT /api/groups/remove-user/:group_id
+// @desc    Set user as admin
+// @route   PUT /api/groups/set-admin/:group_id
 // @access  Public
-exports.removeUserFromGroup = async (req, res, next) => {
+exports.setUserAsAdmin = async (req, res, next) => {
     try {
         const { group_id } = req.params;
-        const { creator_id, user_id } = req.body;
+        const { setter_id, user_id } = req.body;
 
         const group = await Group.findById(group_id);
 
@@ -586,17 +754,113 @@ exports.removeUserFromGroup = async (req, res, next) => {
                 )
             );
         } else {
-            if (group.creator_id != creator_id) {
+            if (group.creator_id != setter_id) {
                 return next(
                     new ErrorResponse(
-                        `User with id ${creator_id} is not authorized to remove users from group with id ${group_id}`,
+                        `User with id ${setter_id} is not authorized to set admins for group with id ${group_id}`,
                         401
                     )
                 );
             }
             const updatedGroup = await Group.findOneAndUpdate(
                 { _id: group_id },
-                { $pull: { members: user_id } },
+                { $addToSet: { admins: user_id } }, // $addToSet prevents duplicate admins
+                { new: true }
+            );
+
+            res.status(200).json({
+                success: true,
+                data: updatedGroup,
+            });
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Remove user as admin
+// @route   PUT /api/groups/remove-admin/:group_id
+// @access  Public
+exports.removeUserAsAdmin = async (req, res, next) => {
+    try {
+        const { group_id } = req.params;
+        const { setter_id, user_id } = req.body;
+
+        const group = await Group.findById(group_id);
+
+        if (!group) {
+            return next(
+                new ErrorResponse(`Group with id ${group_id} not found`, 404)
+            );
+        }
+
+        if (!group.members.includes(user_id)) {
+            return next(
+                new ErrorResponse(
+                    `User with id ${user_id} is not a member of group with id ${group_id}`,
+                    400
+                )
+            );
+        } else {
+            if (group.creator_id != setter_id) {
+                return next(
+                    new ErrorResponse(
+                        `User with id ${setter_id} is not authorized to remove admins for group with id ${group_id}`,
+                        401
+                    )
+                );
+            }
+            const updatedGroup = await Group.findOneAndUpdate(
+                { _id: group_id },
+                { $pull: { admins: user_id } },
+                { new: true }
+            );
+
+            res.status(200).json({
+                success: true,
+                data: updatedGroup,
+            });
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Remove user from group
+// @route   PUT /api/groups/remove-user/:group_id
+// @access  Public
+exports.removeUserFromGroup = async (req, res, next) => {
+    try {
+        const { group_id } = req.params;
+        const { setter_id, user_id } = req.body;
+
+        const group = await Group.findById(group_id);
+
+        if (!group) {
+            return next(
+                new ErrorResponse(`Group with id ${group_id} not found`, 404)
+            );
+        }
+
+        if (!group.members.includes(user_id)) {
+            return next(
+                new ErrorResponse(
+                    `User with id ${user_id} is not a member of group with id ${group_id}`,
+                    400
+                )
+            );
+        } else {
+            if (group.creator_id != setter_id) {
+                return next(
+                    new ErrorResponse(
+                        `User with id ${setter_id} is not authorized to remove users from group with id ${group_id}`,
+                        401
+                    )
+                );
+            }
+            const updatedGroup = await Group.findOneAndUpdate(
+                { _id: group_id },
+                { $pull: { members: user_id, admins: user_id } },
                 { new: true }
             );
 
@@ -685,7 +949,7 @@ exports.leaveGroup = async (req, res, next) => {
         } else {
             const updatedGroup = await Group.findOneAndUpdate(
                 { _id: group_id },
-                { $pull: { members: user_id } },
+                { $pull: { members: user_id, admins: user_id } },
                 { new: true }
             );
 

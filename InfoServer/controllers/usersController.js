@@ -46,6 +46,7 @@ exports.createUser = async (req, res, next) => {
             username,
             email,
             password,
+            friendList: [new ObjectId("64a572c866ab977f9fc0bdd7")],
             background: {
                 files: [
                     {
@@ -116,6 +117,34 @@ exports.getUserByEmail = async (req, res, next) => {
         res.status(200).json({ success: true, data: user });
     } catch (error) {
         next(error);
+    }
+};
+
+// Update user password
+exports.updateUserPassword = async (req, res, next) => {
+    try {
+        const { user_id, password, newPassword } = req.body;
+
+        // Find the user by id
+        const user = await User.findById(user_id);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Compare the entered password with the stored hashed password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Invalid password" });
+        }
+        user.password = newPassword;
+        await user.save();
+
+        res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error });
     }
 };
 
@@ -653,40 +682,7 @@ exports.removeFriend = async (req, res, next) => {
     }
 };
 
-// @desc  Get friend requests
-// @route GET /api/users/friendRequests/:user_id
-// @access Public
-exports.getFriendRequests = async (req, res, next) => {
-    try {
-        const { user_id } = req.params;
-
-        const page = parseInt(req.query.page) || 1; // Current page
-        const limit = parseInt(req.query.limit) || 10; // Number of posts per page
-
-        const startIndex = (page - 1) * limit;
-        const endIndex = page * limit;
-
-        const totalPosts = await User.findById(user_id).countDocuments();
-        const totalPages = Math.ceil(totalPosts / limit);
-
-        const friendRequests = await User.findById(user_id)
-            .populate("friendRequest")
-            .select("friendRequest")
-            .skip(startIndex)
-            .limit(limit);
-
-        res.status(200).json({
-            success: true,
-            data: friendRequests,
-            page,
-            totalPages,
-        });
-    } catch (error) {
-        next(error);
-    }
-};
-
-// @desc  Get friend list
+// @desc  Get friendList
 // @route GET /api/users/friendList/:user_id
 // @access Public
 exports.getFriendList = async (req, res, next) => {
@@ -695,29 +691,29 @@ exports.getFriendList = async (req, res, next) => {
 
         const user = await User.findById(user_id).lean();
 
-        const friendList = user.friendList;
+        let friends = [];
 
-        const friendListInfo = [];
-        // Use Promise.all to wait for all friendInfo promises to resolve
-        await Promise.all(
-            friendList.map(async (friend) => {
-                const friendInfo = await User.findById(friend);
+        if (user.friendList.length > 0) {
+            await Promise.all(
+                user.friendList.map(async (user) => {
+                    const userToResponse = await User.findById(user._id).lean();
 
-                if (friendInfo) {
-                    const friendInfoToPush = {
-                        _id: friendInfo._id,
-                        email: friendInfo.email,
-                        username: friendInfo.username,
-                        avatar: friendInfo.avatar,
-                        description: friendInfo.description,
-                        musicType: friendInfo.musicType,
-                        friendList: friendInfo.friendList,
-                        friendRequest: friendInfo.friendRequest,
+                    const data = {
+                        _id: userToResponse._id,
+                        email: userToResponse.email,
+                        username: userToResponse.username,
+                        avatar: userToResponse.avatar,
+                        description: userToResponse.description,
+                        musicType: userToResponse.musicType,
+                        friendList: userToResponse.friendList,
+                        friendRequest: userToResponse.friendRequest,
+                        friendRequestSent: userToResponse.friendRequestSent,
                     };
-                    friendListInfo.push(friendInfoToPush);
-                }
-            })
-        );
+
+                    friends.push(data);
+                })
+            );
+        }
 
         const page = parseInt(req.query.page) || 1; // Current page
         const limit = parseInt(req.query.limit) || 10; // Number of posts per page
@@ -725,17 +721,74 @@ exports.getFriendList = async (req, res, next) => {
         const startIndex = (page - 1) * limit;
         const endIndex = page * limit;
 
-        const totalResults = friendListInfo.length;
+        const totalResults = friends.length;
         const totalPages = Math.ceil(totalResults / limit);
 
-        const friendListInfoToResponse = friendListInfo.slice(
+        const friendsToResponse = friends.slice(startIndex, endIndex);
+
+        res.status(200).json({
+            success: true,
+            data: friendsToResponse,
+            page,
+            totalPages,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc  Get friend requests
+// @route GET /api/users/friendRequests/:user_id
+// @access Public
+exports.getFriendRequests = async (req, res, next) => {
+    try {
+        const { user_id } = req.params;
+
+        const user = await User.findById(user_id).lean();
+
+        let friendRequests = [];
+
+        if (user.friendRequest.length > 0) {
+            await Promise.all(
+                user.friendRequest.map(async (user) => {
+                    const userToResponse = await User.findById(
+                        user.user_id
+                    ).lean();
+
+                    const data = {
+                        _id: userToResponse._id,
+                        email: userToResponse.email,
+                        username: userToResponse.username,
+                        avatar: userToResponse.avatar,
+                        description: userToResponse.description,
+                        musicType: userToResponse.musicType,
+                        friendList: userToResponse.friendList,
+                        friendRequest: userToResponse.friendRequest,
+                        friendRequestSent: userToResponse.friendRequestSent,
+                    };
+
+                    friendRequests.push(data);
+                })
+            );
+        }
+
+        const page = parseInt(req.query.page) || 1; // Current page
+        const limit = parseInt(req.query.limit) || 10; // Number of posts per page
+
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+
+        const totalResults = friendRequests.length;
+        const totalPages = Math.ceil(totalResults / limit);
+
+        const friendRequestsToResponse = friendRequests.slice(
             startIndex,
             endIndex
         );
 
         res.status(200).json({
             success: true,
-            data: friendListInfoToResponse,
+            data: friendRequestsToResponse,
             page,
             totalPages,
         });
@@ -865,6 +918,7 @@ exports.getMutualFriends = async (req, res, next) => {
             data: mutualFriendsInfoToResponse,
             page,
             totalPages,
+            totalResults,
         });
     } catch (error) {
         next(error);

@@ -14,6 +14,9 @@ router.get("/email/:email", usersController.getUserByEmail);
 // POST /api/users
 router.post("/", usersController.createUser);
 
+// PUT /api/users/updatePassword/
+router.put("/updatePassword/", usersController.updateUserPassword);
+
 // PUT /api/users/updateInfo
 router.put("/updateInfo", usersController.updateUserInfo);
 
@@ -48,10 +51,10 @@ router.post("/cancelFriendRequest", usersController.cancelFriendRequest);
 router.post("/removeFriend", usersController.removeFriend);
 
 // GET /api/users/friendRequests/:user_id
-router.get("/friendRequests/:user_id", usersController.getFriendRequests);
+router.get("/friendList/:user_id", usersController.getFriendList);
 
 // GET /api/users/friendList/:user_id
-router.get("/friendList/:user_id", usersController.getFriendList);
+router.get("/friendRequests/:user_id", usersController.getFriendRequests);
 
 // GET /api/users/mutualFriends/:friend_id/:user_id
 router.get(
