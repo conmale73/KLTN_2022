@@ -183,6 +183,7 @@ exports.countUnreadMessagesOfChats = async (req, res, next) => {
             success: true,
             data: unreadCount,
             highlightChats: chatsWithUnreadMessages,
+            chats: groupChatIDs,
         });
     } catch (error) {
         next(error);

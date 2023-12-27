@@ -8,13 +8,12 @@ import { FaFaceSmile } from "react-icons/fa6";
 
 import { useState, useRef, useEffect } from "react";
 import EmojiPicker from "emoji-picker-react";
-import io from "socket.io-client";
+
 import TextareaAutosize from "react-textarea-autosize";
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 
-var socket = io("http://localhost:3000");
-
+import { socket } from "../../socket.js";
 const ChatBox = (props) => {
     const user = useSelector((state) => state.user.data);
     const currentChat = useSelector(
@@ -46,14 +45,16 @@ const ChatBox = (props) => {
         queryFn: () => fetchData(),
     });
     useEffect(() => {
-        socket.emit("joinChat", user._id, props.chat_id);
-
-        socket.on("receiveMessage", (message) => {
-            setMessages((messages) => [message, ...messages]);
-        });
         setMessages([]);
         setPage(1);
     }, [props.chat_id]);
+
+    useEffect(() => {
+        socket.emit("joinChat", user._id, props.chat_id);
+        socket.on("receiveMessage", (message) => {
+            setMessages((messages) => [message, ...messages]);
+        });
+    }, []);
 
     const handleSelectEmoji = (emojiObject, e) => {
         if (emojiObject && emojiObject.emoji) {
@@ -100,7 +101,7 @@ const ChatBox = (props) => {
                     user.username,
                     text
                 );
-                socket.emit("sendMessage", newMessage);
+                socket.emit("sendMessage", newMessage, newMessage.sender_id);
                 setMessages((messages) => [newMessage, ...messages]);
                 setText("");
             } catch (err) {

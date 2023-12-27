@@ -16,7 +16,7 @@ const UserPreview = ({
     const user = useSelector((state) => state.user.data);
     const onlineUsers = useSelector((state) => state.onlineUsers.data);
 
-    if (userData._id === user._id) {
+    if (userData._id === user?._id) {
         return (
             <>
                 <HoverCard.Root>
@@ -218,7 +218,7 @@ const UserPreview = ({
                                         <p className="font-bold">Intro:</p>
                                         <p>{user.description}</p>
                                     </div>
-                                    <div className="flex m-0 text-[15px] leading-[1.5]">
+                                    {/* <div className="flex m-0 text-[15px] leading-[1.5]">
                                         <p className="font-bold">Music:</p>
                                         {user.musicType.map((type, index) => (
                                             <div
@@ -228,7 +228,7 @@ const UserPreview = ({
                                                 {type}
                                             </div>
                                         ))}
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
 
@@ -452,7 +452,7 @@ const UserPreview = ({
                                         <p className="font-bold">Intro:</p>
                                         <p>{userData.description}</p>
                                     </div>
-                                    <div className="flex m-0 text-[15px] leading-[1.5]">
+                                    {/* <div className="flex m-0 text-[15px] leading-[1.5]">
                                         <p className="font-bold">Music:</p>
                                         {userData.musicType.map(
                                             (type, index) => (
@@ -464,7 +464,7 @@ const UserPreview = ({
                                                 </div>
                                             )
                                         )}
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
 

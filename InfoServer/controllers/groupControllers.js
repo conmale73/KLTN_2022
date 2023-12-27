@@ -152,6 +152,45 @@ exports.getAllPublicGroups = async (req, res, next) => {
     }
 };
 
+// @desc    Get admins info
+// @route   GET /api/groups/admins/:group_id
+// @access  Public
+exports.getAdminsInfo = async (req, res, next) => {
+    try {
+        const { group_id } = req.params;
+
+        const group = await Group.findById(group_id);
+
+        const admins = group.admins;
+
+        const adminsInfo = [];
+        await Promise.all(
+            admins.map(async (admin) => {
+                const userInfo = await User.findById(admin);
+                if (userInfo) {
+                    const data = {
+                        _id: userInfo._id,
+                        email: userInfo.email,
+                        username: userInfo.username,
+                        avatar: userInfo.avatar,
+                        musicType: userInfo.musicType,
+                        description: userInfo.description,
+                    };
+
+                    adminsInfo.push(data);
+                }
+            })
+        );
+
+        res.status(200).json({
+            success: true,
+            data: adminsInfo,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
 // @desc    Get all recommend groups that user is not a member of
 // @route   GET /api/groups/recommend/:user_id
 // @access  Public
@@ -416,6 +455,201 @@ exports.cancelRequestJoinGroup = async (req, res, next) => {
             { new: true }
         );
 
+        res.status(200).json({
+            success: true,
+            data: updatedGroup,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Get pending requests to join group
+// @route   PUT /api/groups/pending-requests/:group_id
+// @access  Public
+exports.getPendingRequestsToJoinGroup = async (req, res, next) => {
+    try {
+        const { group_id } = req.params;
+        const { user_id } = req.body;
+
+        const group = await Group.findById(group_id);
+
+        const page = parseInt(req.query.page) || 1; // Current page
+        const limit = parseInt(req.query.limit) || 10; // Number of posts per page
+
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+
+        let resData = [];
+        await Promise.all(
+            group.pendingRequests.map(async (request) => {
+                const userInfo = await User.findById(request.user_id);
+
+                if (userInfo) {
+                    const data = {
+                        notification_id: request.notification_id,
+                        _id: userInfo._id,
+                        email: userInfo.email,
+                        username: userInfo.username,
+                        avatar: userInfo.avatar,
+                        musicType: userInfo.musicType,
+                        description: userInfo.description,
+                    };
+
+                    resData.push(data);
+                }
+            })
+        );
+
+        const totalResults = resData.length;
+
+        const totalPages = Math.ceil(totalResults / limit);
+
+        const pendingRequests = resData.slice(startIndex, endIndex);
+
+        res.status(200).json({
+            success: true,
+            data: pendingRequests,
+            page,
+            totalPages,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Accept request to join group
+// @route   PUT /api/groups/accept-request/:group_id
+// @access  Public
+exports.acceptRequestToJoinGroup = async (req, res, next) => {
+    try {
+        const { group_id } = req.params;
+        const { user_id, sender_id, notification_id } = req.body;
+
+        const group = await Group.findById(group_id);
+        const user = await User.findById(user_id);
+
+        if (!group) {
+            return next(
+                new ErrorResponse(`Group with id ${group_id} not found`, 404)
+            );
+        }
+
+        if (group.members.includes(sender_id)) {
+            return next(
+                new ErrorResponse(
+                    `User with id ${sender_id} is already a member of group with id ${group_id}`,
+                    400
+                )
+            );
+        }
+
+        if (!group.admins.includes(user_id)) {
+            return next(
+                new ErrorResponse(
+                    `User with id ${user_id} is not authorized to accept the request to join group with id ${group_id}`,
+                    400
+                )
+            );
+        }
+
+        const updatedGroup = await Group.findOneAndUpdate(
+            { _id: group_id },
+            {
+                $addToSet: { members: sender_id },
+                $pull: {
+                    pendingRequests: {
+                        user_id: sender_id,
+                    },
+                },
+            }, // $addToSet prevents duplicate members
+            { new: true }
+        );
+
+        const notification = await Notification.findOneAndUpdate(
+            {
+                _id: notification_id,
+            },
+            { status: "ACCEPTED" },
+            { new: true }
+        );
+
+        const newNotification = new Notification({
+            type: "GROUP_ACCEPT",
+            sender: {
+                user_id: new ObjectId(user_id),
+                username: user.username,
+                avatar: user.avatar,
+            },
+            receiver_id: new ObjectId(sender_id),
+            group_id: new ObjectId(group_id),
+            status: "ACCEPTED",
+            content: `has accepted your request to join group ${group.name}`,
+            link: `/social/groups/${group_id}`,
+        });
+
+        res.status(200).json({
+            success: true,
+            data: updatedGroup,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Decline request to join group
+// @route   PUT /api/groups/decline-request/:group_id
+// @access  Public
+exports.declineRequestToJoinGroup = async (req, res, next) => {
+    try {
+        const { group_id } = req.params;
+        const { user_id, sender_id, notification_id } = req.body;
+
+        const group = await Group.findById(group_id);
+
+        if (!group) {
+            return next(
+                new ErrorResponse(`Group with id ${group_id} not found`, 404)
+            );
+        }
+
+        if (group.members.includes(sender_id)) {
+            return next(
+                new ErrorResponse(
+                    `User with id ${sender_id} is already a member of group with id ${group_id}`,
+                    400
+                )
+            );
+        }
+
+        if (!group.admins.includes(user_id)) {
+            return next(
+                new ErrorResponse(
+                    `User with id ${user_id} is not authorized to accept the request to join group with id ${group_id}`,
+                    400
+                )
+            );
+        }
+
+        const updatedGroup = await Group.findOneAndUpdate(
+            { _id: group_id },
+            {
+                $pull: {
+                    pendingRequests: {
+                        user_id: sender_id,
+                    },
+                },
+            }, // $addToSet prevents duplicate members
+            { new: true }
+        );
+
+        const notification = await Notification.findOneAndUpdate(
+            {
+                _id: notification_id,
+            },
+            { status: "DECLINED" },
+            { new: true }
+        );
         res.status(200).json({
             success: true,
             data: updatedGroup,

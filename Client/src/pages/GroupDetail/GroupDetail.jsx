@@ -17,6 +17,7 @@ import styles from "./GroupDetail.module.scss";
 import Discussion from "./Discussion";
 import Members from "./Members";
 import Events from "./Events";
+import About from "./About";
 import GroupSettings from "./GroupSettings";
 import GroupModeration from "./GroupModeration";
 import { setGroupDetail } from "../../redux/groupDetail/groupDetailSlice";
@@ -128,97 +129,393 @@ const GroupDetail = () => {
         console.log(res.data);
         dispatch(setGroupDetail(res.data.data));
     };
-    return (
-        <div
-            className={`${styles.groupDetail} flex w-full flex-col gap-[20px] items-center`}
-        >
+
+    if (groupDetail?.members?.includes(user?._id)) {
+        return (
             <div
-                className={`groupHeader w-full h-fit flex flex-col items-center bg-[#303030] rounded-[20px]`}
+                className={`${styles.groupDetail} flex w-full flex-col gap-[20px] items-center`}
             >
                 <div
-                    className="imageContainer flex justify-center groupThumbnail w-[80%] h-[400px] 
-                object-fill relative"
+                    className={`groupHeader w-full h-fit flex flex-col items-center bg-[#303030] rounded-[20px]`}
                 >
-                    {group && (
-                        <ImageViewer
-                            image={groupDetail?.thumbnail?.files[0]}
-                            objectFit="cover"
-                        />
-                    )}
-
-                    <div className="groupBy flex items-center gap-2 pl-[10px] absolute bottom-0 h-[50px] w-full bg-[#414141]">
-                        <span className="">{`Group by`}</span>
+                    <div
+                        className="imageContainer flex justify-center groupThumbnail w-[80%] h-[400px] 
+                object-fill relative"
+                    >
                         {group && (
-                            <UserInfoPreview
-                                nameOnly={true}
-                                user_id={groupDetail?.creator_id}
-                                link={true}
+                            <ImageViewer
+                                image={groupDetail?.thumbnail?.files[0]}
+                                objectFit="cover"
                             />
                         )}
+
+                        <div className="groupBy flex items-center gap-2 pl-[10px] absolute bottom-0 h-[50px] w-full bg-[#414141]">
+                            <span className="">{`Group by`}</span>
+                            {group && user && (
+                                <UserInfoPreview
+                                    nameOnly={true}
+                                    user_id={groupDetail?.creator_id}
+                                    link={true}
+                                />
+                            )}
+                        </div>
+                    </div>
+                    <div className="groupInfo w-full h-fit flex justify-center">
+                        <div className="w-[80%]">
+                            <div className="groupName text-[30px] font-bold text-start">
+                                {groupDetail?.name}
+                            </div>
+                            <div className="groupDescription flex gap-[10px] items-center mt-[5px] mb-[10px]">
+                                {groupDetail?.privacy == "PUBLIC" ? (
+                                    <div className="groupPrivacy flex gap-[5px] items-center">
+                                        <FaGlobeAsia
+                                            size="14px"
+                                            color="#adadad"
+                                        />
+                                        <p className="text-[14px] text-[#adadad]">
+                                            Public group
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className="groupPrivacy flex gap-[5px] items-center">
+                                        <FaLock size="20px" color="#adadad" />
+                                        <p className="text-[14px] text-[#adadad]">
+                                            Private group
+                                        </p>
+                                    </div>
+                                )}
+                                <span>•</span>
+                                <p
+                                    className="text-[16px] font-[600] hover:underline cursor-pointer"
+                                    onClick={() => setSelectedTab("Members")}
+                                >{`${groupDetail?.members.length} members`}</p>
+                                <span>•</span>
+
+                                <p className="text-[16px] font-[500] flex-1 text-ellipsis">
+                                    {groupDetail?.description}
+                                </p>
+                            </div>
+                            <div className="groupMemberPreview flex w-full h-fit items-center gap-2 relative">
+                                {groupDetail?.members?.map((member, index) => {
+                                    if (index < 10) {
+                                        return (
+                                            <UserInfoPreview
+                                                thumbnailWidth="30px"
+                                                thumbnailHeight="30px"
+                                                key={index}
+                                                user_id={member}
+                                                showName={false}
+                                                displayOnlineStatus={false}
+                                            />
+                                        );
+                                    }
+                                })}
+                                {groupDetail?.members.includes(user._id) ? (
+                                    <div className="flex gap-[10px] absolute right-0">
+                                        <InviteModal
+                                            key="invitemodal"
+                                            open={openInviteModal}
+                                            setOpen={setOpenInviteModal}
+                                            memberList={groupDetail?.members}
+                                        />
+                                        <LeaveGroupButton
+                                            group_id={group_id}
+                                            key="leaveGroupButton"
+                                            creator_id={groupDetail?.creator_id}
+                                        />
+                                    </div>
+                                ) : (
+                                    <>
+                                        {groupDetail?.pendingMembers.some(
+                                            (member) =>
+                                                member.receiver_id == user._id
+                                        ) ? (
+                                            <div className="flex absolute right-0 gap-[10px]">
+                                                <div
+                                                    className="flex items-center justify-center gap-2 p-[7px] rounded-[5px] cursor-pointer bg-[#404040]
+            hover:bg-[#555555] w-fit h-[40px]"
+                                                    onClick={() =>
+                                                        handleDeclineInvitation()
+                                                    }
+                                                >
+                                                    <div className="text-[18px] font-bold">
+                                                        Decline
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    className="flex items-center justify-center gap-2 p-[7px] rounded-[5px] cursor-pointer bg-[#555555]
+ hover:bg-[#676668]  w-fit h-[40px]"
+                                                    onClick={() =>
+                                                        handleAcceptInvitation()
+                                                    }
+                                                >
+                                                    <IoMdPersonAdd size="18px" />
+                                                    <div className="text-[18px] font-bold">
+                                                        Accept invitation
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                {groupDetail?.pendingRequests.some(
+                                                    (request) =>
+                                                        request.user_id ==
+                                                        user._id
+                                                ) ? (
+                                                    <span
+                                                        className="flex items-center justify-center gap-2 p-[7px] rounded-[5px] cursor-pointer bg-[#555555]
+                                 hover:bg-[#676668] absolute right-0 w-fit h-[40px]"
+                                                        onClick={() =>
+                                                            handleClickCancelRequest()
+                                                        }
+                                                    >
+                                                        <FaUserGroup size="18px" />
+                                                        <div className="text-[18px] font-bold">
+                                                            Cancel request
+                                                        </div>
+                                                    </span>
+                                                ) : (
+                                                    <span
+                                                        className="flex items-center justify-center gap-2 p-[7px] rounded-[5px] cursor-pointer bg-[#555555]
+                             hover:bg-[#676668] absolute right-0 w-fit h-[40px]"
+                                                        onClick={() =>
+                                                            handleClickJoin()
+                                                        }
+                                                    >
+                                                        <FaUserGroup size="18px" />
+                                                        <div className="text-[18px] font-bold">
+                                                            Join group
+                                                        </div>
+                                                    </span>
+                                                )}
+                                            </>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                            <div className={`${styles.nav}`}>
+                                <div className={`${styles.navMenu}`}>
+                                    <div
+                                        className={`${styles.navItem} ${
+                                            selectedTab == "Discussion"
+                                                ? styles.selected
+                                                : ""
+                                        }`}
+                                        onClick={(e) =>
+                                            setSelectedTab("Discussion")
+                                        }
+                                    >
+                                        <p
+                                            className={`${styles.text} ${
+                                                selectedTab == "Discussion"
+                                                    ? styles.selectedText
+                                                    : ""
+                                            }`}
+                                        >
+                                            Discussion
+                                        </p>
+                                    </div>
+                                    <div
+                                        className={`${styles.navItem} ${
+                                            selectedTab == "Members"
+                                                ? styles.selected
+                                                : ""
+                                        }`}
+                                        onClick={(e) =>
+                                            setSelectedTab("Members")
+                                        }
+                                    >
+                                        <p
+                                            className={`${styles.text} ${
+                                                selectedTab == "Members"
+                                                    ? styles.selectedText
+                                                    : ""
+                                            }`}
+                                        >
+                                            Members
+                                        </p>
+                                    </div>
+                                    {groupDetail?.admins.some(
+                                        (admin) => admin == user._id
+                                    ) && (
+                                        <div
+                                            className={`${styles.navItem} ${
+                                                selectedTab == "Requests"
+                                                    ? styles.selected
+                                                    : ""
+                                            }`}
+                                            onClick={(e) =>
+                                                setSelectedTab("Requests")
+                                            }
+                                        >
+                                            <p
+                                                className={`${styles.text} ${
+                                                    selectedTab == "Requests"
+                                                        ? styles.selectedText
+                                                        : ""
+                                                }`}
+                                            >
+                                                Requests
+                                            </p>
+                                        </div>
+                                    )}
+                                    <div
+                                        className={`${styles.navItem} ${
+                                            selectedTab == "About"
+                                                ? styles.selected
+                                                : ""
+                                        }`}
+                                        onClick={(e) => setSelectedTab("About")}
+                                    >
+                                        <p
+                                            className={`${styles.text} ${
+                                                selectedTab == "About"
+                                                    ? styles.selectedText
+                                                    : ""
+                                            }`}
+                                        >
+                                            About
+                                        </p>
+                                    </div>
+
+                                    {/* <div
+                                    className={`${styles.navItem} ${
+                                        selectedTab == "Events"
+                                            ? styles.selected
+                                            : ""
+                                    }`}
+                                    onClick={(e) => setSelectedTab("Events")}
+                                >
+                                    <p
+                                        className={`${styles.text} ${
+                                            selectedTab == "Events"
+                                                ? styles.selectedText
+                                                : ""
+                                        }`}
+                                    >
+                                        Events
+                                    </p>
+                                </div> */}
+
+                                    {/* {groupDetail?.creator_id == user._id ? (
+                                    <div
+                                        className={`${styles.navItem} ${
+                                            selectedTab == "GroupSettings"
+                                                ? styles.selected
+                                                : ""
+                                        }`}
+                                        onClick={(e) =>
+                                            setSelectedTab("GroupSettings")
+                                        }
+                                    >
+                                        <p
+                                            className={`${styles.text} ${
+                                                selectedTab == "GroupSettings"
+                                                    ? styles.selectedText
+                                                    : ""
+                                            }`}
+                                        >
+                                            Settings
+                                        </p>
+                                    </div>
+                                ) : null} */}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div className="groupInfo w-full h-fit flex justify-center">
-                    <div className="w-[80%]">
-                        <div className="groupName text-[30px] font-bold text-start">
-                            {groupDetail?.name}
+                <div className="w-[80%] h-fit min-h-[1000px] flex justify-center">
+                    {selectedTab == "Discussion" && (
+                        <Discussion
+                            group_id={group_id}
+                            group_name={groupDetail?.name}
+                        />
+                    )}
+                    {selectedTab == "Members" && (
+                        <Members
+                            group_id={group_id}
+                            memberList={groupDetail?.members}
+                            admins={groupDetail?.admins}
+                            creator_id={groupDetail?.creator_id}
+                            role={role}
+                        />
+                    )}
+                    {selectedTab == "Events" && <Events group_id={group_id} />}
+                    {selectedTab == "GroupSettings" && (
+                        <>
+                            {groupDetail?.creator_id == user._id ? (
+                                <GroupSettings group_id={group_id} />
+                            ) : null}
+                        </>
+                    )}
+                    {selectedTab == "Requests" && (
+                        <>
+                            {groupDetail?.admins.some(
+                                (admin) => admin == user._id
+                            ) ? (
+                                <GroupModeration group_id={group_id} />
+                            ) : null}
+                        </>
+                    )}
+                    {selectedTab == "About" && (
+                        <About group_data={groupDetail} />
+                    )}
+                </div>
+            </div>
+        );
+    } else if (
+        groupDetail?.privacy == "PRIVATE" &&
+        !groupDetail?.members?.includes(user?._id)
+    ) {
+        return (
+            <div
+                className={`${styles.groupDetail} flex w-full flex-col gap-[20px] items-center`}
+            >
+                <div
+                    className={`groupHeader w-full h-fit flex flex-col items-center bg-[#303030] rounded-[20px]`}
+                >
+                    <div
+                        className="imageContainer flex justify-center groupThumbnail w-[80%] h-[400px] 
+                object-fill relative"
+                    >
+                        {group && (
+                            <ImageViewer
+                                image={groupDetail?.thumbnail?.files[0]}
+                                objectFit="cover"
+                            />
+                        )}
+
+                        <div className="groupBy flex items-center gap-2 pl-[10px] absolute bottom-0 h-[50px] w-full bg-[#414141]">
+                            <span className="">{`Group by`}</span>
+                            {group && (
+                                <UserInfoPreview
+                                    nameOnly={true}
+                                    user_id={groupDetail?.creator_id}
+                                    link={true}
+                                />
+                            )}
                         </div>
-                        <div className="groupDescription flex gap-[10px] items-center mt-[5px] mb-[10px]">
-                            {groupDetail?.privacy == "PUBLIC" ? (
+                    </div>
+                    <div className="groupInfo w-full h-fit flex justify-center">
+                        <div className="w-[80%]">
+                            <div className="groupName text-[30px] font-bold text-start">
+                                {groupDetail?.name}
+                            </div>
+                            <div className="groupDescription flex gap-[10px] items-center mt-[5px] mb-[10px]">
                                 <div className="groupPrivacy flex gap-[5px] items-center">
-                                    <FaGlobeAsia size="14px" />
-                                    <p className="text-[14px] text-[#adadad]">
-                                        Public group
-                                    </p>
-                                </div>
-                            ) : (
-                                <div className="groupPrivacy flex gap-[5px] items-center">
-                                    <FaLock size="20px" />
+                                    <FaLock size="20px" color="#adadad" />
                                     <p className="text-[14px] text-[#adadad]">
                                         Private group
                                     </p>
                                 </div>
-                            )}
-                            <span>•</span>
-                            <p
-                                className="text-[16px] font-[600] hover:underline cursor-pointer"
-                                onClick={() => setSelectedTab("Members")}
-                            >{`${groupDetail?.members.length} members`}</p>
-                            <span>•</span>
-
-                            <p className="text-[16px] font-[500] flex-1 text-ellipsis">
-                                {groupDetail?.description}
-                            </p>
-                        </div>
-                        <div className="groupMemberPreview flex w-full h-fit items-center gap-2 relative">
-                            {groupDetail?.members?.map((member, index) => {
-                                if (index < 10) {
-                                    return (
-                                        <UserInfoPreview
-                                            thumbnailWidth="30px"
-                                            thumbnailHeight="30px"
-                                            key={index}
-                                            user_id={member}
-                                            showName={false}
-                                            displayOnlineStatus={false}
-                                        />
-                                    );
-                                }
-                            })}
-                            {groupDetail?.members.includes(user._id) ? (
-                                <div className="flex gap-[10px] absolute right-0">
-                                    <InviteModal
-                                        key="invitemodal"
-                                        open={openInviteModal}
-                                        setOpen={setOpenInviteModal}
-                                        memberList={groupDetail?.members}
-                                    />
-                                    <LeaveGroupButton
-                                        group_id={group_id}
-                                        key="leaveGroupButton"
-                                        creator_id={groupDetail?.creator_id}
-                                    />
-                                </div>
-                            ) : (
+                                <span>•</span>
+                                <p
+                                    className="text-[16px] font-[600] text-[#adadad]"
+                                    onClick={() => setSelectedTab("Members")}
+                                >{`${groupDetail?.members.length} members`}</p>
+                                <span>•</span>
+                            </div>
+                            <div className="groupMemberPreview flex w-full h-fit items-center gap-2 relative">
                                 <>
                                     {groupDetail?.pendingMembers.some(
                                         (member) =>
@@ -284,130 +581,31 @@ const GroupDetail = () => {
                                         </>
                                     )}
                                 </>
-                            )}
-                        </div>
-                        <div className={`${styles.nav}`}>
-                            <div className={`${styles.navMenu}`}>
-                                <div
-                                    className={`${styles.navItem} ${
-                                        selectedTab == "Discussion"
-                                            ? styles.selected
-                                            : ""
-                                    }`}
-                                    onClick={(e) =>
-                                        setSelectedTab("Discussion")
-                                    }
-                                >
-                                    <p
-                                        className={`${styles.text} ${
-                                            selectedTab == "Discussion"
-                                                ? styles.selectedText
-                                                : ""
-                                        }`}
-                                    >
-                                        Discussion
-                                    </p>
-                                </div>
-                                <div
-                                    className={`${styles.navItem} ${
-                                        selectedTab == "Members"
-                                            ? styles.selected
-                                            : ""
-                                    }`}
-                                    onClick={(e) => setSelectedTab("Members")}
-                                >
-                                    <p
-                                        className={`${styles.text} ${
-                                            selectedTab == "Members"
-                                                ? styles.selectedText
-                                                : ""
-                                        }`}
-                                    >
-                                        Members
-                                    </p>
-                                </div>
-                                <div
-                                    className={`${styles.navItem} ${
-                                        selectedTab == "Events"
-                                            ? styles.selected
-                                            : ""
-                                    }`}
-                                    onClick={(e) => setSelectedTab("Events")}
-                                >
-                                    <p
-                                        className={`${styles.text} ${
-                                            selectedTab == "Events"
-                                                ? styles.selectedText
-                                                : ""
-                                        }`}
-                                    >
-                                        Events
-                                    </p>
-                                </div>
+                            </div>
 
-                                {groupDetail?.creator_id == user._id ? (
+                            <div className={`${styles.nav}`}>
+                                <div className={`${styles.navMenu}`}>
                                     <div
-                                        className={`${styles.navItem} ${
-                                            selectedTab == "GroupSettings"
-                                                ? styles.selected
-                                                : ""
-                                        }`}
-                                        onClick={(e) =>
-                                            setSelectedTab("GroupSettings")
-                                        }
+                                        className={`${styles.navItem} ${styles.selected}`}
+                                        onClick={(e) => setSelectedTab("About")}
                                     >
                                         <p
-                                            className={`${styles.text} ${
-                                                selectedTab == "GroupSettings"
-                                                    ? styles.selectedText
-                                                    : ""
-                                            }`}
+                                            className={`${styles.text} ${styles.selectedText}`}
                                         >
-                                            Settings
+                                            About
                                         </p>
                                     </div>
-                                ) : null}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div className="w-[80%] h-fit min-h-[1000px] flex justify-center">
+                    <About group_data={groupDetail} />
+                </div>
             </div>
-            <div className="w-[80%] h-fit min-h-[1000px] flex justify-center">
-                {selectedTab == "Discussion" && (
-                    <Discussion
-                        group_id={group_id}
-                        group_name={groupDetail?.name}
-                    />
-                )}
-                {selectedTab == "Members" && (
-                    <Members
-                        group_id={group_id}
-                        memberList={groupDetail?.members}
-                        admins={groupDetail?.admins}
-                        creator_id={groupDetail?.creator_id}
-                        role={role}
-                    />
-                )}
-                {selectedTab == "Events" && <Events group_id={group_id} />}
-                {selectedTab == "GroupSettings" && (
-                    <>
-                        {groupDetail?.creator_id == user._id ? (
-                            <GroupSettings group_id={group_id} />
-                        ) : null}
-                    </>
-                )}
-                {selectedTab == "GroupSettings" && (
-                    <>
-                        {groupDetail?.admins.some(
-                            (admin) => admin == user._id
-                        ) ? (
-                            <GroupModeration group_id={group_id} />
-                        ) : null}
-                    </>
-                )}
-            </div>
-        </div>
-    );
+        );
+    }
 };
 
 export default GroupDetail;

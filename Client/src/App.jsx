@@ -4,7 +4,8 @@ import Routes from "./routes";
 import "./App.css";
 import useShowScrollbar from "./hooks/useShowScrollbar";
 import { SongProvider } from "./context/SongContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { socket } from "./socket";
 import io from "socket.io-client";
 import { useSelector, useDispatch } from "react-redux";
 import { setOnlineUsers } from "./redux/onlineUsers/onlineUsersSlice";
@@ -17,13 +18,23 @@ function App() {
     useShowScrollbar();
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.data);
+    const [isConnected, setIsConnected] = useState(socket.connected);
+    const [fooEvents, setFooEvents] = useState([]);
+
     useEffect(() => {
         if (user) {
-            const socket = io("http://localhost:3000");
-
-            socket.on("connect", () => {
+            function onConnect() {
+                setIsConnected(true);
                 socket.emit("addNewOnlineUser", user._id);
-            });
+            }
+
+            function onDisconnect() {
+                setIsConnected(false);
+                socket.emit("deleteOnlineUser", user._id);
+            }
+            socket.on("connect", onConnect);
+
+            socket.on("disconnect", onDisconnect);
 
             socket.on("getOnlineUsers", (data) => {
                 dispatch(setOnlineUsers(data));

@@ -887,6 +887,7 @@ exports.getMutualFriends = async (req, res, next) => {
                 if (friendInfo) {
                     const friendInfoToPush = {
                         _id: friendInfo._id,
+                        email: friendInfo.email,
                         username: friendInfo.username,
                         avatar: friendInfo.avatar,
                         description: friendInfo.description,

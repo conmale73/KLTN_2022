@@ -7,6 +7,9 @@ export const groupService = {
     getAllPublicGroups() {
         return axiosClient.get(`/api/groups/public/`);
     },
+    getAdminsInfo(group_id) {
+        return axiosClient.get(`/api/groups/admins/${group_id}/`);
+    },
     getRecommendGroups(user_id) {
         return axiosClient.get(`/api/groups/recommend/${user_id}/`);
     },
@@ -64,6 +67,21 @@ export const groupService = {
     cancelRequestJoinGroup(group_id, data) {
         return axiosClient.put(
             `/api/groups/cancel-request-join/${group_id}/`,
+            data
+        );
+    },
+    getPendingRequests(group_id, data, page, limit) {
+        return axiosClient.put(
+            `/api/groups/pending-requests/${group_id}?page=${page}&limit=${limit}`,
+            data
+        );
+    },
+    acceptRequestJoinGroup(group_id, data) {
+        return axiosClient.put(`/api/groups/accept-request/${group_id}/`, data);
+    },
+    declineRequestJoinGroup(group_id, data) {
+        return axiosClient.put(
+            `/api/groups/decline-request/${group_id}/`,
             data
         );
     },

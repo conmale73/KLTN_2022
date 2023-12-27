@@ -11,6 +11,9 @@ router.get("/", GroupController.getAllGroups);
 // GET /api/groups/public
 router.get("/public", GroupController.getAllPublicGroups);
 
+// GET /api/groups/admins/:group_id
+router.get("/admins/:group_id", GroupController.getAdminsInfo);
+
 // GET /api/groups/recommend/:user_id
 router.get("/recommend/:user_id", GroupController.getRecommendGroups);
 
@@ -57,6 +60,24 @@ router.put("/request-join/:group_id", GroupController.requestJoinGroup);
 router.put(
     "/cancel-request-join/:group_id",
     GroupController.cancelRequestJoinGroup
+);
+
+// PUT /api/groups/pending-requests/:group_id
+router.put(
+    "/pending-requests/:group_id",
+    GroupController.getPendingRequestsToJoinGroup
+);
+
+// PUT /api/groups/accept-request/:group_id
+router.put(
+    "/accept-request/:group_id",
+    GroupController.acceptRequestToJoinGroup
+);
+
+// PUT /api/groups/decline-request/:group_id
+router.put(
+    "/decline-request/:group_id",
+    GroupController.declineRequestToJoinGroup
 );
 
 // PUT /api/groups/leave/:group_id

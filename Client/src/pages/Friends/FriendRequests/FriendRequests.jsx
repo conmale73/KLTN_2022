@@ -28,7 +28,7 @@ const FriendRequests = ({ user_id }) => {
     if (isLoading) return <Loading isFullScreen={true} />;
     if (error) return <p>{error.message}</p>;
 
-    if (friendData.length == 0) {
+    if (friendData?.length == 0) {
         return (
             <div className="w-full h-full flex justify-center items-center">
                 <p className="text-[#f0f0f0] text-[20px] font-bold">
@@ -38,7 +38,7 @@ const FriendRequests = ({ user_id }) => {
         );
     }
     return (
-        <div className="flex gap-[10px] flex-wrap">
+        <div className="flex gap-[20px] flex-wrap">
             {friendData?.map((friend, index) => (
                 <FriendRequest key={index} friendRequest={friend} />
             ))}

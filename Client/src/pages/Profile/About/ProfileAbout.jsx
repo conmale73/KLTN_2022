@@ -54,6 +54,8 @@ const ProfileAbout = ({ user_id }) => {
     const [birthdayVisible, setBirthdayVisible] = useState("");
     const [defaultMonth, setDefaultMonth] = useState();
 
+    const [edittingMusic, setEdittingMusic] = useState(false);
+
     const fetchUserData = async () => {
         const res = await userService.getUserById(user_id);
         setUserData(res.data.data);
@@ -260,7 +262,7 @@ const ProfileAbout = ({ user_id }) => {
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-col w-full p-[20px] bg-[#303030] rounded-[20px] gap-[10px]">
+                    {/* <div className="flex flex-col w-full p-[20px] bg-[#303030] rounded-[20px] gap-[10px]">
                         <div className="w-full flex-1 text-[25px] font-bold">
                             Music
                         </div>
@@ -283,14 +285,14 @@ const ProfileAbout = ({ user_id }) => {
                                     </div>
                                     {userData?.description &&
                                         userData?._id == user._id && (
-                                            <button className="w-full h-[30px] text-[18px] font-[500] bg-[#555555] hover:bg-[#676668] hover:text-[#fff] text-[#e4e6eb] rounded-[5px]">
+                                            <button className="w-full h-[30px] text-[18px] font-[500] bg-[#555555] hover:bg-[#676668] hover:text-[#fff] text-[#e4e6eb] rounded-[5px]" onClick={() => setEdittingMusic(true)}>
                                                 Edit
                                             </button>
                                         )}
                                 </>
                             )}
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="right w-[60%] flex flex-col gap-[20px]">
                     <div className="flex flex-col w-full p-[20px] bg-[#303030] rounded-[20px] gap-[10px]">

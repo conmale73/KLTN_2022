@@ -7,18 +7,18 @@ import io from "socket.io-client";
 import { BiSolidMessageRoundedDetail } from "react-icons/bi";
 
 import styles from "./Messenger.module.scss";
-import { messageService } from "../../../services";
+import { messageService, groupChatService } from "../../../services";
 import {
     setCount,
     setHightlightChats,
 } from "../../../redux/unreadMessages/unreadMessagesSlice";
 import ChatList from "../../ChatList";
-
-var socket = io("http://localhost:3000");
+import { socket } from "../../../socket";
 
 const Messenger = ({ open, setOpen }) => {
     const user = useSelector((state) => state.user.data);
     const count = useSelector((state) => state.unreadMessages.count);
+    const onlineUsers = useSelector((state) => state.onlineUsers.data);
     const handleStateDropdown = () => {
         setOpen(!open);
     };
@@ -43,9 +43,11 @@ const Messenger = ({ open, setOpen }) => {
     });
 
     useEffect(() => {
-        socket.on("receiveMessage", (message) => {
-            fetchData();
-        });
+        if (user) {
+            socket.on("receiveMessage", (message) => {
+                fetchData();
+            });
+        }
     }, []);
 
     if (isLoading) return null;

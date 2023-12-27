@@ -316,18 +316,24 @@ const PostTool = ({ setPosts, group_name, group_id }) => {
             <div className={styles.divider}></div>
             <div className={styles.bottom}>
                 <div className={styles.buttons}>
-                    <div className={styles.button}>
+                    <div
+                        className={styles.button}
+                        onClick={() => setOpen(true)}
+                    >
                         <img src="https://static.xx.fbcdn.net/rsrc.php/v3/y7/r/Ivw7nhRtXyo.png" />
                         <p className={styles.text}>Photo/Audio</p>
                     </div>
-                    <div className={styles.button}>
+                    <div
+                        className={styles.button}
+                        onClick={() => setOpen(true)}
+                    >
                         <img src="https://static.xx.fbcdn.net/rsrc.php/v3/yd/r/Y4mYLVOhTwq.png" />
                         <p className={styles.text}>Feeling/Activity</p>
                     </div>
-                    <div className={styles.button}>
+                    {/* <div className={styles.button}>
                         <img src="https://static.xx.fbcdn.net/rsrc.php/v3/yd/r/pkbalDbTOVI.png" />
                         <p className={styles.text}>Event</p>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

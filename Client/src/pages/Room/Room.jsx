@@ -26,9 +26,7 @@ import {
     removeUserFromVoiceChannel,
 } from "../../redux/voiceChannels/voiceChannelsSlice";
 import { setCurrentVoiceChannel } from "../../redux/currentVoiceChannel/currentVoiceChannelSlice";
-import io from "socket.io-client";
-
-var socket = io("http://localhost:3000");
+import { socket } from "../../socket";
 const Room = () => {
     const { id } = useParams();
     const [open, setOpen] = useState(false);

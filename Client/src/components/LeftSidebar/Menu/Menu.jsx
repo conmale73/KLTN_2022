@@ -61,7 +61,7 @@ const Menu = () => {
                                             </div>
                                         </div>
                                     </Link>
-                                    <Link to="/music/library">
+                                    {/* <Link to="/music/library">
                                         <div className="button">
                                             <div className="icon">
                                                 <BiLibrary
@@ -82,7 +82,7 @@ const Menu = () => {
                                             </div>
                                             <div className="text">History</div>
                                         </div>
-                                    </Link>
+                                    </Link> */}
                                     {/* <Link to="/music/library#likes">
                                         <div className="button">
                                             <div className="icon">
@@ -116,7 +116,7 @@ const Menu = () => {
                                             <div className="text">Home</div>
                                         </div>
                                     </Link>
-                                    <Link to="/music/library">
+                                    {/* <Link to="/music/library">
                                         <div className="button">
                                             <div className="icon">
                                                 <BiLibrary
@@ -137,7 +137,7 @@ const Menu = () => {
                                             </div>
                                             <div className="text">History</div>
                                         </div>
-                                    </Link>
+                                    </Link> */}
                                     {/* <Link to="/music/library#likes">
                                         <div className="button">
                                             <div className="icon">
@@ -278,7 +278,7 @@ const Menu = () => {
                                             </div>
                                         </div>
                                     </Link>
-                                    <Link to="/social/events">
+                                    {/* <Link to="/social/events">
                                         <div className="button">
                                             <div className="icon">
                                                 <BsCalendarEventFill
@@ -288,7 +288,7 @@ const Menu = () => {
                                             </div>
                                             <div className="text">Events</div>
                                         </div>
-                                    </Link>
+                                    </Link> */}
                                     <Link to="/social/groups">
                                         <div className="button">
                                             <div className="icon">

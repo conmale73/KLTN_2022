@@ -20,7 +20,7 @@ const UserInfoPreview = ({
     const onlineUsers = useSelector((state) => state.onlineUsers.data);
     const user = useSelector((state) => state.user.data);
 
-    if (user_id === user._id) {
+    if (user_id === user?._id) {
         return (
             <>
                 <HoverCard.Root>
@@ -233,7 +233,7 @@ const UserInfoPreview = ({
                                         <p className="font-bold">Intro:</p>
                                         <p>{user.description}</p>
                                     </div>
-                                    <div className="flex m-0 text-[15px] leading-[1.5]">
+                                    {/* <div className="flex m-0 text-[15px] leading-[1.5]">
                                         <p className="font-bold">Music:</p>
                                         {user.musicType.map((type, index) => (
                                             <div
@@ -243,7 +243,7 @@ const UserInfoPreview = ({
                                                 {type}
                                             </div>
                                         ))}
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
 
@@ -486,7 +486,7 @@ const UserInfoPreview = ({
                                         <p className="font-bold">Intro:</p>
                                         <p>{data.description}</p>
                                     </div>
-                                    <div className="flex m-0 text-[15px] leading-[1.5]">
+                                    {/* <div className="flex m-0 text-[15px] leading-[1.5]">
                                         <p className="font-bold">Music:</p>
                                         {data.musicType.map((type, index) => (
                                             <div
@@ -496,7 +496,7 @@ const UserInfoPreview = ({
                                                 {type}
                                             </div>
                                         ))}
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
 

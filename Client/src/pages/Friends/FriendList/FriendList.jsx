@@ -29,7 +29,7 @@ const FriendList = ({ user_id }) => {
     if (error) return <p>{error.message}</p>;
 
     return (
-        <div className="flex gap-[10px] flex-wrap">
+        <div className="flex gap-[20px] flex-wrap">
             {friendData?.map((friend, index) => (
                 <Friend key={index} friend={friend} />
             ))}

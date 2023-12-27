@@ -92,9 +92,7 @@ io.on("connection", (socket) => {
         console.log(`user ${user_id} joined chat ${chat_id}`);
     });
 
-    socket.on("sendMessage", (newMessage) => {
-        console.log(newMessage);
-
+    socket.on("sendMessage", (newMessage, user_id) => {
         socket.to(newMessage.chat_id).emit("receiveMessage", newMessage);
     });
 
