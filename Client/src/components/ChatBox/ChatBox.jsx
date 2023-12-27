@@ -131,6 +131,7 @@ const ChatBox = (props) => {
             setMessages((messages) => [...messages, ...res.data.data]);
         }
     };
+
     return (
         <div className={styles.chatBoxContainer}>
             <div className={styles.chatBox} id="chatBox">
@@ -178,7 +179,7 @@ const ChatBox = (props) => {
                         className="xuk3077 x78zum5 x6prxxf xz9dl7a xsag5q8"
                         style={{ width: 100 + "%" }}
                     >
-                        <span className="">
+                        {/* <span className="">
                             <div
                                 aria-label="Open more actions"
                                 className="text-[#a3a3a3] hover:text-[#d1d1d1] x1i10hfl x1qjc9v5 xjbqb8w xjqpnuy xa49m3k xqeqjp1 x2hbi6w x13fuv20 xu3j5b3 x1q0q8m5 x26u7qi x972fbf xcfux6l x1qhh985 xm0m39n x9f619 x1ypdohk xdl72j9 x2lah0s xe8uvvx x2lwn1j xeuugli x1n2onr6 x16tdsg8 x1hl2dhg xggy1nq x1ja2u2z x1t137rt x1o1ewxj x3x9cwd x1e5q0jg x13rtm0m x3nfvp2 x1q0g3np x87ps6o x1lku1pv x1a2a7pz xsgj6o6 xw3qccf x1gslohp x12nagc x1iorvi4 x150jy0e xjkvuk6 x1e558r4"
@@ -190,7 +191,7 @@ const ChatBox = (props) => {
                                     className=""
                                 />
                             </div>
-                        </span>
+                        </span> */}
 
                         <div className="relative x1iyjqo2 xw2csxc x1n2onr6">
                             <div

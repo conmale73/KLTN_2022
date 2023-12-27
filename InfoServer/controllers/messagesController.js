@@ -1,5 +1,6 @@
 const Message = require("../models/messageModel");
 const GroupChat = require("../models/groupChatModel");
+const { ObjectId } = require("mongodb");
 
 // @desc    Create a new message
 // @route   POST /api/messages
@@ -85,32 +86,104 @@ exports.getLastMessageByChatID = async (req, res, next) => {
     }
 };
 
-// @desc  Mark message as read
-// @route PUT /api/messages/markAsRead/:message_id
+// @desc  Read all messages of a chat
+// @route PUT /api/messages/readAll/:chat_id
 // @access Public
-exports.markMessageAsRead = async (req, res, next) => {
+exports.readAllMessageOfAChat = async (req, res, next) => {
     try {
-        const { message_id } = req.params;
+        const { chat_id } = req.params;
         const { user_id } = req.body;
 
-        const message = await Message.findOne({ _id: message_id });
+        const chat = await GroupChat.findOne({ _id: chat_id });
 
-        if (!message) {
-            return next(new ErrorResponse("Message not found", 404));
-        }
-
-        if (message.read.find((read) => read.user_id == user_id)) {
-            return;
-        } else {
-            message.read.push({ user_id: user_id, read_at: Date.now() });
-
-            await message.save();
-
-            res.status(200).json({
-                success: true,
-                data: message,
+        if (!chat.members.includes(user_id)) {
+            return next({
+                message: "You are not a member of this chat",
+                statusCode: 400,
             });
         }
+
+        const messages = await Message.updateMany(
+            { chat_id, "read.user_id": { $ne: user_id } }, // Check if user_id is not already in the read array
+            {
+                $addToSet: {
+                    read: {
+                        user_id,
+                    },
+                },
+            },
+            { new: true }
+        );
+
+        res.status(200).json({
+            success: true,
+            data: messages.modifiedCount,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc  Get all unread messages of a chat
+// @route GET /api/messages/unread/:chat_id/:user_id
+// @access Public
+exports.getUnreadMessagesOfAChat = async (req, res, next) => {
+    try {
+        const { chat_id, user_id } = req.params;
+
+        const messages = await Message.find({
+            chat_id,
+            read: { $not: { $elemMatch: { user_id } } },
+        });
+
+        res.status(200).json({
+            success: true,
+            data: messages,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc  Count unread messages of a chat
+// @route PUT /api/messages/countUnread/:chat_id/:user_id
+// @access Public
+exports.countUnreadMessagesOfChats = async (req, res, next) => {
+    try {
+        const { user_id } = req.params;
+
+        // Find group chats where members include user_id
+        const groupChats = await GroupChat.find({
+            members: user_id,
+        });
+
+        const groupChatIDs = groupChats.map((groupChat) => groupChat._id);
+
+        const chatsWithUnreadMessages = [];
+        for (let i = 0; i < groupChatIDs.length; i++) {
+            const unreadMessages = await Message.find({
+                chat_id: groupChatIDs[i],
+                read: { $not: { $elemMatch: { user_id } } },
+            });
+            if (unreadMessages.length > 0) {
+                chatsWithUnreadMessages.push(groupChatIDs[i]);
+            }
+        }
+
+        let unreadCount = 0;
+        for (let i = 0; i < chatsWithUnreadMessages.length; i++) {
+            const messages = await Message.find({
+                chat_id: chatsWithUnreadMessages[i],
+                read: { $not: { $elemMatch: { user_id } } },
+            });
+            unreadCount += messages.length;
+        }
+
+        res.status(200).json({
+            success: true,
+            data: unreadCount,
+            highlightChats: chatsWithUnreadMessages,
+        });
     } catch (error) {
         next(error);
     }

@@ -20,6 +20,12 @@ router.get(
     groupChatController.getAllChatsHaveMessagesByUserID
 );
 
+// GET /api/groupChats/unread/:user_id
+router.get(
+    "/unread/:user_id",
+    groupChatController.getAllChatsHaveUnreadMessagesByUserID
+);
+
 // GET /api/groupChats/two/
 router.post("/two/", groupChatController.getGroupChatOfTwoUsers);
 

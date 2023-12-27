@@ -101,3 +101,20 @@ exports.refreshComments = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.unreadAllMessages = async (req, res, next) => {
+    try {
+        const messages = await Message.find();
+
+        for (let i = 0; i < messages.length; i++) {
+            const message = messages[i];
+            message.read = [];
+            await message.save();
+        }
+        res.status(200).json({
+            success: true,
+        });
+    } catch (error) {
+        next(error);
+    }
+};

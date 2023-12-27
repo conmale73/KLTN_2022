@@ -140,6 +140,17 @@ exports.getAllChatsHaveMessagesByUserID = async (req, res, next) => {
             }
         }
 
+        const chatsWithUnreadMessages = [];
+        for (let i = 0; i < groupChatIDs.length; i++) {
+            const unreadMessages = await Message.find({
+                chat_id: groupChatIDs[i],
+                read: { $not: { $elemMatch: { user_id } } },
+            });
+            if (unreadMessages.length > 0) {
+                chatsWithUnreadMessages.push(groupChatIDs[i]);
+            }
+        }
+
         const totalResults = await GroupChat.find({
             _id: chatsWithMessages,
         }).countDocuments();
@@ -155,8 +166,43 @@ exports.getAllChatsHaveMessagesByUserID = async (req, res, next) => {
         res.status(200).json({
             success: true,
             data: chats,
+            unreadChatIDs: chatsWithUnreadMessages,
             page,
             totalPages,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// @desc    Get all chats of a user that have unread messages
+// @route   GET /api/groupChats/unread/:user_id
+// @access  Public
+exports.getAllChatsHaveUnreadMessagesByUserID = async (req, res, next) => {
+    try {
+        const { user_id } = req.params;
+
+        // Find group chats where members include user_id
+        const groupChats = await GroupChat.find({
+            members: user_id,
+        });
+
+        const groupChatIDs = groupChats.map((groupChat) => groupChat._id);
+
+        const chatsWithUnreadMessages = [];
+        for (let i = 0; i < groupChatIDs.length; i++) {
+            const unreadMessages = await Message.find({
+                chat_id: groupChatIDs[i],
+                read: { $not: { $elemMatch: { user_id } } },
+            });
+            if (unreadMessages.length > 0) {
+                chatsWithUnreadMessages.push(groupChatIDs[i]);
+            }
+        }
+
+        res.status(200).json({
+            success: true,
+            data: chatsWithUnreadMessages,
         });
     } catch (error) {
         next(error);

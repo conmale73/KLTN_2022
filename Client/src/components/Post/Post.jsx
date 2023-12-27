@@ -200,10 +200,13 @@ const Post = (props) => {
                                         <BiDetail className={styles.icon} />
                                     </div>
                                 </Link>
-                                <OptionButton
-                                    post_id={props.id}
-                                    setIsDeleted={setIsDeleted}
-                                />
+                                {props.user_id == user._id && (
+                                    <OptionButton
+                                        user_id={props.user_id}
+                                        post_id={props.id}
+                                        setIsDeleted={setIsDeleted}
+                                    />
+                                )}
                             </div>
                         </div>
                     </>
@@ -277,10 +280,13 @@ const Post = (props) => {
                                             <BiDetail className={styles.icon} />
                                         </div>
                                     </Link>
-                                    <OptionButton
-                                        post_id={props.id}
-                                        setIsDeleted={setIsDeleted}
-                                    />
+                                    {props.user_id == user._id && (
+                                        <OptionButton
+                                            user_id={props.user_id}
+                                            post_id={props.id}
+                                            setIsDeleted={setIsDeleted}
+                                        />
+                                    )}
                                 </div>
                             </div>
                         ) : (
@@ -340,10 +346,13 @@ const Post = (props) => {
                                             <BiDetail className={styles.icon} />
                                         </div>
                                     </Link>
-                                    <OptionButton
-                                        post_id={props.id}
-                                        setIsDeleted={setIsDeleted}
-                                    />
+                                    {props.user_id == user._id && (
+                                        <OptionButton
+                                            user_id={props.user_id}
+                                            post_id={props.id}
+                                            setIsDeleted={setIsDeleted}
+                                        />
+                                    )}
                                 </div>
                             </div>
                         )}

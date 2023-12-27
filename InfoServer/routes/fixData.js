@@ -16,4 +16,7 @@ router.patch("/refreshPost", fixDataController.refreshPost);
 
 // PATCH /api/fixData/refreshComments
 router.patch("/refreshComments", fixDataController.refreshComments);
+
+// PATCH /api/fixData/unreadAllMessages
+router.patch("/unreadAllMessages", fixDataController.unreadAllMessages);
 module.exports = router;

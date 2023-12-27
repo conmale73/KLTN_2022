@@ -17,4 +17,13 @@ export const messageService = {
     getLastMessage(chat_id) {
         return axiosClient.get(`/api/messages/last/${chat_id}`);
     },
+    getUnreadMessages(chat_id, user_id) {
+        return axiosClient.get(`/api/messages/unread/${chat_id}/${user_id}`);
+    },
+    readAllMessages(chat_id, data) {
+        return axiosClient.put(`/api/messages/readAll/${chat_id}`, data);
+    },
+    countUnreadMessages(user_id) {
+        return axiosClient.get(`/api/messages/countUnread/${user_id}`);
+    },
 };

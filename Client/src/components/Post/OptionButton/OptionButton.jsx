@@ -8,7 +8,7 @@ import { FaPen, FaTrash } from "react-icons/fa";
 
 import styles from "./OptionButton.module.scss";
 import { postService } from "../../../services";
-const OptionButton = ({ post_id, setIsDeleted }) => {
+const OptionButton = ({ post_id, setIsDeleted, user_id }) => {
     const user = useSelector((state) => state.user.data);
 
     const [open, setOpen] = useState(false);
@@ -43,14 +43,14 @@ const OptionButton = ({ post_id, setIsDeleted }) => {
                     className="w-fit h-fit bg-[#303030] p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
                 >
                     <div className="flex flex-col w-full h-full gap-[10px]">
-                        <div className="w-full flex flex-col gap-[5px] cursor-pointer hover:bg-[#454545] rounded-[5px]">
+                        {/* <div className="w-full flex flex-col gap-[5px] cursor-pointer hover:bg-[#454545] rounded-[5px]">
                             <div className="w-full h-[50px] flex items-center justify-center gap-[10px] px-[10px]">
                                 <FaPen className="text-[16px] text-[#e4e6eb] w-[20px] h-[20px]" />
                                 <p className="text-[16px] text-[#e4e6eb] w-full text-start">
                                     Edit post
                                 </p>
                             </div>
-                        </div>
+                        </div> */}
                         <AlertDialog.Root>
                             <AlertDialog.Trigger asChild>
                                 <div className="w-full flex flex-col gap-[5px] cursor-pointer hover:bg-[#454545] rounded-[5px]">

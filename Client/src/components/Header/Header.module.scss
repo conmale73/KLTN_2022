@@ -24,6 +24,7 @@
 
     .navItem {
         cursor: pointer;
+
         &:first-child {
             display: flex;
             width: 50%;
@@ -59,14 +60,22 @@
     margin: 0 20px 0 0;
     position: relative;
     overflow: visible;
+
     .button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         margin: 0px 0px 0px 10px;
         color: var(--general-icon-color);
-    }
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
 
-    .button :hover {
-        cursor: pointer;
-        color: var(--icon-hover);
+        &:hover {
+            cursor: pointer;
+            color: var(--icon-hover);
+            background-color: var(--general-button-hover);
+        }
     }
 
     .signInButton {

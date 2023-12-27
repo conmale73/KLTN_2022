@@ -46,12 +46,27 @@ function Header() {
                 <div className={styles.buttons}>
                     {user != null ? (
                         <>
-                            <NotificationButton
-                                open={openNoti}
-                                setOpen={setOpenNoti}
-                            />
-                            <Messenger open={openMess} setOpen={setOpenMess} />
-                            <ProfileButton />
+                            <div
+                                className={styles.button}
+                                onClick={() => setOpenNoti(true)}
+                            >
+                                <NotificationButton
+                                    open={openNoti}
+                                    setOpen={setOpenNoti}
+                                />
+                            </div>
+                            <div
+                                className={styles.button}
+                                onClick={() => setOpenMess(true)}
+                            >
+                                <Messenger
+                                    open={openMess}
+                                    setOpen={setOpenMess}
+                                />
+                            </div>
+                            <div className={styles.button}>
+                                <ProfileButton />
+                            </div>
                         </>
                     ) : (
                         <>

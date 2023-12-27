@@ -13,6 +13,7 @@ import showFooterSlice from "./showFooter/showFooterSlice";
 import currentChatListSlice from "./currentChatList/currentChatListSlice";
 import groupDetailSlice from "./groupDetail/groupDetailSlice";
 import toastSlice from "./toast/toastSlice";
+import unreadMessagesSlice from "./unreadMessages/unreadMessagesSlice";
 //initializing store
 export const store = configureStore({
     reducer: {
@@ -27,6 +28,7 @@ export const store = configureStore({
         voiceChannels: voiceChannelsSlice,
         currentVoiceChannel: currentVoiceChannelSlice,
         showFooter: showFooterSlice,
+        unreadMessages: unreadMessagesSlice,
         editingImage: editingImage,
         mode: modeSlice,
     },

@@ -18,4 +18,7 @@ export const groupChatService = {
             `/api/groupChats/messages/${user_id}?page=${page}&limit=${limit}`
         );
     },
+    getChatsHaveUnreadMessagesByUserID(user_id) {
+        return axiosClient.get(`/api/groupChats/unread/${user_id}`);
+    },
 };

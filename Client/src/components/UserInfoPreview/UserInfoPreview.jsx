@@ -12,6 +12,7 @@ const UserInfoPreview = ({
     user_id,
     link,
     lastMessage,
+    hightlightLastMessage,
     showName,
     nameOnly,
     displayOnlineStatus,
@@ -159,14 +160,31 @@ const UserInfoPreview = ({
                                             </>
                                         )}
                                         {lastMessage && (
-                                            <p className="text-[15px] text-ellipsis line-clamp-1 max-w-[100%] font-[400] text-[#adadad]">
-                                                {`${
-                                                    lastMessage?.sender_id ===
-                                                    user._id
-                                                        ? "You"
-                                                        : lastMessage?.sender_name
-                                                }: ${lastMessage?.content}`}
-                                            </p>
+                                            <>
+                                                {hightlightLastMessage ? (
+                                                    <p className="text-[15px] text-ellipsis line-clamp-1 max-w-[100%] font-[600] text-[#e4e6eb]">
+                                                        {`${
+                                                            lastMessage?.sender_id ===
+                                                            user._id
+                                                                ? "You"
+                                                                : lastMessage?.sender_name
+                                                        }: ${
+                                                            lastMessage?.content
+                                                        }`}
+                                                    </p>
+                                                ) : (
+                                                    <p className="text-[15px] text-ellipsis line-clamp-1 max-w-[100%] font-[400] text-[#adadad]">
+                                                        {`${
+                                                            lastMessage?.sender_id ===
+                                                            user._id
+                                                                ? "You"
+                                                                : lastMessage?.sender_name
+                                                        }: ${
+                                                            lastMessage?.content
+                                                        }`}
+                                                    </p>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                 </div>
@@ -395,14 +413,31 @@ const UserInfoPreview = ({
                                             </>
                                         )}
                                         {lastMessage && (
-                                            <p className="text-[15px] text-ellipsis line-clamp-1 max-w-[100%] font-[400] text-[#adadad]">
-                                                {`${
-                                                    lastMessage?.sender_id ===
-                                                    user._id
-                                                        ? "You"
-                                                        : lastMessage?.sender_name
-                                                }: ${lastMessage?.content}`}
-                                            </p>
+                                            <>
+                                                {hightlightLastMessage ? (
+                                                    <p className="text-[15px] text-ellipsis line-clamp-1 max-w-[100%] font-[600] text-[#e4e6eb]">
+                                                        {`${
+                                                            lastMessage?.sender_id ===
+                                                            user._id
+                                                                ? "You"
+                                                                : lastMessage?.sender_name
+                                                        }: ${
+                                                            lastMessage?.content
+                                                        }`}
+                                                    </p>
+                                                ) : (
+                                                    <p className="text-[15px] text-ellipsis line-clamp-1 max-w-[100%] font-[400] text-[#adadad]">
+                                                        {`${
+                                                            lastMessage?.sender_id ===
+                                                            user._id
+                                                                ? "You"
+                                                                : lastMessage?.sender_name
+                                                        }: ${
+                                                            lastMessage?.content
+                                                        }`}
+                                                    </p>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                 </div>

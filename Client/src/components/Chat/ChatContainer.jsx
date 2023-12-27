@@ -10,21 +10,46 @@ import {
     closeChat,
 } from "../../redux/currentChatList/currentChatListSlice";
 import ImageViewer from "../ImageViewer";
+import { messageService } from "../../services";
+import {
+    setCount,
+    setHightlightChats,
+} from "../../redux/unreadMessages/unreadMessagesSlice";
 const ChatContainer = (props) => {
     const user = useSelector((state) => state.user.data);
     const currentChat = useSelector(
         (state) => state.currentChatList.currentChat
     );
+    const count = useSelector((state) => state.unreadMessages.count);
+    const hightlightChats = useSelector(
+        (state) => state.unreadMessages.hightlightChats
+    );
     const [text, setText] = useState("");
 
     const dispatch = useDispatch();
+
+    const handleOnClickChatContainer = async () => {
+        const data = {
+            user_id: user._id,
+        };
+        const res = await messageService.readAllMessages(currentChat._id, data);
+        dispatch(setCount(count - res.data.data));
+        dispatch(
+            setHightlightChats(
+                hightlightChats?.filter((chat) => chat !== currentChat._id)
+            )
+        );
+    };
     return (
         <>
             {" "}
             {user && (
                 <>
                     {currentChat.group_id ? (
-                        <div className="chatContainer flex flex-col w-[330px]  bg-[#303030] h-[455px] scroll rounded-t-md">
+                        <div
+                            className="chatContainer flex flex-col w-[330px]  bg-[#303030] h-[455px] scroll rounded-t-md shadow-lg"
+                            onClick={() => handleOnClickChatContainer()}
+                        >
                             <div
                                 className="flex w-full h-[48px] bg-[#303030] pl-2 pt-2 pb-1
                 border-b-[1px] border-[#545454] 
@@ -75,7 +100,10 @@ const ChatContainer = (props) => {
                             </div>
                         </div>
                     ) : (
-                        <div className="chatContainer flex flex-col w-[330px]  bg-[#303030] h-[455px] scroll rounded-t-md">
+                        <div
+                            className="chatContainer flex flex-col w-[330px]  bg-[#303030] h-[455px] scroll rounded-t-md shadow-lg"
+                            onClick={() => handleOnClickChatContainer()}
+                        >
                             <div
                                 className="flex w-full h-[48px] bg-[#303030] pl-2 pt-2 pb-1
                 border-b-[1px] border-[#545454] 

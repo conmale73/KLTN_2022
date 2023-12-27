@@ -2,10 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 import { groupChatService } from "../../services";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+
 import Loading from "../Loading";
 import ChatPreview from "./ChatPreview";
+import { setHightlightChats } from "../../redux/unreadMessages/unreadMessagesSlice";
 const ChatList = () => {
     const user = useSelector((state) => state.user.data);
+    const dispatch = useDispatch();
     const [chats, setChats] = useState([]);
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(8);
@@ -19,7 +22,8 @@ const ChatList = () => {
             );
             setChats(res.data.data);
             setTotalPages(res.data.totalPages);
-            return res.data.data;
+            dispatch(setHightlightChats(res.data.unreadChatIDs));
+            return res.data;
         } catch (err) {
             console.log(err);
         }
