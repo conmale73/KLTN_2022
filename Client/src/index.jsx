@@ -19,7 +19,7 @@ root.render(
         <Provider store={store}>
             <GlobalStyles>
                 <App />
-                <ReactQueryDevtools />
+                {/* <ReactQueryDevtools /> */}
             </GlobalStyles>
         </Provider>
     </QueryClientProvider>
