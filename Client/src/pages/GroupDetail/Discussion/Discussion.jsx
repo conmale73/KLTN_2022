@@ -8,6 +8,7 @@ import { postService } from "../../../services";
 import Loading from "../../../components/Loading";
 import PostList from "../../../components/PostList";
 const Discussion = ({ group_id, group_name }) => {
+    const user = useSelector((state) => state.user.data);
     const [posts, setPosts] = useState([]);
     const [sortBy, setSortBy] = useState("NEW");
 
@@ -68,13 +69,15 @@ const Discussion = ({ group_id, group_name }) => {
 
     return (
         <div className="w-full flex flex-col gap-[20px]">
-            <div className="w-full flex justify-center">
-                <PostTool
-                    group_name={group_name}
-                    group_id={group_id}
-                    setPosts={setPosts}
-                />
-            </div>
+            {user && (
+                <div className="w-full flex justify-center">
+                    <PostTool
+                        group_name={group_name}
+                        group_id={group_id}
+                        setPosts={setPosts}
+                    />
+                </div>
+            )}
 
             {/* <div className="w-full">
                 <SelectSortBy

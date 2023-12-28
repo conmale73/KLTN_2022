@@ -27,7 +27,7 @@ const GroupCard = ({ group }) => {
                     <p className={styles.description}>{group.description}</p>
                 </div>
                 <div className={styles.actions}>
-                    {group.members.includes(user._id) ? (
+                    {group.members.includes(user?._id) ? (
                         <Link
                             to={`/social/groups/${group._id}`}
                             className={styles.visitButton}

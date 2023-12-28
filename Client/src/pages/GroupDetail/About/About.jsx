@@ -106,7 +106,7 @@ const About = ({ group_data }) => {
                         </p>
                     </div>
                     <Divider />
-                    <div className="my-[5px]">
+                    <div className="my-[5px] flex">
                         {admins?.map((admin, index) => {
                             if (index < 10) {
                                 return (

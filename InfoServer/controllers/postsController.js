@@ -80,11 +80,16 @@ exports.getPostById = async (req, res, next) => {
             case "GROUP":
                 const group = await Group.findById(group_id);
 
-                const members = group.members.map((member) =>
-                    member.toString()
-                );
+                if (group.privacy === "PUBLIC") {
+                    authorized = true;
+                } else {
+                    const members = group.members.map((member) =>
+                        member.toString()
+                    );
 
-                authorized = members.includes(user_id);
+                    authorized = members.includes(user_id);
+                }
+
                 break;
             default:
                 authorized = false;

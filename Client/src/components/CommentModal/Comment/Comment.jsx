@@ -115,7 +115,8 @@ const Comment = (props) => {
                         </div>
                     )}
                 </div>
-                {props.creator?.user_id == user._id && (
+
+                {user && props.creator?.user_id == user?._id && (
                     <DropdownMenu.Root>
                         <DropdownMenu.Trigger asChild>
                             <div
@@ -143,31 +144,35 @@ const Comment = (props) => {
                     <div className="text-[#9d9d9d] text-[15px]">
                         {moment(props.createAt).fromNow()}
                     </div>
-                    {liked ? (
-                        <div
-                            className="flex gap-[5px] items-center text-[#9d9d9d] hover:text-[#ffffff] cursor-pointer"
-                            onClick={() => handleClickUnlike()}
-                        >
-                            <FaHeart size="15px" color="#9d9d9d" />
-                            <span className="text-[#ffffff] text-[15px] ">
-                                Unlike
-                            </span>
-                        </div>
-                    ) : (
-                        <div
-                            className="flex gap-[5px] items-center text-[#9d9d9d] hover:text-[#ffffff] cursor-pointer"
-                            onClick={() => handleClickLike()}
-                        >
-                            <FaRegHeart size="15px" className="" />
-                            <span className=" text-[15px]">Like</span>
-                        </div>
+                    {user && (
+                        <>
+                            {liked ? (
+                                <div
+                                    className="flex gap-[5px] items-center text-[#9d9d9d] hover:text-[#ffffff] cursor-pointer"
+                                    onClick={() => handleClickUnlike()}
+                                >
+                                    <FaHeart size="15px" color="#9d9d9d" />
+                                    <span className="text-[#ffffff] text-[15px] ">
+                                        Unlike
+                                    </span>
+                                </div>
+                            ) : (
+                                <div
+                                    className="flex gap-[5px] items-center text-[#9d9d9d] hover:text-[#ffffff] cursor-pointer"
+                                    onClick={() => handleClickLike()}
+                                >
+                                    <FaRegHeart size="15px" className="" />
+                                    <span className=" text-[15px]">Like</span>
+                                </div>
+                            )}
+                            <div
+                                className="flex justify-center items-center text-[#9d9d9d] hover:text-[#ffffff] cursor-pointer"
+                                onClick={(e) => handleClickReply()}
+                            >
+                                <span className=" text-[15px]">Reply</span>
+                            </div>
+                        </>
                     )}
-                    <div
-                        className="flex justify-center items-center text-[#9d9d9d] hover:text-[#ffffff] cursor-pointer"
-                        onClick={(e) => handleClickReply()}
-                    >
-                        <span className=" text-[15px]">Reply</span>
-                    </div>
                 </div>
             </div>
             {props.replyCount > 0 && (

@@ -30,7 +30,7 @@ const ChatContainer = (props) => {
 
     const handleOnClickChatContainer = async () => {
         const data = {
-            user_id: user._id,
+            user_id: user?._id,
         };
         const res = await messageService.readAllMessages(currentChat._id, data);
         dispatch(setCount(count - res.data.data));

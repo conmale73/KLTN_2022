@@ -4,6 +4,7 @@ import { setExtend } from "../../redux/mode/modeSlice";
 import { useParams } from "react-router-dom";
 import { groupService } from "../../services";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 import { FaPlus, FaGlobeAsia, FaLock, FaPen } from "react-icons/fa";
 import { FaUserGroup } from "react-icons/fa6";
@@ -26,7 +27,7 @@ import LeaveGroupButton from "./LeaveGroupButton/LeaveGroupButton";
 const GroupDetail = () => {
     const { group_id } = useParams();
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.user.data) || { _id: "" };
+    const user = useSelector((state) => state.user.data) || "0";
     useEffect(() => {
         dispatch(setExtend("groupDetail"));
 
@@ -34,6 +35,7 @@ const GroupDetail = () => {
             dispatch(setExtend(null));
         };
     }, []);
+    const navigate = useNavigate();
 
     const [selectedTab, setSelectedTab] = useState("Discussion"); // ["Discussion", "Members", "Events", "GroupSettings"]
 
@@ -56,39 +58,48 @@ const GroupDetail = () => {
     });
 
     useEffect(() => {
-        const checkRole = () => {
-            if (
-                user._id === groupDetail?.creator_id &&
-                groupDetail?.admins.includes(user._id)
-            ) {
-                setRole(3);
-            } else if (
-                user._id === groupDetail?.creator_id &&
-                !groupDetail?.admins.includes(user._id)
-            ) {
-                setRole(2);
-            } else if (groupDetail?.admins.includes(user._id)) {
-                setRole(1);
-            } else {
-                setRole(0);
-            }
-        };
-        checkRole();
+        if (user != "0") {
+            const checkRole = () => {
+                if (
+                    user._id === groupDetail?.creator_id &&
+                    groupDetail?.admins.includes(user._id)
+                ) {
+                    setRole(3);
+                } else if (
+                    user._id === groupDetail?.creator_id &&
+                    !groupDetail?.admins.includes(user._id)
+                ) {
+                    setRole(2);
+                } else if (groupDetail?.admins.includes(user._id)) {
+                    setRole(1);
+                } else {
+                    setRole(0);
+                }
+            };
+            checkRole();
+        } else {
+            return;
+        }
     }, [groupDetail?._id]);
 
     if (isLoading) return <Loading isFullScreen={true} />;
     if (error) return <p>{error.message}</p>;
 
     const handleClickJoin = async () => {
-        const data = {
-            user_id: user._id,
-        };
-        if (groupDetail?.privacy == "PUBLIC") {
-            const res = await groupService.joinGroup(group_id, data);
-            dispatch(setGroupDetail(res.data.data));
-        } else if (groupDetail?.privacy == "PRIVATE") {
-            const res = await groupService.requestJoinGroup(group_id, data);
-            dispatch(setGroupDetail(res.data.data));
+        if (user != "0") {
+            const data = {
+                user_id: user._id,
+            };
+
+            if (groupDetail?.privacy == "PUBLIC") {
+                const res = await groupService.joinGroup(group_id, data);
+                dispatch(setGroupDetail(res.data.data));
+            } else if (groupDetail?.privacy == "PRIVATE") {
+                const res = await groupService.requestJoinGroup(group_id, data);
+                dispatch(setGroupDetail(res.data.data));
+            }
+        } else {
+            navigate("/authentication/login");
         }
     };
 
@@ -130,7 +141,11 @@ const GroupDetail = () => {
         dispatch(setGroupDetail(res.data.data));
     };
 
-    if (groupDetail?.members?.includes(user?._id)) {
+    if (
+        groupDetail?.members?.includes(user?._id) ||
+        (groupDetail?.privacy == "PUBLIC" &&
+            !groupDetail?.members?.includes(user?._id))
+    ) {
         return (
             <div
                 className={`${styles.groupDetail} flex w-full flex-col gap-[20px] items-center`}

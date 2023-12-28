@@ -1,6 +1,7 @@
 import styles from "./CommentModal.module.scss";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 import { FaRegCommentAlt } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
@@ -11,6 +12,7 @@ import CommentList from "./CommentList/CommentList";
 import UserInfoPreview from "../UserInfoPreview";
 
 const CommentModal = (props) => {
+    const user = useSelector((state) => state.user.data);
     const [comments, setComments] = useState([]);
 
     const [text, setText] = useState("");
@@ -94,17 +96,19 @@ const CommentModal = (props) => {
                                 setCommentCount={props.setCommentCount}
                             />
                         </div>
-                        <div className="fixed bottom-0 w-full max-w-[1010px] bg-neutral-800">
-                            <CommentTool
-                                text={text}
-                                setText={setText}
-                                post_id={props.id}
-                                user_id={props.user_id}
-                                username={props.username}
-                                setComments={setComments}
-                                setCommentCount={props.setCommentCount}
-                            />
-                        </div>
+                        {user && (
+                            <div className="fixed bottom-0 w-full max-w-[1010px] bg-neutral-800">
+                                <CommentTool
+                                    text={text}
+                                    setText={setText}
+                                    post_id={props.id}
+                                    user_id={props.user_id}
+                                    username={props.username}
+                                    setComments={setComments}
+                                    setCommentCount={props.setCommentCount}
+                                />
+                            </div>
+                        )}
                     </div>
                 </Dialog.Content>
             </Dialog.Portal>

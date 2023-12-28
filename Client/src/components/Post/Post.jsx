@@ -56,7 +56,7 @@ const Post = (props) => {
         return res.data.data;
     };
     const fetchGroupData = async () => {
-        const res = await groupService.getGroupById(props.group_id, user._id);
+        const res = await groupService.getGroupById(props.group_id, user?._id);
         setGroupData(res.data.data);
         return res.data.data;
     };
@@ -200,7 +200,7 @@ const Post = (props) => {
                                         <BiDetail className={styles.icon} />
                                     </div>
                                 </Link>
-                                {props.user_id == user._id && (
+                                {props.user_id == user?._id && (
                                     <OptionButton
                                         user_id={props.user_id}
                                         post_id={props.id}
@@ -239,7 +239,7 @@ const Post = (props) => {
                                 </div>
                                 <div className={styles.groupPostInfo}>
                                     <Link
-                                        to={`/profile/${props.user_id}`}
+                                        to={`/social/groups/${groupData?._id}`}
                                         className="w-fit"
                                     >
                                         <p className={styles.groupName}>
@@ -280,7 +280,7 @@ const Post = (props) => {
                                             <BiDetail className={styles.icon} />
                                         </div>
                                     </Link>
-                                    {props.user_id == user._id && (
+                                    {props.user_id == user?._id && (
                                         <OptionButton
                                             user_id={props.user_id}
                                             post_id={props.id}
@@ -346,7 +346,7 @@ const Post = (props) => {
                                             <BiDetail className={styles.icon} />
                                         </div>
                                     </Link>
-                                    {props.user_id == user._id && (
+                                    {props.user_id == user?._id && (
                                         <OptionButton
                                             user_id={props.user_id}
                                             post_id={props.id}
@@ -466,44 +466,46 @@ const Post = (props) => {
                         />
                     )}
                 </div>
-                <div className={styles.actions}>
-                    {liked ? (
-                        <div
-                            className={styles.liked}
-                            onClick={() => handleClickUnLike()}
-                        >
-                            <FaHeart className={styles.icon} />
-                            <span>Liked</span>
-                        </div>
-                    ) : (
-                        <div
-                            className={styles.like}
-                            onClick={() => handleClickLike()}
-                        >
-                            <FaRegHeart className={styles.icon} />
-                            <span>Like</span>
-                        </div>
-                    )}
-                    {props.inCommentModal ? (
-                        <div className={styles.comment}>
-                            <FaRegCommentAlt className={styles.icon} />
-                            <span>Comment</span>
-                        </div>
-                    ) : (
-                        <div
-                            className={styles.comment}
-                            onClick={() => handleClickComment()}
-                        >
-                            <FaRegCommentAlt className={styles.icon} />
-                            <span>Comment</span>
-                        </div>
-                    )}
+                {user && (
+                    <div className={styles.actions}>
+                        {liked ? (
+                            <div
+                                className={styles.liked}
+                                onClick={() => handleClickUnLike()}
+                            >
+                                <FaHeart className={styles.icon} />
+                                <span>Liked</span>
+                            </div>
+                        ) : (
+                            <div
+                                className={styles.like}
+                                onClick={() => handleClickLike()}
+                            >
+                                <FaRegHeart className={styles.icon} />
+                                <span>Like</span>
+                            </div>
+                        )}
+                        {props.inCommentModal ? (
+                            <div className={styles.comment}>
+                                <FaRegCommentAlt className={styles.icon} />
+                                <span>Comment</span>
+                            </div>
+                        ) : (
+                            <div
+                                className={styles.comment}
+                                onClick={() => handleClickComment()}
+                            >
+                                <FaRegCommentAlt className={styles.icon} />
+                                <span>Comment</span>
+                            </div>
+                        )}
 
-                    {/* <div className={styles.share}>
+                        {/* <div className={styles.share}>
                         <FaRegShareFromSquare className={styles.icon} />
                         <span>Share</span>
                     </div> */}
-                </div>
+                    </div>
+                )}
             </div>
         </>
     );
