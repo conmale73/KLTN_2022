@@ -2,9 +2,12 @@
 
 ## Installation
 
-### Step 1: Download and Install NodeJS
+### Step 1: Download and Install NodeJS && MongoDB
 
 ><https://nodejs.org/en/download/>
+
+><https://www.mongodb.com/try/download/community>
+
 
 ### Step 2: Open InfoServer folder in Terminal and type in these commands to load required packages
 
